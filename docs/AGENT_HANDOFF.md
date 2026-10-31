@@ -4,6 +4,14 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-10-31 — Improved filter chip contrast
+
+- Set explicit dark text colors for selected and unselected filter chips so labels remain legible on the light sheet; added regression checks for both states.
+- During Android runtime validation, also fixed a zero-width transient constraint on the map's horizontal place cards that could throw during startup.
+- Validation: `dart format`, `flutter analyze`, and `flutter test` passed. Built, installed, and hot-restarted on the Android emulator; visually confirmed the filter labels now have readable contrast.
+- Next: review the updated filter visually on an Android device.
+- Blockers: none known.
+
 ### 2026-10-31 — Documented optional companion landing-page prototype
 
 - Added an optional static landing-page prototype to `docs/PROTOTYPE_SCOPE.md`, including a preview-only download button until an approved APK and distribution host exist.

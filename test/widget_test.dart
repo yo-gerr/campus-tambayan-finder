@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
 import 'package:campus_tambayan_finder/features/places/sample_places_repository.dart';
@@ -87,12 +88,53 @@ void main() {
 
     await tester.tap(find.byKey(const Key('open-filters')));
     await tester.pumpAndSettle();
+
+    final allChip = tester.widget<ChoiceChip>(
+      find.byKey(const Key('category-any-filter')),
+    );
+    final coffeeChip = tester.widget<ChoiceChip>(
+      find.byKey(const Key('category-coffee-filter')),
+    );
+    expect(allChip.labelStyle?.color, AppColors.primary);
+    expect(coffeeChip.labelStyle?.color, AppColors.ink);
+
     await tester.tap(find.byKey(const Key('category-coffee-filter')));
+    final applyButton = find.byKey(const Key('apply-filters'));
+    final applyButtonTop = tester.getTopLeft(applyButton).dy;
+    await tester.scrollUntilVisible(
+      find.text('What do you want to do?'),
+      100,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('filter-options')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(tester.getTopLeft(applyButton).dy, applyButtonTop);
+    expect(
+      tester.getRect(applyButton).bottom,
+      lessThanOrEqualTo(
+        tester.getRect(find.byKey(const Key('place-filter-sheet'))).bottom,
+      ),
+    );
     await tester.tap(find.byKey(const Key('apply-filters')));
     await tester.pumpAndSettle();
 
     expect(find.text('Sample Kape Stop'), findsOneWidget);
     expect(find.text('Sample Study Corner'), findsNothing);
+  });
+
+  testWidgets('reset clears selected filters before applying', (tester) async {
+    await pumpPrototype(tester);
+
+    await tester.tap(find.byKey(const Key('open-filters')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('category-coffee-filter')));
+    await tester.tap(find.text('Reset'));
+    await tester.tap(find.byKey(const Key('apply-filters')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sample Kape Stop'), findsOneWidget);
+    expect(find.text('Sample Study Corner'), findsOneWidget);
   });
 
   testWidgets('switches language and opens the illustrative map', (

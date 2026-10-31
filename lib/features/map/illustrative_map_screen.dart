@@ -73,10 +73,11 @@ class IllustrativeMapScreen extends StatelessWidget {
                       ),
                       for (final (index, place) in places.indexed)
                         Positioned(
-                          left: (place.mapX * maxPinLeft)
-                              .clamp(0.0, maxPinLeft),
-                          top: (place.mapY * maxPinTop)
-                              .clamp(0.0, maxPinTop),
+                          left: (place.mapX * maxPinLeft).clamp(
+                            0.0,
+                            maxPinLeft,
+                          ),
+                          top: (place.mapY * maxPinTop).clamp(0.0, maxPinTop),
                           child: _PlacePin(
                             place: place,
                             index: index,
@@ -126,7 +127,10 @@ class IllustrativeMapScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final place = places[index];
                 return SizedBox(
-                  width: MediaQuery.sizeOf(context).width - 70,
+                  width: (MediaQuery.sizeOf(context).width - 70).clamp(
+                    0.0,
+                    double.infinity,
+                  ),
                   child: PlaceCard(
                     place: place,
                     copy: copy,
