@@ -4,6 +4,23 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-10-31 — Documented optional companion landing-page prototype
+
+- Added an optional static landing-page prototype to `docs/PROTOTYPE_SCOPE.md`, including a preview-only download button until an approved APK and distribution host exist.
+- Clarified in the project brief and architecture that the public page, hosting, distribution, and release artifact remain unapproved decisions. Recommended a separate `landing-page/` directory to avoid Flutter's reserved `web/` path and keeping APK binaries out of source control.
+- Updated the README to distinguish the optional companion-page prototype from the contributor README.
+- Validation: documentation review only; no application behavior changed.
+- Next: confirm with the team whether this companion prototype is included in the requested deliverable.
+- Blockers: public-page requirement, APK distribution, hosting, and operational ownership remain undecided.
+
+### 2026-10-31 — Fixed the place filter dialog layout
+
+- Replaced the constrained alert dialog with a scrollable bottom sheet. The title and Apply/Reset actions remain available while filter options scroll.
+- Added widget coverage for scrolling to lower filters, applying a category filter, and resetting selections.
+- Validation: formatted the changed Dart files, `flutter analyze`, and `flutter test` passed. Hot-restarted the Flutter app in Chrome using temporary web scaffolding, then removed that scaffolding.
+- Next: review the updated filter layout on an Android device when one is available.
+- Blockers: no Android device or emulator was connected for visual verification.
+
 ### 2026-10-31 — Created initial local version-control baseline
 
 - Initialized a local Git repository and recorded the existing project foundation and Flutter prototype in the first baseline commit.

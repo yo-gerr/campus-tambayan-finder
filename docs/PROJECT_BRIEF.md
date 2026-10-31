@@ -80,7 +80,7 @@ Reassess these considerations whenever a feature change affects personal or prec
 
 ## Public landing/information page
 
-Not decided. The contributor-facing repository README is not a product landing page. Validate whether a separate public page is useful for the confirmed audience and launch plan; it is not currently an agreed feature.
+Not decided. The contributor-facing repository README is not a product landing page. A separate static companion-page prototype may be considered to explain the app and demonstrate a future download button, but this does not confirm that the team wants a public page or that one should be hosted. Confirm its audience, content, distribution link, hosting, maintenance, and any domain costs before adding it to a committed release scope. See `docs/PROTOTYPE_SCOPE.md` for the optional prototype boundary.
 
 ## Decisions and open questions
 

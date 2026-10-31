@@ -25,7 +25,7 @@ These are capabilities in the agreed product direction. Their detailed behavior 
 - **Bilingual experience and guidance:** support Filipino and English and provide first-use and in-app instructions.
 - **Location-aware behavior:** request device location only when needed and provide a useful experience if permission is denied.
 - **Optional mood check-in:** a proposed post-visit feature. Keep it separate from core discovery; do not assume storage, account linkage, analytics, or research use until explicitly specified.
-- **Public product information:** a separate landing page is not part of the agreed app scope; validate whether one is needed.
+- **Public product information:** a separate landing page is not part of the agreed app scope. An optional static companion prototype may be explored separately; confirm before adding it as a deliverable or publishing it.
 
 ## Possible feature-first shape
 
@@ -52,7 +52,10 @@ src/
     android/           # Android-specific APIs, permissions, and composition
 tests/
   ...                  # Mirror the chosen stack's test conventions
+landing-page/           # Optional standalone static information page; not app code
 ```
+
+If a landing page is approved, keep its static source separate from Android app code and configure the chosen host to publish that directory. Prefer `landing-page/` over Flutter's reserved `web/` directory. A download button should link to an approved, separately published release artifact; do not store APK binaries in the source tree. Hosting, release signing, and distribution remain separate decisions.
 
 ### Current Flutter prototype layout
 

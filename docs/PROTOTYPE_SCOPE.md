@@ -8,9 +8,23 @@ The agreed product direction is an Android app for students near PLV Annex and C
 
 This document is a prototype plan, not approval of a final MVP, production release, provider, or client quote. Confirm the scope and budget with the team before treating it as a committed deliverable.
 
+## Optional companion landing-page prototype
+
+A small public-facing information page may be prototyped alongside the Android app to explain the concept and demonstrate where students could get the app. This is an optional companion deliverable for discussion, not part of the agreed Android product scope or an approved requirement for launch. Confirm with the team whether it is wanted before treating it as included work.
+
+- Keep the page independent from the Flutter app so its framework and hosting can be chosen separately.
+- A prototype may show the app name, a short description, selected prototype screenshots, and a download button.
+- Until an installable release and distribution location are approved, the button must be clearly marked as a preview or unavailable; do not imply that it downloads a working release.
+- If distribution is later approved, link to a separately published APK artifact (for example, an approved release/download host). Do not commit the APK binary into the source repository or assume a hosting provider.
+- Public hosting, domain registration, Play Store publication, signed release creation, ongoing updates, and operational ownership are outside this prototype scope until agreed.
+- The page must distinguish fictional prototype listings and visuals from verified businesses or live map information.
+
+Prefer a separate root directory such as `landing-page/` for a static page. Avoid naming it `web/` while Flutter web support is a possibility, because Flutter reserves that directory for its own web platform files. The eventual hosting provider can be configured to publish the static directory without changing the Android app.
+
 ## Recommended prototype boundary
 
 - Flutter Android prototype with local, clearly fictional/sample data.
+- Optionally, a separate static landing-page mockup for team review, subject to scope confirmation.
 - No backend, accounts, API credentials, billing configuration, or real user data.
 - No real-device location permission request.
 - Use a simple locally drawn schematic map or placeholder map visual. Do not present it as a real or accurate map.
@@ -83,6 +97,7 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 4. Open a place's details from the list or schematic map.
 5. Try the Directions action and see a clear prototype-only response.
 6. Switch the interface language.
+7. If the companion page is included, review its product summary and preview download-button behavior.
 
 ## Explicitly out of scope for this prototype
 
@@ -93,7 +108,7 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 - Live GPS, background location, or device permission prompts.
 - Google Maps, MapLibre, OpenStreetMap tile-provider integration, geocoding, or live route/ETA services.
 - Production listing research, field visits, photography, verification, or permission-seeking unless separately agreed as project work.
-- Public landing page, domain/hosting setup, Play Store publication, production security, or legal terms.
+- Public production landing page, domain/hosting setup, Play Store publication, production security, or legal terms. The optional landing-page mockup described above is only a prototype for review, not a public launch or hosting commitment.
 
 These are not rejected product ideas; they require confirmation and may materially affect cost, privacy, technical design, or maintenance.
 
@@ -105,6 +120,7 @@ These are not rejected product ideas; they require confirmation and may material
 - The language control changes the prototype interface copy.
 - The onboarding guide can be dismissed and opened again.
 - Prototype-only map/directions behavior and sample listing data are clearly identified as illustrative.
+- If included, the companion page is separate from the Android app and its download button does not claim to distribute an unavailable or unapproved APK.
 - No real credentials, personal information, mood data, or location data are collected.
 
 ## Replaceable implementation seams

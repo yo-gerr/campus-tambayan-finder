@@ -2,7 +2,7 @@
 
 A proposed Android application to help students find suitable places to study, eat, relax, and socialize in Malinta, Valenzuela City, particularly near PLV Annex and CPAG.
 
-This repository README is for project contributors and agents; it is not the proposed public-facing product landing page. Whether the product needs a separate landing or information page is still an open product decision.
+This repository README is for project contributors and agents; it is not the proposed public-facing product landing page. A separate companion-page prototype is optional for team review; whether the team wants a public page, APK download, or hosting remains open.
 
 ## Project status
 
