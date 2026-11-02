@@ -2,7 +2,7 @@
 
 ## Scope
 
-The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. A Flutter app now implements a local-data clickable prototype; Flutter is provisional for this prototype only. Production framework, minimum Android version, backend, map provider, and routing provider remain undecided. The feature-first structure below is a conceptual guide, not a requirement to mirror every suggested layer.
+The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. A Flutter app implements the local-data prototype, but Flutter is not a school requirement or a confirmed production choice. Production framework, minimum Android version, backend, and map renderer remain undecided.
 
 ## Guiding boundaries
 
@@ -16,16 +16,16 @@ The agreed target is an Android application, initially serving students near PLV
 
 ## Feature areas in the agreed direction
 
-These are capabilities in the agreed product direction. Their detailed behavior and MVP priority still need definition:
+These are capabilities in the agreed product direction. Their presentation priority is recorded in the project brief; details still need definition:
 
 - **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Search behavior remains to be specified.
 - **Place details:** show verified-as-possible listing information such as address, photos, amenities, estimated prices, and operating hours.
-- **Map and travel estimates:** show nearby places and estimated travel time from PLV Annex or CPAG; route modes, provider, and accuracy caveats need definition.
-- **Listing operations:** the development team gathers and maintains initial listing data. Shop owners do not need app accounts or in-app payments under the agreed concept.
+- **Map and travel estimates:** map is a high-priority presentation feature. The team prefers opening directions in Google Maps; the in-app map renderer, travel modes, and whether ETA is displayed in-app or by Google Maps remain open.
+- **Listing operations:** the team plans to provide approximately 15–20 initial entries with available photos and details. Authorized team members will edit listing information manually; a custom in-app admin screen is not wanted. Whether class-demo listings are bundled locally or loaded from a shared source, and the data/provider dashboard and access controls, remain undecided.
 - **Bilingual experience and guidance:** support Filipino and English and provide first-use and in-app instructions.
 - **Location-aware behavior:** request device location only when needed and provide a useful experience if permission is denied.
-- **Optional mood check-in:** a proposed post-visit feature. Keep it separate from core discovery; do not assume storage, account linkage, analytics, or research use until explicitly specified.
-- **Public product information:** a separate landing page is not part of the agreed app scope. An optional static companion prototype may be explored separately; confirm before adding it as a deliverable or publishing it.
+- **Optional mood check-in:** requested as an optional presentation feature, with no user profile linkage. Keep it separate from browsing; do not assume persistent storage, analytics, or research use. Privacy and data-handling decisions remain open.
+- **Public product information:** no separate landing page is needed for the current APK presentation/testing delivery. Revisit only if the team later requests one.
 
 ## Possible feature-first shape
 
@@ -47,15 +47,12 @@ src/
     map-and-routing/
     localization/
     onboarding/
-    mood-check-in/     # Only if approved and privacy requirements are defined
+    mood-check-in/     # Optional; isolate until privacy and data handling are defined
   platform/
     android/           # Android-specific APIs, permissions, and composition
 tests/
   ...                  # Mirror the chosen stack's test conventions
-landing-page/           # Optional standalone static information page; not app code
 ```
-
-If a landing page is approved, keep its static source separate from Android app code and configure the chosen host to publish that directory. Prefer `landing-page/` over Flutter's reserved `web/` directory. A download button should link to an approved, separately published release artifact; do not store APK binaries in the source tree. Hosting, release signing, and distribution remain separate decisions.
 
 ### Current Flutter prototype layout
 

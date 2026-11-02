@@ -11,7 +11,7 @@ These instructions are for any coding agent working in this repository, includin
 ## Project principles
 
 - Treat Android as the agreed target platform and Filipino (Tagalog) and English as agreed language support; the framework, programming language, and service providers remain undecided. See `docs/PROJECT_BRIEF.md` for current decisions.
-- Treat a public landing or product-information page as an option to validate, not an approved requirement; distinguish it from this contributor-facing README.
+- Treat a public landing or product-information page as outside the current agreed class-demo scope; distinguish it from this contributor-facing README and only add one if the team later requests it.
 - Keep shared product/domain concepts independent from platform-specific interface and infrastructure decisions.
 - Prefer feature-oriented boundaries when application code is introduced; see `docs/ARCHITECTURE.md`.
 - Do not add dependencies, application scaffolding, or speculative product features before they are needed or confirmed.

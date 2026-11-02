@@ -2,11 +2,11 @@
 
 A proposed Android application to help students find suitable places to study, eat, relax, and socialize in Malinta, Valenzuela City, particularly near PLV Annex and CPAG.
 
-This repository README is for project contributors and agents; it is not the proposed public-facing product landing page. A separate companion-page prototype is optional for team review; whether the team wants a public page, APK download, or hosting remains open.
+This repository README is for project contributors and agents; it is not a public-facing product landing page. The team does not require a separate webpage for the current class-presentation/testing delivery.
 
 ## Project status
 
-The team has agreed on the initial product direction, Android platform, and Filipino/English language support. A Flutter prototype is being built provisionally with local sample data; Flutter is not yet a confirmed production requirement. Backend, live map/routing services, and production release scope remain undecided.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is being used provisionally with local sample data and is not a school-mandated or confirmed production framework. The team will provide an initial list of about 15–20 establishments. Whether listings are bundled or shared online, in-app map rendering, ETA presentation, and mood-data handling still need decisions.
 
 ## Start here
 
@@ -31,9 +31,14 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
 | App languages | Filipino (Tagalog) and English |
-| Optional mood check-in | Proposed; release scope and data handling need definition |
-| Public landing/information page | Undecided; validate audience and launch needs |
-| Framework and programming language | Undecided |
+| Requested delivery | Installable Android APK for class presentation/testing; no Google Play release |
+| Initial listings | About 15–20; compiled data and available photos supplied by the team |
+| Listing storage for class demo | Open: local bundled data or shared online listings |
+| Directions | Open Google Maps; in-app ETA and map provider remain undecided |
+| Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
+| Public landing/information page | Not needed for current class-presentation/testing delivery |
+| School framework requirement | None |
+| Prototype framework | Flutter, provisional |
 | Backend, storage, map, and routing providers | Undecided |
 
 ## Getting started

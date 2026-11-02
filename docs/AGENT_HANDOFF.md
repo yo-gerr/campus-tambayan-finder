@@ -4,6 +4,14 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-02 — Recorded answers to initial scope questions
+
+- Updated the project brief, architecture, prototype scope, agent instructions, and README with the requested class-presentation/testing APK, feature ranking, no Google Play/no landing page, team-supplied 15–20 listings, no custom admin screen, and Google Maps directions preference.
+- Recorded mood check-in as optional and prioritized, with no profile linkage; persistence, nickname use, consent, and retention remain unresolved. ETA display/provider, listing verification/translation/photo permissions, whether listings are local or shared online, and dashboard/access setup also remain open.
+- Validation: documentation consistency review and `git diff --check`; no application code changed.
+- Next: clarify the remaining privacy and ETA decisions before implementing data collection or live services; obtain the team's listing template, photos, and approved content.
+- Blockers: no deadline or detailed acceptance criteria supplied; map/data providers and several feature behaviors remain undecided.
+
 ### 2026-10-31 — Improved filter chip contrast
 
 - Set explicit dark text colors for selected and unselected filter chips so labels remain legible on the light sheet; added regression checks for both states.

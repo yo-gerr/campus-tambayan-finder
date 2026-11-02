@@ -2,33 +2,34 @@
 
 ## Purpose and status
 
-Define a small, reviewable prototype that can be built while the team clarifies delivery, budget, framework requirements, and service choices. It is intended to make the core place-discovery experience tangible and collect feedback before committing to production architecture.
+Define a reviewable Android prototype for an installable APK used in a class presentation and testing. The team does not require Google Play publication or a separate public webpage for this delivery.
 
 The agreed product direction is an Android app for students near PLV Annex and CPAG in Malinta, with Filipino (Tagalog) and English support. Flutter is a **provisional prototype choice**, not a confirmed school or production requirement. If the team requires another framework, this prototype can still communicate screens and interactions, but its code may not be reusable.
 
-This document is a prototype plan, not approval of a final MVP, production release, provider, or client quote. Confirm the scope and budget with the team before treating it as a committed deliverable.
+This document records the current class-demo target, not a production release, selected service provider, or final client quote. Flutter remains provisional: the school has not required a particular framework or programming language.
 
-## Optional companion landing-page prototype
+## Delivery target and priorities
 
-A small public-facing information page may be prototyped alongside the Android app to explain the concept and demonstrate where students could get the app. This is an optional companion deliverable for discussion, not part of the agreed Android product scope or an approved requirement for launch. Confirm with the team whether it is wanted before treating it as included work.
+The requested deliverable is an installable Android APK for class presentation/testing; no Google Play release or public landing page is needed. The team ranked the presentation features in this order:
 
-- Keep the page independent from the Flutter app so its framework and hosting can be chosen separately.
-- A prototype may show the app name, a short description, selected prototype screenshots, and a download button.
-- Until an installable release and distribution location are approved, the button must be clearly marked as a preview or unavailable; do not imply that it downloads a working release.
-- If distribution is later approved, link to a separately published APK artifact (for example, an approved release/download host). Do not commit the APK binary into the source repository or assume a hosting provider.
-- Public hosting, domain registration, Play Store publication, signed release creation, ongoing updates, and operational ownership are outside this prototype scope until agreed.
-- The page must distinguish fictional prototype listings and visuals from verified businesses or live map information.
-
-Prefer a separate root directory such as `landing-page/` for a static page. Avoid naming it `web/` while Flutter web support is a possibility, because Flutter reserves that directory for its own web platform files. The eventual hosting provider can be configured to publish the static directory without changing the Android app.
+1. Place listings and details.
+2. Map.
+3. Optional mood check-in.
+4. Estimated travel time.
+5. Filipino and English language options.
+6. Introductory guide.
 
 ## Recommended prototype boundary
 
-- Flutter Android prototype with local, clearly fictional/sample data.
-- Optionally, a separate static landing-page mockup for team review, subject to scope confirmation.
-- No backend, accounts, API credentials, billing configuration, or real user data.
+- Flutter Android prototype, pending no school framework requirement, with local sample data until the team supplies the listing set.
+- The target initial dataset is approximately 15–20 establishments. The team will provide a compiled list, available photos, and available information, including names, locations, descriptions, operating hours, and prices.
+- No custom admin screen; authorized team members will make listing edits manually using a provider dashboard once the provider and access controls are decided.
+- For the current prototype, keep using local sample data. Whether the class-demo APK must load a shared online listing set or may package the team-provided listings locally is still open; do not choose a backend/provider or configure billing without confirmation.
+- No student accounts, API credentials, billing configuration, or real user data.
 - No real-device location permission request.
 - Use a simple locally drawn schematic map or placeholder map visual. Do not present it as a real or accurate map.
-- Focus on navigating, filtering, and viewing places; simulate actions that would later use external services.
+- Directions should open Google Maps rather than implement in-app navigation. Do not add a Maps SDK or Routes API, promise in-app ETA, or configure billing until the ETA presentation and service requirements are confirmed.
+- Focus on browsing listings, viewing details, filtering, and demonstrating the agreed presentation priorities with clearly simulated behavior where required.
 
 ## Provisional visual direction
 
@@ -66,7 +67,7 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 - Demonstrate a simple budget range.
 - Demonstrate a small selection of agreed amenities (Wi-Fi, air conditioning, electrical outlets) and setting/activity (indoor/outdoor; study/eat/relax/socialize).
 - Include clear Apply, Reset, and empty-results states.
-- Do not implement “available time” filtering until the team clarifies whether it means travel duration or time available to stay.
+- Treat opening days/hours and estimated travel time as separate details. Do not invent a separate “available time” filter or a time-staying feature.
 
 ### 4. Place details
 
@@ -80,7 +81,8 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 - Show a schematic map panel with sample pins corresponding to sample listings.
 - Selecting a pin and selecting a place card should lead to the same place details.
 - Show PLV Annex or CPAG as the selected origin if that interaction is included.
-- A “Directions” action may show a prototype message or a nonfunctional preview. Do not call a live routing API, request a key, promise an ETA, or launch navigation unless that behavior is separately approved.
+- The team prefers a Directions action that opens Google Maps. In the prototype, use an explicit preview/simulation or a Google Maps URL only when suitable sample coordinates are available; do not imply sample pins are real locations.
+- The team ranked estimated travel time as a priority, but has not specified whether it should be shown inside the app or by Google Maps. Clarify this before implementing a live ETA integration. Do not call a routing API, request a key, or configure billing for the prototype.
 - Clearly mark the map as illustrative and not for navigation.
 
 ### 6. Language selection
@@ -88,6 +90,13 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 - Provide a visible English/Filipino toggle for the prototype's main interface and sample labels.
 - Keep both languages aligned in meaning.
 - Use placeholder translations only when reviewed by the owner/team; do not imply unreviewed translation is final copy.
+
+### 7. Optional mood check-in
+
+- The team wants an optional mood check-in and ranked it third for the class presentation.
+- A nickname may be used, but the mood response must not be linked to a student profile; no student account/profile is requested for browsing.
+- For the prototype, demonstrate the interaction with sample-only or transient state. Do not store actual mood responses or nicknames, add history/analytics, or imply research findings.
+- Before any persistent mood collection, clarify whether nickname entry is optional and per check-in, consent and purpose, who can access responses, retention/deletion, and whether responses are intended for aggregate analysis. Do not present responses as diagnoses or causal evidence.
 
 ## Suggested review flow
 
@@ -97,30 +106,31 @@ Collect student/team feedback on clarity, tone, readability, and color before se
 4. Open a place's details from the list or schematic map.
 5. Try the Directions action and see a clear prototype-only response.
 6. Switch the interface language.
-7. If the companion page is included, review its product summary and preview download-button behavior.
+7. Optionally submit a sample mood check-in and verify it is not linked to a profile or persisted.
 
 ## Explicitly out of scope for this prototype
 
 - Firebase, Supabase, or any other backend, database, authentication, or cloud storage.
 - Custom admin screen, provider-dashboard setup, and cross-device synchronization.
 - Student or shop-owner accounts, persistent nicknames, ratings, comments, submissions, or reports.
-- Mood check-ins, mood history, analytics, or research use.
+- Persistent mood check-ins, mood history, analytics, or research use. A non-persistent optional sample-only check-in is described above.
 - Live GPS, background location, or device permission prompts.
-- Google Maps, MapLibre, OpenStreetMap tile-provider integration, geocoding, or live route/ETA services.
+- In-app Google Maps/MapLibre/OpenStreetMap SDK or tile integration, geocoding, or live route/ETA services. External Google Maps directions may be opened as described above; do not imply sample coordinates are real.
 - Production listing research, field visits, photography, verification, or permission-seeking unless separately agreed as project work.
-- Public production landing page, domain/hosting setup, Play Store publication, production security, or legal terms. The optional landing-page mockup described above is only a prototype for review, not a public launch or hosting commitment.
+- Public landing page, domain/hosting setup, Google Play publication, production security, or legal terms.
 
 These are not rejected product ideas; they require confirmation and may materially affect cost, privacy, technical design, or maintenance.
 
 ## Prototype acceptance checklist
 
+- An Android APK can be built, installed, and launched for class presentation/testing; Google Play publication is not required.
 - The main browsing, filtering, and detail interactions can be demonstrated without a network connection.
 - Selecting a filter changes the visible sample results and Reset restores them.
 - A place can be opened from both the list and schematic map.
 - The language control changes the prototype interface copy.
 - The onboarding guide can be dismissed and opened again.
+- The optional mood check-in is clearly optional and does not create a profile or persist mood/nickname data.
 - Prototype-only map/directions behavior and sample listing data are clearly identified as illustrative.
-- If included, the companion page is separate from the Android app and its download button does not claim to distribute an unavailable or unapproved APK.
 - No real credentials, personal information, mood data, or location data are collected.
 
 ## Replaceable implementation seams
@@ -129,4 +139,4 @@ When implementation begins, keep sample places behind a small data-source/reposi
 
 ## Decisions to confirm before production
 
-Use the [project brief](PROJECT_BRIEF.md) and the scope-question document with the team to resolve the target deliverable, deadline and must-haves, meaning of “available time,” direction/ETA behavior, listing count and data responsibility, update workflow, student participation and mood handling, service costs/account ownership, school framework requirements, app name/assets, and distribution.
+Use the [project brief](PROJECT_BRIEF.md) and scope-question answers to track remaining decisions: deadline and acceptance criteria; listing template, photo permissions, translation source and verification; map provider; whether ETA is shown in-app or by Google Maps and which travel modes apply; mood nickname necessity and data handling; provider dashboard/access control; service/account ownership; and final app name/logo/assets.
