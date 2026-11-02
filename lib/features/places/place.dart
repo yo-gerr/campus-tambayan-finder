@@ -16,6 +16,8 @@ class Place implements PlaceLike {
     required this.activities,
     required this.mapX,
     required this.mapY,
+    this.photoUrl,
+    this.photoAsset,
   });
 
   final String id;
@@ -38,6 +40,18 @@ class Place implements PlaceLike {
   final double mapX;
   final double mapY;
 
+  /// Public URL of the place photo, when the team has uploaded one.
+  ///
+  /// The app tries this first so a photo can change without rebuilding. It is
+  /// optional: rows and builds without photos keep working.
+  final String? photoUrl;
+
+  /// Bundled photo used when [photoUrl] is absent or cannot be loaded.
+  ///
+  /// This is what keeps photos visible offline. Optional until the team
+  /// supplies approved images.
+  final String? photoAsset;
+
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
       id: json['id'] as String,
@@ -54,6 +68,16 @@ class Place implements PlaceLike {
       activities: List<String>.from(json['activities'] as List<dynamic>),
       mapX: (json['mapX'] as num).toDouble(),
       mapY: (json['mapY'] as num).toDouble(),
+      photoUrl: _optionalText(json['photoUrl']),
+      photoAsset: _optionalText(json['photoAsset']),
     );
   }
+}
+
+/// Treats a missing, null, blank, or non-string value as "no photo" so a
+/// partially filled row never reaches the image widgets.
+String? _optionalText(Object? value) {
+  if (value is! String) return null;
+  final trimmed = value.trim();
+  return trimmed.isEmpty ? null : trimmed;
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import 'place.dart';
+import 'place_photo.dart';
 
 Future<void> showPlaceDetails({
   required BuildContext context,
@@ -32,6 +33,7 @@ class _PlaceDetailSheet extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.85,
       child: ListView(
+        key: const Key('place-detail-list'),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
         children: [
           Center(
@@ -74,6 +76,17 @@ class _PlaceDetailSheet extends StatelessWidget {
             '${copy.category(place.category)} · ${place.area}',
             style: Theme.of(context).textTheme.bodyMedium
                 ?.copyWith(color: AppColors.mutedInk),
+          ),
+          const SizedBox(height: 14),
+          PlacePhoto(
+            place: place,
+            width: double.infinity,
+            height: 170,
+            borderRadius: 18,
+            placeholder: _DetailPhotoPlaceholder(
+              category: place.category,
+              copy: copy,
+            ),
           ),
           const SizedBox(height: 18),
           Container(
@@ -144,6 +157,39 @@ class _PlaceDetailSheet extends StatelessWidget {
             ),
             icon: const Icon(Icons.directions_outlined),
             label: Text(copy.get('directions')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailPhotoPlaceholder extends StatelessWidget {
+  const _DetailPhotoPlaceholder({required this.category, required this.copy});
+
+  final String category;
+  final AppCopy copy;
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = switch (category) {
+      'coffee' => Icons.local_cafe_outlined,
+      'park' => Icons.park_outlined,
+      'eatery' => Icons.restaurant_outlined,
+      _ => Icons.menu_book_outlined,
+    };
+
+    return ColoredBox(
+      color: AppColors.sage,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 40, color: AppColors.primary),
+          const SizedBox(height: 8),
+          Text(
+            copy.get('no_photo'),
+            style: Theme.of(context).textTheme.labelSmall
+                ?.copyWith(color: AppColors.mutedInk),
           ),
         ],
       ),

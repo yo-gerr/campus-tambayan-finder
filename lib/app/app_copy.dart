@@ -41,6 +41,7 @@ class AppCopy {
     'demo_banner': ['DEMO CONTENT · NOT VERIFIED', 'DEMO CONTENT · HINDI BERIPIKADO'],
     'offline_notice': ['Showing the bundled copy · live updates unavailable',
       'Naka-bundle na kopya · walang live updates'],
+    'no_photo': ['No photo yet', 'Wala pang larawan'],
     'demo_badge': ['DEMO LISTING', 'HALIMBAWANG LISTAHAN'],
     'sample_data': ['Sample information for prototype review only.',
       'Halimbawang impormasyon para lamang sa prototype.'],

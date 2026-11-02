@@ -95,7 +95,19 @@ void main() {
       find.textContaining('Sample information for prototype review only.'),
       findsOneWidget,
     );
+    // The photo pushes the hours row below the lazily built part of the list.
+    await tester.dragUntilVisible(
+      find.text('Sample hours · 8:00 AM–8:00 PM'),
+      find.byKey(const Key('place-detail-list')),
+      const Offset(0, -150),
+    );
     expect(find.text('Sample hours · 8:00 AM–8:00 PM'), findsOneWidget);
+    // Scroll back so the header's close button is reachable again.
+    await tester.drag(
+      find.byKey(const Key('place-detail-list')),
+      const Offset(0, 400),
+    );
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Close'));
     await tester.pumpAndSettle();
   });

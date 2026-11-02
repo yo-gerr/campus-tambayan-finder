@@ -13,7 +13,9 @@
     "setting": "indoor",
     "activities": ["study", "relax"],
     "mapX": 0.26,
-    "mapY": 0.34
+    "mapY": 0.34,
+    "photoUrl": null,
+    "photoAsset": null
   },
   {
     "id": "sample-kape-stop",
@@ -29,7 +31,9 @@
     "setting": "indoor",
     "activities": ["study", "eat", "socialize"],
     "mapX": 0.67,
-    "mapY": 0.25
+    "mapY": 0.25,
+    "photoUrl": null,
+    "photoAsset": null
   },
   {
     "id": "sample-luntiang-pahingahan",
@@ -45,7 +49,9 @@
     "setting": "outdoor",
     "activities": ["relax", "socialize"],
     "mapX": 0.49,
-    "mapY": 0.56
+    "mapY": 0.56,
+    "photoUrl": null,
+    "photoAsset": null
   },
   {
     "id": "sample-budget-kainan",
@@ -61,6 +67,8 @@
     "setting": "indoor",
     "activities": ["eat", "socialize"],
     "mapX": 0.76,
-    "mapY": 0.69
+    "mapY": 0.69,
+    "photoUrl": null,
+    "photoAsset": null
   }
 ]

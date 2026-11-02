@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import 'place.dart';
+import 'place_photo.dart';
 
 class PlaceCard extends StatelessWidget {
   const PlaceCard({
@@ -27,7 +28,13 @@ class PlaceCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              _PlaceIllustration(category: place.category),
+              PlacePhoto(
+                place: place,
+                width: 68,
+                height: 74,
+                borderRadius: 15,
+                placeholder: _PlaceIllustration(category: place.category),
+              ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
