@@ -2,7 +2,7 @@
 
 ## Scope
 
-The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. A Flutter app implements the local-data prototype, but Flutter is not a school requirement or a confirmed production choice. Production framework, minimum Android version, backend, and map renderer remain undecided.
+The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. Flutter is the framework for the current class-demo MVP, although it is not school-mandated. Production framework, minimum Android version, backend, and map renderer remain undecided.
 
 ## Guiding boundaries
 
@@ -10,7 +10,7 @@ The agreed target is an Android application, initially serving students near PLV
 - **Domain before framework:** represent core concepts and rules without depending on UI widgets, platform APIs, network clients, or a particular database.
 - **Explicit adapters:** keep external systems (maps, geolocation, persistence, APIs) behind interfaces owned by the application/domain boundary.
 - **Thin presentation:** Android screens should render state and translate user actions into application operations; avoid putting business rules in UI components.
-- **Shared visual theme:** once UI implementation begins, define shared semantic colors, typography, spacing, and component styles in the selected framework's app-level theme. Screens should consume theme values instead of duplicating hard-coded styling. Keep theme implementation framework-specific; Flutter is only a provisional prototype choice.
+- **Shared visual theme:** define shared semantic colors, typography, spacing, and component styles in Flutter's app-level theme for this MVP. Screens should consume theme values instead of duplicating hard-coded styling. This does not commit a later production app to Flutter.
 - **Share only stable code:** share domain, validation, and use-case logic when useful. Keep platform-specific presentation and integrations in their platform layer rather than forcing artificial cross-platform abstractions.
 - **Start small:** do not create empty packages, layers, or services just to match a diagram.
 
@@ -54,7 +54,7 @@ tests/
   ...                  # Mirror the chosen stack's test conventions
 ```
 
-### Current Flutter prototype layout
+### Current Flutter MVP baseline layout
 
 The prototype uses a deliberately small Flutter layout:
 
@@ -71,7 +71,7 @@ test/
   widget_test.dart      # Main interaction smoke tests
 ```
 
-This layout is an implementation detail for the prototype, not a commitment to production architecture. Replace the sample repository or schematic map only after scope and provider decisions are confirmed.
+This layout is an implementation detail for the current MVP, not a commitment to production architecture. Replace the sample repository or schematic map only after scope and provider decisions are confirmed.
 
 In smaller projects, combine layers where the framework makes separate files clearer than separate packages. Keep dependencies directed inward: presentation and adapters may depend on application/domain contracts; domain rules should not depend on presentation or vendor SDKs.
 

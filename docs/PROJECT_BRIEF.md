@@ -24,7 +24,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - **Platform:** Android application.
 - **Languages:** Filipino (Tagalog) and English.
 - **School-mandated framework or programming language:** None.
-- **Framework and minimum Android version:** No school requirement was identified. Flutter is being used provisionally for the prototype; production framework and minimum Android version are not formally confirmed.
+- **Framework and minimum Android version:** No school requirement was identified. Flutter is the framework for the current class-demo MVP; the production framework and minimum Android version are not confirmed.
 
 ### First delivery and feature priority
 
@@ -32,7 +32,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - **Google Play:** publication is not required.
 - **Separate public webpage:** not required for this delivery.
 - **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide.
-- Filters remain part of the concept and prototype scope; the team did not rank them in this priority list.
+- Filters remain part of the concept and MVP scope; the team did not rank them in this priority list.
 
 ### Places and listings
 
@@ -85,7 +85,7 @@ There will be no persistent student profile for the requested mood check-in. Cla
 - The team does not want a custom in-app admin screen. Authorized team members may manually edit listing information using an agreed data/provider dashboard; the provider and access controls are not yet selected.
 - Whether the APK should load shared listings from an online data source or package listings locally for the class demo is not yet confirmed.
 - The team accepts an approach that prefers no-cost/no-card services where feasible and requires advance disclosure and approval before enabling paid services or card-dependent billing.
-- The framework is not dictated by the school. Flutter remains a provisional implementation choice, not a confirmed production requirement.
+- The framework is not dictated by the school. Flutter is selected for the current MVP; a later production framework is not decided.
 
 ### Optional mood check-in
 
@@ -113,7 +113,7 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Coverage | Agreed initial focus: Malinta near PLV Annex and CPAG |
 | Languages | Agreed: Filipino (Tagalog) and English |
 | School framework requirement | None identified |
-| Prototype framework | Flutter, provisional implementation choice |
+| Current class-demo MVP framework | Flutter |
 | Production framework and minimum Android version | Open |
 | Current delivery | Confirmed installable APK for class presentation and testing; Google Play publication not required |
 | Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide |
@@ -132,4 +132,4 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Distribution channel for APK handoff and account ownership | APK for presentation/testing; exact file handoff/account ownership open; Google Play not required |
 | MVP prioritization and acceptance criteria | Feature ranking agreed; detailed acceptance criteria and deadline still open |
 
-When the team confirms or changes a decision, update this brief and summarize the material change in `docs/AGENT_HANDOFF.md`.
+Implementation phases and per-phase acceptance criteria are tracked in `docs/MVP_PLAN.md`. When the team confirms or changes a product decision, update this brief and summarize the material change in `docs/AGENT_HANDOFF.md`.

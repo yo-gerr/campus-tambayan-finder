@@ -4,6 +4,14 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-02 — Reframed prototype scope as phased Flutter MVP plan
+
+- Replaced `docs/PROTOTYPE_SCOPE.md` with `docs/MVP_PLAN.md`. Preserved the implemented Flutter prototype as Phase 0, then organized the remaining work into dependent phases with priorities, acceptance criteria, and unresolved prerequisites.
+- Updated the README, project brief, architecture, and agent guidance to reflect Flutter as the current class-demo MVP framework while leaving production framework/providers open.
+- Validation: documentation link/reference search, consistency review, and `git diff --check`; no application code changed.
+- Next: start with team-provided listing content and decide whether class-demo listings are bundled locally or loaded from a shared online source.
+- Blockers: map source, ETA behavior, listing source, mood privacy decisions, final content/assets, presentation deadline, and APK signing expectations remain open.
+
 ### 2026-11-02 — Recorded answers to initial scope questions
 
 - Updated the project brief, architecture, prototype scope, agent instructions, and README with the requested class-presentation/testing APK, feature ranking, no Google Play/no landing page, team-supplied 15–20 listings, no custom admin screen, and Google Maps directions preference.
@@ -64,7 +72,7 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ### 2026-10-31 — Recorded provisional prototype design direction
 
-- Added a provisional visual direction to `docs/PROTOTYPE_SCOPE.md`: Material 3 patterns, a warm/teal palette to validate, readable platform typography, and shared UI/accessibility guidance.
+- Added a provisional visual direction to the former `docs/PROTOTYPE_SCOPE.md`, now represented in `docs/MVP_PLAN.md`: Material 3 patterns, a warm/teal palette to validate, readable platform typography, and shared UI/accessibility guidance.
 - Added a framework-neutral architecture principle for centralizing semantic theme tokens once UI implementation begins; did not lock Flutter or production branding.
 - Validation: documentation-only update; no application or test tooling exists yet.
 - Next: review the prototype visual direction with students/team before treating any palette or style as final.
@@ -72,7 +80,7 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ### 2026-10-31 — Defined clickable prototype scope
 
-- Added `docs/PROTOTYPE_SCOPE.md` with proposed offline, local-sample-data prototype flows, interactions, explicit exclusions, and a review checklist.
+- Added the initial `docs/PROTOTYPE_SCOPE.md`, later evolved into `docs/MVP_PLAN.md`, with proposed offline sample-data flows, interactions, exclusions, and a review checklist.
 - Recorded Flutter as provisional for prototype planning only; no framework or production implementation decision was made in the project brief.
 - Linked the prototype scope from the README.
 - Validation: documentation-only update; no application code or test tooling exists yet.

@@ -6,13 +6,13 @@ This repository README is for project contributors and agents; it is not a publi
 
 ## Project status
 
-The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is being used provisionally with local sample data and is not a school-mandated or confirmed production framework. The team will provide an initial list of about 15–20 establishments. Whether listings are bundled or shared online, in-app map rendering, ETA presentation, and mood-data handling still need decisions.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Whether listings are bundled or shared online, in-app map rendering, ETA presentation, and mood-data handling still need decisions.
 
 ## Start here
 
 - [Project brief](docs/PROJECT_BRIEF.md) — current concept, assumptions, and questions to resolve.
 - [Architecture](docs/ARCHITECTURE.md) — proposed framework-neutral, feature-first structure.
-- [Clickable prototype scope](docs/PROTOTYPE_SCOPE.md) — proposed offline prototype flows, boundaries, and acceptance checklist.
+- [Flutter MVP plan](docs/MVP_PLAN.md) — phased implementation sequence, dependencies, and acceptance criteria.
 - [Product and implementation references](docs/REFERENCES.md) — curated research links and notes; not code to copy.
 - [Agent handoff](docs/AGENT_HANDOFF.md) — latest work, checks, blockers, and suggested next steps.
 - [Agent instructions](AGENTS.md) — shared working agreement, documentation rules, and Git/commit conventions for coding agents.
@@ -38,7 +38,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
 | Public landing/information page | Not needed for current class-presentation/testing delivery |
 | School framework requirement | None |
-| Prototype framework | Flutter, provisional |
+| Current class-demo MVP framework | Flutter |
 | Backend, storage, map, and routing providers | Undecided |
 
 ## Getting started
@@ -52,4 +52,4 @@ flutter test
 flutter analyze
 ```
 
-The prototype has no backend or live map integration. Its clearly labeled listings load from local JSON. See [prototype scope](docs/PROTOTYPE_SCOPE.md) for what is simulated and what remains out of scope. Production framework and service decisions remain open in the [project brief](docs/PROJECT_BRIEF.md).
+The current app is a Flutter MVP baseline with fictional local JSON listings and an illustrative map; it has no backend or live map integration. See the [MVP plan](docs/MVP_PLAN.md) for phased work and remaining dependencies. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).
