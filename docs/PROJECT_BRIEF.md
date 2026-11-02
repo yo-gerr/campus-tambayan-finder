@@ -83,7 +83,9 @@ There will be no persistent student profile for the requested mood check-in. Cla
 ### Listing maintenance and service costs
 
 - The team does not want a custom in-app admin screen. Authorized team members may manually edit listing information using an agreed data/provider dashboard; the provider and access controls are not yet selected.
-- Whether the APK should load shared listings from an online data source or package listings locally for the class demo is not yet confirmed.
+- Confirmed November 2, 2026: the class-demo APK loads listings from a shared Supabase (Free plan) table, while the bundled JSON listings stay in the build as the seed and offline fallback. Photos stay bundled in the app for this delivery; Supabase Storage is available on the same plan if later updates need it.
+- The repository JSON/CSV is the canonical listing copy and is imported into Supabase one way. Dashboard edits must be exported back before an APK build so the bundled fallback and the shared table do not drift apart.
+- The app reads shared listings with the publishable key only. Row-level security allows reads and no writes, so no student account or sign-in is introduced. Who owns the Supabase organization and who holds dashboard edit access remain open.
 - The team accepts an approach that prefers no-cost/no-card services where feasible and requires advance disclosure and approval before enabling paid services or card-dependent billing.
 - The framework is not dictated by the school. Flutter is selected for the current MVP; a later production framework is not decided.
 
@@ -123,12 +125,13 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, available photos, and available information, including names, locations, descriptions, hours, and prices |
 | Photo permissions, data template, translation source, and verification criteria | Open |
-| Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually; provider and access controls open |
-| Listing delivery/storage | Open whether class-demo APK uses packaged local listings or a shared online data source |
+| Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually in the Supabase dashboard; who holds access is open |
+| Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan table, with bundled local JSON as seed and offline fallback |
+| Listing photos (class demo) | Confirmed: bundled in the APK; Supabase Storage is a later option for updates without a rebuild |
 | Student accounts, ratings, comments | No student profile or ratings/comments requested for browsing |
 | Mood check-in | Optional and prioritized for class presentation; nickname may be used, but response must not be linked to a user profile. Persistence, nickname necessity, consent, retention, and access are open |
 | Public landing/information page | Not needed for current class-demo deliverable |
-| Hosting, services, costs, and operational ownership | Open; disclose paid/card-dependent services and get approval first |
+| Hosting, services, costs, and operational ownership | Confirmed: Supabase Free plan for shared listings (no card, no paid add-ons). Paid plans and other services remain unapproved. Ownership of the Supabase organization is open |
 | Distribution channel for APK handoff and account ownership | APK for presentation/testing; exact file handoff/account ownership open; Google Play not required |
 | MVP prioritization and acceptance criteria | Feature ranking agreed; detailed acceptance criteria and deadline still open |
 

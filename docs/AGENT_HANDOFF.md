@@ -4,6 +4,16 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-02 — Added optional shared listings via Supabase with bundled fallback
+
+- Recorded the listing-source decision: the class-demo APK loads listings from a shared Supabase Free-plan `places` table, while `assets/data/sample_places.json` stays canonical and serves as the seed and offline fallback. Photos remain bundled; no Supabase Storage, paid plan, or card is used.
+- Added a read-only `PlacesRepository`/`PlacesSnapshot` port, `PlacesRemoteSource`, `SupabasePlacesSource`, and `SyncedPlacesRepository` (bundled data first, five-second first-update timeout, live stream, offline-fallback label). `SamplePlacesRepository` now emits the seed snapshot, and the Explore screen shows a bilingual "bundled copy · live updates unavailable" notice.
+- Added build-time configuration through `--dart-define=SUPABASE_URL` and `--dart-define=SUPABASE_PUBLISHABLE_KEY`; without both values the app runs on bundled listings only, so tests and offline builds need no network or credentials. Added `supabase_flutter` 2.18.3.
+- Docs: added `docs/SUPABASE_SETUP.md` (schema with quoted camelCase columns, select-only RLS, realtime publication, import notes, demo runbook, Free-plan pause risk). Updated the brief decision table, architecture data flow, MVP plan phases, references (Free-plan limits verified 2026-11-02), and README setup.
+- Validation: `flutter analyze` clean, `flutter test` 13 passed, `flutter build apk --debug` succeeded, and `git diff --check` was clean.
+- Next: create the team-owned Supabase project, apply the table and policies, import the approved listings, then verify the two-phone live update and the airplane-mode fallback on a device.
+- Blockers: Supabase organization ownership and dashboard edit access, final listings/photos, and venue network reliability remain open.
+
 ### 2026-11-02 — Reframed prototype scope as phased Flutter MVP plan
 
 - Replaced `docs/PROTOTYPE_SCOPE.md` with `docs/MVP_PLAN.md`. Preserved the implemented Flutter prototype as Phase 0, then organized the remaining work into dependent phases with priorities, acceptance criteria, and unresolved prerequisites.

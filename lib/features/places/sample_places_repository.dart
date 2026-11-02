@@ -3,13 +3,22 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 import 'place.dart';
+import 'places_repository.dart';
 
-abstract interface class PlacesRepository {
-  Future<List<Place>> loadPlaces();
-}
-
+/// Reads the fictional listings bundled with the APK.
+///
+/// These stay in the build as the seed and offline fallback even when the
+/// shared source is configured, and they are the canonical source the shared
+/// table is imported from.
 class SamplePlacesRepository implements PlacesRepository {
   @override
+  Stream<PlacesSnapshot> watchPlaces() async* {
+    yield PlacesSnapshot(
+      places: await loadPlaces(),
+      source: PlacesDataSource.bundledSeed,
+    );
+  }
+
   Future<List<Place>> loadPlaces() async {
     final content = await rootBundle.loadString(
       'assets/data/sample_places.json',

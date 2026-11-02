@@ -4,11 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
-import 'package:campus_tambayan_finder/features/places/sample_places_repository.dart';
+import 'package:campus_tambayan_finder/features/places/places_repository.dart';
 
 class _TestPlacesRepository implements PlacesRepository {
   @override
-  Future<List<Place>> loadPlaces() async => const [
+  Stream<PlacesSnapshot> watchPlaces() async* {
+    yield PlacesSnapshot(
+      places: await _places(),
+      source: PlacesDataSource.bundledSeed,
+    );
+  }
+
+  Future<List<Place>> _places() async => const [
     Place(
       id: 'sample-study-corner',
       name: 'Sample Study Corner',
@@ -46,6 +53,16 @@ class _TestPlacesRepository implements PlacesRepository {
       mapY: 0.25,
     ),
   ];
+}
+
+class _OfflinePlacesRepository extends _TestPlacesRepository {
+  @override
+  Stream<PlacesSnapshot> watchPlaces() async* {
+    yield PlacesSnapshot(
+      places: await _places(),
+      source: PlacesDataSource.offlineFallback,
+    );
+  }
 }
 
 void main() {
@@ -166,5 +183,25 @@ void main() {
     await tester.tap(find.byKey(const Key('open-guide')));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('Find your next tambayan'), findsOneWidget);
+  });
+
+  testWidgets('labels the bundled copy when shared listings are unavailable', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      TambayanApp(
+        showIntroOnStart: false,
+        placesRepository: _OfflinePlacesRepository(),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump();
+
+    expect(find.byKey(const Key('offline-notice')), findsOneWidget);
+    expect(
+      find.text('Showing the bundled copy · live updates unavailable'),
+      findsOneWidget,
+    );
   });
 }

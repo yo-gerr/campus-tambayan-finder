@@ -7,6 +7,7 @@ import '../features/places/place_detail_sheet.dart';
 import '../features/places/place_filter_sheet.dart';
 import '../features/places/place_filters.dart';
 import '../features/places/places_explore_screen.dart';
+import '../features/places/places_repository.dart';
 import '../features/places/sample_places_repository.dart';
 import 'app_copy.dart';
 import 'app_theme.dart';
@@ -49,7 +50,7 @@ class _TambayanHome extends StatefulWidget {
 }
 
 class _TambayanHomeState extends State<_TambayanHome> {
-  late Future<List<Place>> _placesFuture;
+  late Stream<PlacesSnapshot> _placesStream;
   AppLanguage _language = AppLanguage.english;
   PlaceFilters _filters = const PlaceFilters();
   String _campus = 'plv';
@@ -60,7 +61,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
   @override
   void initState() {
     super.initState();
-    _placesFuture = widget.placesRepository.loadPlaces();
+    _placesStream = widget.placesRepository.watchPlaces();
     if (widget.showIntroOnStart) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _showGuide();
@@ -139,20 +140,20 @@ class _TambayanHomeState extends State<_TambayanHome> {
           const SizedBox(width: 4),
         ],
       ),
-      body: FutureBuilder<List<Place>>(
-        future: _placesFuture,
+      body: StreamBuilder<PlacesSnapshot>(
+        stream: _placesStream,
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
           if (snapshot.hasError) {
             return _LoadError(
               onRetry: () => setState(
-                () => _placesFuture = widget.placesRepository.loadPlaces(),
+                () => _placesStream = widget.placesRepository.watchPlaces(),
               ),
             );
           }
-          final places = snapshot.data!;
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final places = snapshot.data!.places;
           final visiblePlaces = places.where(_filters.matches).toList();
           return IndexedStack(
             index: _tabIndex,
@@ -162,6 +163,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                 copy: _copy,
                 filters: _filters,
                 campus: _campus,
+                usingOfflineCopy: snapshot.data!.isOfflineFallback,
                 onCampusChanged: (campus) => setState(() => _campus = campus),
                 onFiltersPressed: _openFilters,
                 onClearFilters: () =>
@@ -221,7 +223,7 @@ class _LoadError extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 40),
             const SizedBox(height: 12),
-            const Text('Could not load the sample places.'),
+            const Text('Could not load places.'),
             const SizedBox(height: 12),
             FilledButton(onPressed: onRetry, child: const Text('Try again')),
           ],

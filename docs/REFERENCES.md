@@ -44,16 +44,22 @@ These are official service references researched on 2026-10-30 to compare likely
 - Caveats: Public Nominatim has a maximum of one request per second, disallows autocomplete and systematic/bulk querying, and may withdraw access.
 
 #### Firebase pricing plans
-- Source: https://firebase.google.com/docs/projects/billing/firebase-pricing-plans and https://firebase.google.com/pricing
+- Source: https://firebase.google.com/docs/projects/billing/firebase-pricing-plans and https://firebase.google.com/pricing (checked 2026-11-02)
 - Relevant ideas: Firebase offers a no-cost Spark plan and a pay-as-you-go Blaze plan; Firestore has no-cost quotas, while some products/features require billing.
 - Adaptation notes: Could support shared, read-oriented place listings for a modest demo. A custom admin interface is still a separate implementation task; provider-console editing is a possible simpler alternative.
-- Caveats: Check quotas and whether each selected feature requires Blaze. Cloud Functions and usage beyond free quotas can incur charges. Use security rules and client-owned billing.
+- Caveats: Cloud Storage has no Spark quota (Blaze only), so hosting photos there requires a card. Linking a Cloud Billing account, or enabling Google Maps APIs in the same project, automatically upgrades the project to Blaze. Firestore Spark quotas are 1 GiB stored, 10 GiB/month egress, 20K writes/day, and 50K reads/day, and the product stops when a quota is exceeded. Use security rules and client-owned billing.
 
-#### Supabase pricing
-- Source: https://supabase.com/pricing
-- Relevant ideas: Managed Postgres, authentication, and storage can be used as separate backend capabilities.
-- Adaptation notes: Could suit structured place records and relationships if the team prefers SQL.
-- Caveats: The current free tier has usage limits and pauses projects after a week of inactivity; Pro currently starts at USD 25/month. Recheck pricing and terms before selection.
+#### Supabase pricing and free-plan limits
+- Source: https://supabase.com/pricing (checked 2026-11-02)
+- Relevant ideas: Managed Postgres, row-level security, Realtime Postgres Changes, and file storage are separate capabilities. The Free plan includes 500 MB database, 1 GB file storage, 5 GB egress, unlimited API requests, 200 realtime connections, and 2 active projects, with no payment method.
+- Adaptation notes: Selected for class-demo shared listings: read-only access through row-level security, no student accounts, and bundled JSON as seed and offline fallback. The table editor and CSV import fit the team's spreadsheet template. Setup and demo runbook are in `docs/SUPABASE_SETUP.md`.
+- Caveats: Free projects pause after one week of inactivity and must be restored manually, which is a demo-day risk; there are no automatic backups; the paid plan from USD 25/month is not approved. The publishable key ships in the app by design, so row-level security must allow reads only. Recheck terms before launch.
+
+#### Supabase row-level security and Realtime
+- Source: https://supabase.com/docs/guides/database/postgres/row-level-security and https://supabase.com/docs/guides/realtime/postgres-changes (checked 2026-11-02)
+- Relevant ideas: Policies decide what the publishable key may read or write; Realtime Postgres Changes streams row updates, and a table must be added to the realtime publication.
+- Adaptation notes: Use a `select`-only policy for `anon` so the shipped key cannot modify listings, and enable realtime for the `places` table for the two-phone demo.
+- Caveats: Policies are the security boundary, not key secrecy. Realtime requires the table in the publication and counts toward the plan's concurrent-connection and message limits.
 
 #### Google Play Console registration
 - Source: https://support.google.com/googleplay/android-developer/answer/6112435

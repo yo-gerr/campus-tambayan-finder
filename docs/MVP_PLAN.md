@@ -13,7 +13,8 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 - **Target:** Android APK for class presentation/testing; no Google Play release.
 - **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide.
 - **Initial listings:** approximately 15–20. The team will provide a compiled list, available photos, names, locations, descriptions, hours, and prices.
-- **Listing edits:** authorized team members will edit listing information manually; no custom in-app admin screen.
+- **Listing edits:** authorized team members edit listing information manually in the Supabase dashboard; no custom in-app admin screen.
+- **Listing source:** shared Supabase Free-plan table, with the bundled JSON listings kept as seed and offline fallback. See [Shared Listings Setup](SUPABASE_SETUP.md).
 - **Directions:** open Google Maps rather than implementing in-app navigation.
 - **Services and costs:** prefer no-cost/no-card choices where feasible; explain any paid or card-dependent service and obtain approval before enabling it.
 - **Mood privacy:** mood responses must not be linked to a user profile. Persistence and nickname behavior are undecided; do not persist mood or nickname data until clarified.
@@ -51,9 +52,10 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Agree on a simple spreadsheet/data template and required fields.
 - Confirm photo permissions, translation responsibility, and how the team expects information to be checked and updated.
 - Replace fictional records with the team's approved information while preserving clear labels for any unknown or estimated values.
-- Decide whether the class-demo APK can bundle the listing data locally or must show shared updates from an online source. If shared updates are required, pause provider integration until service cost, access, and account ownership are approved.
+- Keep the repository JSON canonical and import it into the Supabase `places` table one way; export dashboard edits back before an APK build.
+- Confirm Supabase organization ownership and dashboard edit access. Keep the project on the Free plan unless a paid service is separately approved.
 
-**Acceptance:** the agreed listings display accurate, supplied details; missing or estimated data is identified rather than invented; the app remains usable for browsing.
+**Acceptance:** the agreed listings display accurate, supplied details; missing or estimated data is identified rather than invented; the app remains usable for browsing and shows the bundled copy with a clear notice when the shared source is unavailable.
 
 ### Phase 2 — Place discovery and details
 
@@ -74,6 +76,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Obtain and check coordinates for approved places and the PLV Annex/CPAG origins.
 - Replace the schematic map only after real, approved coordinates and a suitable map approach are available.
 - Open directions in Google Maps using the selected place's real coordinates or verified address; handle missing Google Maps/app availability with a clear fallback.
+- Keep the MVP free of a Maps SDK, Google Maps Platform API key, and billing account; opening external directions does not require them.
 - Keep any unverified or placeholder map visibly marked and never use prototype coordinates to launch real navigation.
 
 **Acceptance:** map markers correspond to the agreed listings and campus origins; selecting a place opens the intended Google Maps destination, or clearly explains why directions are unavailable.
@@ -126,7 +129,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 - The team's listing spreadsheet/data template and final 15–20 entries.
 - Photo permissions, translation responsibility, data verification expectations, and update process.
-- Local bundled listings versus shared online data for the class-demo APK.
+- Supabase organization ownership, dashboard edit access, and who exports the table back to the repository before each build.
 - In-app map source/renderer and attribution requirements.
 - Confirmed coordinates and whether Google Maps is installed/available on presentation devices.
 - Whether ETA appears in-app or only in Google Maps, travel modes, and approved source/cost.

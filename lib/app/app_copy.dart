@@ -39,6 +39,8 @@ class AppCopy {
     'filters': ['Filters', 'Mga filter'],
     'starting_near': ['Starting near', 'Simula malapit sa'],
     'demo_banner': ['DEMO CONTENT · NOT VERIFIED', 'DEMO CONTENT · HINDI BERIPIKADO'],
+    'offline_notice': ['Showing the bundled copy · live updates unavailable',
+      'Naka-bundle na kopya · walang live updates'],
     'demo_badge': ['DEMO LISTING', 'HALIMBAWANG LISTAHAN'],
     'sample_data': ['Sample information for prototype review only.',
       'Halimbawang impormasyon para lamang sa prototype.'],

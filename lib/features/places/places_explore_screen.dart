@@ -12,6 +12,7 @@ class PlacesExploreScreen extends StatefulWidget {
     required this.copy,
     required this.filters,
     required this.campus,
+    required this.usingOfflineCopy,
     required this.onCampusChanged,
     required this.onFiltersPressed,
     required this.onClearFilters,
@@ -24,6 +25,7 @@ class PlacesExploreScreen extends StatefulWidget {
   final AppCopy copy;
   final PlaceFilters filters;
   final String campus;
+  final bool usingOfflineCopy;
   final ValueChanged<String> onCampusChanged;
   final VoidCallback onFiltersPressed;
   final VoidCallback onClearFilters;
@@ -84,6 +86,10 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
             ],
           ),
         ),
+        if (widget.usingOfflineCopy) ...[
+          const SizedBox(height: 10),
+          _OfflineNotice(copy: copy),
+        ],
         const SizedBox(height: 15),
         TextField(
           key: const Key('place-search'),
@@ -230,6 +236,44 @@ class _EmptyResults extends StatelessWidget {
           OutlinedButton(
             onPressed: onClear,
             child: Text(copy.get('clear_filters')),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OfflineNotice extends StatelessWidget {
+  const _OfflineNotice({required this.copy});
+
+  final AppCopy copy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: const Key('offline-notice'),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.sage,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.cloud_off_outlined,
+            size: 19,
+            color: AppColors.primary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              copy.get('offline_notice'),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.3,
+                  ),
+            ),
           ),
         ],
       ),
