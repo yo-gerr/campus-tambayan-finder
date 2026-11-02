@@ -86,6 +86,21 @@ Omit both defines to build a bundled-listings-only APK.
 
 The publishable key is compiled into the APK, which is expected. Row-level security, not key secrecy, protects the data. Do not put the key in a committed file.
 
+### Checking which copy is on screen
+
+The interface shows the bundled-copy notice only when the shared source fails, so a populated table and the bundled fallback can look identical. During a rehearsal, read the device log instead:
+
+```powershell
+adb logcat -s flutter:V | Select-String 'Shared listings'
+```
+
+| Log line | Meaning |
+|---|---|
+| `Shared listings loaded: N places` | First shared read succeeded. |
+| `Shared listings updated: N places` | A realtime change arrived. Several rows inserted at once appear as several lines. |
+| `Shared listings table is empty; keeping the bundled copy` | The connection works but the table has no rows. |
+| `Shared listings unavailable, using bundled copy` | The shared source failed; the notice is showing. |
+
 ## 6. Free plan limits (verified 2026-11-02)
 
 | Limit | Free plan |

@@ -48,6 +48,8 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: first. Depends on the team supplying approved content.**
 
+**Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), but the table still holds the four fictional sample rows. No approved listings, photos, or data template exist yet.
+
 - Receive the compiled list and available photos for approximately 15–20 establishments.
 - Agree on a simple spreadsheet/data template and required fields.
 - Confirm photo permissions, translation responsibility, and how the team expects information to be checked and updated.

@@ -4,6 +4,22 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-03 — Verified live Supabase listings, realtime updates, and offline fallback on Android
+
+- Verified the shared-listing slice against a real Supabase Free-plan project supplied by the owner (URL and publishable key were passed at build time only; neither is committed). The `places` table was created with the documented schema, `select`-only RLS, and realtime enabled.
+- Results on the `Medium_Phone` emulator with a debug APK built from the real defines:
+  - Readable with the publishable key (`200`, 4 rows); inserts with that key rejected (`401`), so the read-only policy holds.
+  - Cold start logged `Shared listings loaded: 4 places`; no offline notice.
+  - Four rows inserted through the dashboard arrived live in an already-open app as `Shared listings updated: 1/2/3/4 places`, confirming Realtime Postgres Changes without a relaunch.
+  - Airplane mode produced `Shared listings unavailable, using bundled copy: ... Failed host lookup`, and the app stayed usable on bundled listings; restoring the network returned to live listings.
+  - Stored text round-tripped correctly, including `·`, `–`, and `café`.
+- Added three `debugPrint` source-transition lines to `SyncedPlacesRepository` (loaded, updated, empty table) because the seeded rows are identical to the bundled ones, so live and fallback cannot be told apart on screen. Documented the log lines in `docs/SUPABASE_SETUP.md`.
+- The shared table currently holds the four **fictional** sample rows from `assets/data/sample_places.json`. Phase 1 must replace them before the `DEMO CONTENT · NOT VERIFIED` label is removed. They can be cleared with `delete from public.places;`.
+- Validation: `flutter analyze` clean, `flutter test` 13 passed, `flutter build apk --debug` succeeded.
+- Not verified: two-device synchronized updates, since only one emulator is available, and a dashboard **update** of an existing row (inserts exercised the same realtime channel, but the scripted demo moment is an edit).
+- Next: Phase 1 — obtain the team's 15–20 approved listings and photos, agree the data template, then replace the sample rows and re-verify with two devices.
+- Blockers: real listing content and photos, photo permissions and translation ownership, second device for the two-phone check, and venue network reliability.
+
 ### 2026-11-03 — Committed the Supabase listing slice and verified the fallback path on Android
 
 - Committed the shared-listing work as `4992486 feat(places): load shared listings from supabase with bundled fallback`; no unrelated changes were included.
