@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-03 — Added hybrid place photos (Storage URL with bundled fallback)
+
+- Resolved the photo design with the owner: images were never out of scope, but the app had no image support at all. The earlier "bundled photos" note is replaced by a hybrid: a public Supabase Storage bucket supplies the primary photo URL, and a bundled copy covers offline or failed loads. A place with neither shows a placeholder.
+- Code: `Place` gained optional `photoUrl` and `photoAsset` (blank or missing values normalize to null). New `lib/features/places/place_photo.dart` prefers the network photo, shows the bundled copy while loading or on error, and falls back to a neutral placeholder; `place_card.dart` and `place_detail_sheet.dart` now render it (the detail sheet gained a 170 px photo block and a keyed scroll list).
+- Schema: two nullable columns, `"photoUrl"` and `"photoAsset"`, added to the documented `places` schema with an `alter table` migration for existing projects. No RLS change; reads stay `select`-only.
+- Seed: `assets/data/sample_places.json` now carries both fields as null, so the sample rows show placeholders until approved photos exist. `docs/SUPABASE_SETUP.md` documents the `place-photos` public bucket (Free plan, no card), file naming, and how to attach a URL.
+- Docs: project brief decision table and notes, architecture photo flow, MVP plan Phase 2, README, setup guide.
+- Validation: `flutter analyze` clean; `flutter test` 18 passed (3 new photo mapping tests, 3 new photo widget tests, and the detail test now scrolls past the photo). Debug APK built and installed on the emulator to confirm the placeholder layout.
+- Not verified: a real Storage photo end to end, because the bucket is empty and the publishable key cannot upload. Upload one file and set a row's `photoUrl` to confirm.
+- Next: upload approved photos, set `photoUrl` per row, optionally bundle copies under `assets/photos/` (add that path to `pubspec.yaml` when the first image lands), then continue Phase 1 content.
+- Note: do not bundle or upload a photo the team has not cleared for use.
+
 ### 2026-11-03 — Verified live Supabase listings, realtime updates, and offline fallback on Android
 
 - Verified the shared-listing slice against a real Supabase Free-plan project supplied by the owner (URL and publishable key were passed at build time only; neither is committed). The `places` table was created with the documented schema, `select`-only RLS, and realtime enabled.

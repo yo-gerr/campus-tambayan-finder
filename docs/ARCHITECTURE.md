@@ -84,7 +84,7 @@ This layout is an implementation detail for the current MVP, not a commitment to
 - The client is read-only. The app ships the publishable key, row-level security permits `select` only, and there is no sign-in. No student account or profile is created.
 - Shared listings are enabled with `--dart-define` build values. Without them the app runs on the bundled listings alone, so tests and offline builds need no network or credentials.
 - The repository JSON is the canonical copy and is imported into Supabase one way. Dashboard edits must be exported back before an APK build so the shared table and bundled fallback do not drift.
-- Photos remain bundled app assets for this delivery. Mood and nickname data must never be added to the shared project as part of listing work.
+- Photos use two optional fields: `photoUrl` for the shared copy in a public Supabase Storage bucket, and `photoAsset` for the bundled copy. The interface prefers the shared photo, falls back to the bundled one when it is missing or cannot load, and shows a neutral placeholder when neither exists. That keeps photos visible offline while still allowing a replacement without a rebuild. Mood and nickname data must never be added to the shared project as part of listing work.
 
 In smaller projects, combine layers where the framework makes separate files clearer than separate packages. Keep dependencies directed inward: presentation and adapters may depend on application/domain contracts; domain rules should not depend on presentation or vendor SDKs.
 

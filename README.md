@@ -38,7 +38,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Directions | Open Google Maps; in-app ETA and map provider remain undecided |
 | Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
 | Listing edits | Authorized team members edit rows in the Supabase dashboard; no in-app admin screen |
-| Listing photos | Bundled with the app for the class demo |
+| Listing photos | Hybrid: Supabase Storage URL preferred, bundled copy as offline fallback |
 | Public landing/information page | Not needed for current class-presentation/testing delivery |
 | School framework requirement | None |
 | Current class-demo MVP framework | Flutter |

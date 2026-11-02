@@ -64,6 +64,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 **Priority: highest; prototype implementation exists and must be completed against approved data.**
 
 - Refine list, search, filters, and details using the confirmed listing fields and content.
+- Show each place's photo, preferring the shared copy and falling back to the bundled one. Use only team-approved images; anything missing keeps a neutral placeholder.
 - Preserve category, budget, amenity, setting, and activity filters unless the team reprioritizes them.
 - Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates.
 - Confirm whether place browsing must work offline for the class demo.

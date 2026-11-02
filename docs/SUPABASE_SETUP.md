@@ -36,7 +36,9 @@ create table if not exists public.places (
   setting text not null,
   activities text[] not null default '{}',
   "mapX" double precision not null,
-  "mapY" double precision not null
+  "mapY" double precision not null,
+  "photoUrl" text,
+  "photoAsset" text
 );
 
 alter table public.places enable row level security;
@@ -54,6 +56,13 @@ create policy "Public read of listings"
 
 No insert, update, or delete policy is created for `anon`, so the shipped key cannot change listings even if it is extracted from the APK.
 
+If the table already exists from an earlier setup, add the photo columns instead of recreating it:
+
+```sql
+alter table public.places add column if not exists "photoUrl" text;
+alter table public.places add column if not exists "photoAsset" text;
+```
+
 ## 3. Enable realtime updates
 
 The app listens for changes so two phones stay in sync. Run this once:
@@ -69,6 +78,19 @@ If the table is already in the publication, the statement errors with "already m
 Use the dashboard's CSV import or the SQL editor, keeping the column names exactly as defined above. Array columns (`amenities`, `activities`) need Postgres array values such as `{wifi,outlets}`, not a bare comma-separated list. Verify the first import in the Table Editor before relying on it.
 
 Keep `assets/data/sample_places.json` as the canonical copy. When the team supplies new listings, update the repository copy and the bundled asset together, then re-import. Export the table back to JSON before each APK build if anyone has edited it in the dashboard.
+
+### Photos
+
+Two optional columns and one Storage bucket cover place photos:
+
+- `photoUrl` — public URL of the current photo. The app tries it first, so a photo can be replaced in the dashboard without rebuilding the APK.
+- `photoAsset` — path to a copy bundled in the APK, used when `photoUrl` is missing or fails to load (offline, weak signal, deleted file).
+
+Create the bucket once: **Storage → New bucket**, name `place-photos`, and enable the public bucket option. Public read is what lets the shipped publishable key fetch images; do not add insert, update, or delete policies for `anon`. The Free plan includes 1 GB and needs no card.
+
+Upload each file named after the place id, for example `sample-kape-stop.jpg`, then copy its public URL — it looks like `https://YOUR-PROJECT.supabase.co/storage/v1/object/public/place-photos/sample-kape-stop.jpg` — and paste it into the row's `photoUrl`.
+
+A row with no photo shows a neutral placeholder, which is the expected state until the team supplies approved images. Bundled copies go under `assets/photos/` and are referenced as `assets/photos/sample-kape-stop.jpg`; add `assets/photos/` to `pubspec.yaml` when the first image arrives. Do not bundle a photo the team has not cleared for use.
 
 ## 5. Run the app against the shared source
 

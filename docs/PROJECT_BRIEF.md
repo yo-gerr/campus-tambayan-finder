@@ -83,7 +83,7 @@ There will be no persistent student profile for the requested mood check-in. Cla
 ### Listing maintenance and service costs
 
 - The team does not want a custom in-app admin screen. Authorized team members may manually edit listing information using an agreed data/provider dashboard; the provider and access controls are not yet selected.
-- Confirmed November 2, 2026: the class-demo APK loads listings from a shared Supabase (Free plan) table, while the bundled JSON listings stay in the build as the seed and offline fallback. Photos stay bundled in the app for this delivery; Supabase Storage is available on the same plan if later updates need it.
+- Confirmed November 2, 2026: the class-demo APK loads listings from a shared Supabase (Free plan) table, while the bundled JSON listings stay in the build as the seed and offline fallback. Resolved November 3, 2026: photos use a hybrid — a public Supabase Storage bucket supplies the primary photo URL, and a bundled copy is the offline fallback; a place with no photo shows a placeholder.
 - The repository JSON/CSV is the canonical listing copy and is imported into Supabase one way. Dashboard edits must be exported back before an APK build so the bundled fallback and the shared table do not drift apart.
 - The app reads shared listings with the publishable key only. Row-level security allows reads and no writes, so no student account or sign-in is introduced. Who owns the Supabase organization and who holds dashboard edit access remain open.
 - The team accepts an approach that prefers no-cost/no-card services where feasible and requires advance disclosure and approval before enabling paid services or card-dependent billing.
@@ -127,7 +127,7 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Photo permissions, data template, translation source, and verification criteria | Open |
 | Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually in the Supabase dashboard; who holds access is open |
 | Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan table, with bundled local JSON as seed and offline fallback |
-| Listing photos (class demo) | Confirmed: bundled in the APK; Supabase Storage is a later option for updates without a rebuild |
+| Listing photos (class demo) | Confirmed November 3, 2026: hybrid — public Supabase Storage photo URL preferred, bundled copy as the offline fallback, placeholder when neither exists |
 | Student accounts, ratings, comments | No student profile or ratings/comments requested for browsing |
 | Mood check-in | Optional and prioritized for class presentation; nickname may be used, but response must not be linked to a user profile. Persistence, nickname necessity, consent, retention, and access are open |
 | Public landing/information page | Not needed for current class-demo deliverable |
