@@ -41,7 +41,12 @@ class SyncedPlacesRepository implements PlacesRepository {
     var hasLive = false;
     if (firstLive.isNotEmpty) {
       hasLive = true;
+      // Keep this one-line source transition in the log: during a demo it is
+      // the quickest way to tell live listings from the bundled copy.
+      debugPrint('Shared listings loaded: ${firstLive.length} places');
       yield PlacesSnapshot(places: firstLive, source: PlacesDataSource.live);
+    } else {
+      debugPrint('Shared listings table is empty; keeping the bundled copy');
     }
 
     try {
@@ -50,6 +55,7 @@ class SyncedPlacesRepository implements PlacesRepository {
         // copy rather than blanking the list in front of a reviewer.
         if (places.isEmpty) continue;
         hasLive = true;
+        debugPrint('Shared listings updated: ${places.length} places');
         yield PlacesSnapshot(places: places, source: PlacesDataSource.live);
       }
     } catch (error) {
