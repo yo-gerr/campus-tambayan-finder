@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-03 — Committed the Supabase listing slice and verified the fallback path on Android
+
+- Committed the shared-listing work as `4992486 feat(places): load shared listings from supabase with bundled fallback`; no unrelated changes were included.
+- Verified on the `Medium_Phone` Android emulator:
+  - Built and installed an APK with deliberately invalid Supabase defines. Logcat showed the expected `Shared listings unavailable, using bundled copy` error, and the app kept running on bundled listings. The on-screen notice could not be asserted automatically because Flutter semantics are not exposed to `uiautomator`; rendering of the notice is covered by the widget test.
+  - Rebuilt the default APK without defines, reinstalled, and confirmed it starts without Supabase initialization or fallback logging.
+  - Neither run produced crashes or asset-load errors.
+- Screenshot for manual review: `%LOCALAPPDATA%\Temp\opencode\fallback-verify.png` (not committed).
+- Validation: `flutter analyze` clean, `flutter test` 13 passed, `flutter build apk --debug` succeeded, `git diff --check` clean before committing.
+- Next: create the team-owned Supabase project, apply the schema/RLS/realtime SQL, import listings, then repeat on two devices to verify live sync.
+- Blockers: no live Supabase project or credentials yet, so realtime sync remains unverified.
+
 ### 2026-11-02 — Added optional shared listings via Supabase with bundled fallback
 
 - Recorded the listing-source decision: the class-demo APK loads listings from a shared Supabase Free-plan `places` table, while `assets/data/sample_places.json` stays canonical and serves as the seed and offline fallback. Photos remain bundled; no Supabase Storage, paid plan, or card is used.
