@@ -4,6 +4,13 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-03 — Improved shop-detail amenity chip contrast
+
+- Set chip background and label colors from the app's Material color scheme, so amenity chips in shop details use a coordinated, high-contrast theme pair instead of Flutter defaults.
+- Added a widget regression assertion that the detail chip uses the theme colors and meets a 4.5:1 text contrast ratio.
+- Validation: `flutter analyze lib/app/app_theme.dart test/widget_test.dart` clean; all 6 tests in `test/widget_test.dart` passed; Dart formatting and `git diff --check` clean. Launched the debug app on the Android emulator, hot restarted it successfully, and found no runtime errors.
+- Remaining work: none specific to this change.
+
 ### 2026-11-03 — Added hybrid place photos (Storage URL with bundled fallback)
 
 - Resolved the photo design with the owner: images were never out of scope, but the app had no image support at all. The earlier "bundled photos" note is replaced by a hybrid: a public Supabase Storage bucket supplies the primary photo URL, and a bundled copy covers offline or failed loads. A place with neither shows a placeholder.

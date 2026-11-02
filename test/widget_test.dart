@@ -65,6 +65,12 @@ class _OfflinePlacesRepository extends _TestPlacesRepository {
   }
 }
 
+double _contrastRatio(Color first, Color second) {
+  final luminances = [first.computeLuminance(), second.computeLuminance()]
+    ..sort();
+  return (luminances[1] + 0.05) / (luminances[0] + 0.05);
+}
+
 void main() {
   Future<void> pumpPrototype(
     WidgetTester tester, {
@@ -95,6 +101,34 @@ void main() {
       find.textContaining('Sample information for prototype review only.'),
       findsOneWidget,
     );
+    final detailList = find.byKey(const Key('place-detail-list'));
+    await tester.scrollUntilVisible(
+      find.descendant(of: detailList, matching: find.text('Free Wi-Fi')),
+      100,
+      scrollable: find.descendant(
+        of: detailList,
+        matching: find.byType(Scrollable),
+      ),
+    );
+    final amenityChip = find.widgetWithText(Chip, 'Free Wi-Fi');
+    expect(amenityChip, findsOneWidget);
+    final detailTheme = Theme.of(tester.element(amenityChip));
+    expect(
+      detailTheme.chipTheme.backgroundColor,
+      detailTheme.colorScheme.secondaryContainer,
+    );
+    expect(
+      detailTheme.chipTheme.labelStyle?.color,
+      detailTheme.colorScheme.onSecondaryContainer,
+    );
+    expect(
+      _contrastRatio(
+        detailTheme.colorScheme.onSecondaryContainer,
+        detailTheme.colorScheme.secondaryContainer,
+      ),
+      greaterThanOrEqualTo(4.5),
+    );
+
     // The photo pushes the hours row below the lazily built part of the list.
     await tester.dragUntilVisible(
       find.text('Sample hours · 8:00 AM–8:00 PM'),

@@ -61,10 +61,14 @@ ThemeData buildAppTheme() {
       ),
     ),
     chipTheme: ChipThemeData(
+      backgroundColor: scheme.secondaryContainer,
       shape: const StadiumBorder(),
       side: const BorderSide(color: Color(0xFFE0E5DF)),
       selectedColor: AppColors.sage,
-      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+      labelStyle: TextStyle(
+        color: scheme.onSecondaryContainer,
+        fontWeight: FontWeight.w600,
+      ),
     ),
   );
 }
