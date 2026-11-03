@@ -14,8 +14,8 @@ class Place implements PlaceLike {
     required this.amenities,
     required this.setting,
     required this.activities,
-    required this.mapX,
-    required this.mapY,
+    this.latitude,
+    this.longitude,
     this.photoUrl,
     this.photoAsset,
     this.photos = const [],
@@ -38,8 +38,24 @@ class Place implements PlaceLike {
   final String setting;
   @override
   final List<String> activities;
-  final double mapX;
-  final double mapY;
+  final double? latitude;
+  final double? longitude;
+
+  PlaceCoordinates? get coordinates {
+    final latitude = this.latitude;
+    final longitude = this.longitude;
+    if (latitude == null ||
+        longitude == null ||
+        !latitude.isFinite ||
+        !longitude.isFinite ||
+        latitude < -90 ||
+        latitude > 90 ||
+        longitude < -180 ||
+        longitude > 180) {
+      return null;
+    }
+    return PlaceCoordinates(latitude: latitude, longitude: longitude);
+  }
 
   /// Public URL of the place photo, when the team has uploaded one.
   ///
@@ -87,13 +103,20 @@ class Place implements PlaceLike {
       amenities: List<String>.from(json['amenities'] as List<dynamic>),
       setting: json['setting'] as String,
       activities: List<String>.from(json['activities'] as List<dynamic>),
-      mapX: (json['mapX'] as num).toDouble(),
-      mapY: (json['mapY'] as num).toDouble(),
+      latitude: _optionalCoordinate(json['latitude']),
+      longitude: _optionalCoordinate(json['longitude']),
       photoUrl: _optionalText(json['photoUrl']),
       photoAsset: _optionalText(json['photoAsset']),
       photos: _photos(json['place_photos'] ?? json['photos']),
     );
   }
+}
+
+class PlaceCoordinates {
+  const PlaceCoordinates({required this.latitude, required this.longitude});
+
+  final double latitude;
+  final double longitude;
 }
 
 class PlaceGalleryPhoto {
@@ -143,4 +166,10 @@ String? _optionalText(Object? value) {
   if (value is! String) return null;
   final trimmed = value.trim();
   return trimmed.isEmpty ? null : trimmed;
+}
+
+double? _optionalCoordinate(Object? value) {
+  if (value is! num) return null;
+  final coordinate = value.toDouble();
+  return coordinate.isFinite ? coordinate : null;
 }

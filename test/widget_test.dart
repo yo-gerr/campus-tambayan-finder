@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
@@ -32,8 +33,8 @@ class _TestPlacesRepository implements PlacesRepository {
       amenities: ['wifi', 'outlets'],
       setting: 'indoor',
       activities: ['study', 'relax'],
-      mapX: 0.26,
-      mapY: 0.34,
+      latitude: null,
+      longitude: null,
     ),
     Place(
       id: 'sample-kape-stop',
@@ -50,8 +51,8 @@ class _TestPlacesRepository implements PlacesRepository {
       amenities: ['wifi', 'aircon', 'outlets'],
       setting: 'indoor',
       activities: ['study', 'eat', 'socialize'],
-      mapX: 0.67,
-      mapY: 0.25,
+      latitude: null,
+      longitude: null,
     ),
   ];
 }
@@ -205,7 +206,7 @@ void main() {
     expect(find.text('Sample Study Corner'), findsOneWidget);
   });
 
-  testWidgets('switches language and opens the illustrative map', (
+  testWidgets('switches language and keeps unverified places off the map', (
     tester,
   ) async {
     await pumpPrototype(tester);
@@ -216,12 +217,14 @@ void main() {
 
     await tester.tap(find.text('Mapa'));
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Guhit na mapa · hindi para sa nabigasyon'), findsWidgets);
-
-    final mapPin = find.byKey(const Key('map-pin-sample-kape-stop'));
-    await tester.tapAt(tester.getTopLeft(mapPin) + const Offset(12, 12));
-    await tester.pumpAndSettle();
-    expect(find.text('Sample Kape Stop'), findsNWidgets(2));
+    expect(
+      find.text(
+        'Lalabas ang mga pin kapag naidagdag na ang coordinate ng mga lugar.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.byType(MapLibreMap), findsNothing);
+    expect(find.text('Sample Kape Stop'), findsOneWidget);
   });
 
   testWidgets('onboarding can be dismissed and opened again', (tester) async {

@@ -61,4 +61,4 @@ By default the app uses the bundled listings and needs no network or credentials
 flutter run --dart-define=SUPABASE_URL=https://YOUR-PROJECT.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
 ```
 
-The current app is a Flutter MVP baseline with fictional listings, an optional shared Supabase listing source, and an illustrative map; it has no live map integration. See the [MVP plan](docs/MVP_PLAN.md) for phased work and remaining dependencies. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).
+The current app is a Flutter MVP baseline with fictional listings, an optional shared Supabase listing source, and a MapLibre/OpenFreeMap map foundation. The bundled sample places have no verified coordinates, so the map shows a waiting state instead of plotting fictional pins. See the [MVP plan](docs/MVP_PLAN.md) for remaining data and service prerequisites. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).

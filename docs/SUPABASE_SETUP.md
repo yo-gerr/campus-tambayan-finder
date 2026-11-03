@@ -35,8 +35,10 @@ create table if not exists public.places (
   amenities text[] not null default '{}',
   setting text not null,
   activities text[] not null default '{}',
-  "mapX" double precision not null,
-  "mapY" double precision not null,
+  latitude double precision,
+  longitude double precision,
+  "mapX" double precision,
+  "mapY" double precision,
   "photoUrl" text,
   "photoAsset" text
 );
@@ -66,9 +68,14 @@ end $$;
 
 No insert, update, or delete policy is created for `anon`, so the shipped key cannot change listings even if it is extracted from the APK.
 
-If the table already exists from an earlier setup, add the photo columns instead of recreating it:
+If the table already exists from an earlier setup, add the new nullable fields
+and relax the old schematic-coordinate columns instead of recreating it:
 
 ```sql
+alter table public.places add column if not exists latitude double precision;
+alter table public.places add column if not exists longitude double precision;
+alter table public.places alter column "mapX" drop not null;
+alter table public.places alter column "mapY" drop not null;
 alter table public.places add column if not exists "photoUrl" text;
 alter table public.places add column if not exists "photoAsset" text;
 ```
@@ -169,6 +176,8 @@ If the table is already in the publication, the statement errors with "already m
 Use the dashboard's CSV import or the SQL editor, keeping the column names exactly as defined above. Array columns (`amenities`, `activities`) need Postgres array values such as `{wifi,outlets}`, not a bare comma-separated list. Verify the first import in the Table Editor before relying on it.
 
 Keep `assets/data/sample_places.json` as the canonical bundled copy. Its optional `photos` array holds offline gallery entries; it is not a `places` column, so omit it from a `places` CSV import. Keep the related `place_photos` rows in a separate CSV/export. When the team supplies new listings, update both repository records and import the matching `places` and `place_photos` data. Export both tables back before each APK build if anyone has edited them in the dashboard.
+
+For map pins, enter verified decimal-degree `latitude` and `longitude` values as a pair. Leave both blank until the place's position has been checked; the app omits places without a valid pair rather than plotting the old schematic `mapX`/`mapY` values. Those legacy columns are retained only for existing project data and are not used by the geographic map.
 
 ### Photos and galleries
 

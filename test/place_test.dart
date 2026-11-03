@@ -6,6 +6,8 @@ Map<String, dynamic> _row({
   Object? photoUrl,
   Object? photoAsset,
   Object? photos,
+  Object? latitude,
+  Object? longitude,
 }) => {
   'id': 'live-place',
   'name': 'Live Place',
@@ -19,8 +21,8 @@ Map<String, dynamic> _row({
   'amenities': <dynamic>['wifi', 'outlets'],
   'setting': 'indoor',
   'activities': <dynamic>['study', 'eat'],
-  'mapX': 0.5,
-  'mapY': 0.4,
+  'latitude': latitude,
+  'longitude': longitude,
   'photoUrl': photoUrl,
   'photoAsset': photoAsset,
   'place_photos': photos,
@@ -29,12 +31,38 @@ Map<String, dynamic> _row({
 void main() {
   test('maps a shared-table row with untyped array values', () {
     // PostgREST returns text[] columns as List<dynamic>, not List<String>.
-    final place = Place.fromJson(_row());
+    final place = Place.fromJson(_row(latitude: 14.701, longitude: 120.984));
 
     expect(place.amenities, ['wifi', 'outlets']);
     expect(place.activities, ['study', 'eat']);
-    expect(place.mapX, 0.5);
+    expect(place.coordinates?.latitude, 14.701);
+    expect(place.coordinates?.longitude, 120.984);
     expect(place.priceMax, 120);
+  });
+
+  test('keeps places without valid paired geographic coordinates unmapped', () {
+    expect(Place.fromJson(_row()).coordinates, isNull);
+    expect(Place.fromJson(_row(latitude: 14.7)).coordinates, isNull);
+    expect(
+      Place.fromJson(_row(latitude: 91, longitude: 120)).coordinates,
+      isNull,
+    );
+    expect(
+      Place.fromJson(_row(latitude: 14.7, longitude: -181)).coordinates,
+      isNull,
+    );
+    expect(
+      Place.fromJson(_row(latitude: '14.7', longitude: '120.9')).coordinates,
+      isNull,
+    );
+  });
+
+  test('accepts zero as a valid geographic coordinate', () {
+    final coordinates = Place.fromJson(_row(latitude: 0, longitude: 0))
+        .coordinates;
+
+    expect(coordinates?.latitude, 0);
+    expect(coordinates?.longitude, 0);
   });
 
   test('maps photo fields when the row supplies them', () {

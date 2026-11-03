@@ -11,7 +11,7 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 ## Delivery decisions and boundaries
 
 - **Target:** Android APK for class presentation/testing; no Google Play release.
-- **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide.
+- **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide. In-app ETA is deferred from the current map phase; directions open in Google Maps.
 - **Initial listings:** approximately 15–20. The team will provide a compiled list, names, locations, descriptions, hours, prices, and up to 10 approved ordered photos per place.
 - **Listing edits:** authorized team members edit listing information manually in the Supabase dashboard; no custom in-app admin screen.
 - **Listing source:** shared Supabase Free-plan table, with the bundled JSON listings kept as seed and offline fallback. See [Shared Listings Setup](SUPABASE_SETUP.md).
@@ -78,16 +78,19 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 ### Phase 3 — Real map and Google Maps directions
 
-**Priority: second. Depends on approved place coordinates and a map-data approach.**
+**Priority: second. Map foundation implemented November 4, 2026; live map display and directions depend on eligible service use and approved coordinates.**
 
-- Decide how the in-app map will be rendered and sourced, including any attribution, terms, network needs, or cost.
+- The app now integrates MapLibre with OpenFreeMap's public Positron style and OSM-derived data. The map is loaded lazily when opened and only if at least one place has valid coordinates. Current sample places have no coordinates and show a waiting state; no sample locations are plotted.
+- OpenFreeMap currently has no registration, API key, or fee, but its public instance has no warranty/SLA and may be discontinued. Confirm the integrator meets the current terms (age 18+ and legally able to accept them, or authorized to bind the represented organization) and recheck availability/terms before live use. Include required attribution. Map tiles require internet.
+- The Positron style is a light neutral baseline. Evaluate a warm app-themed style without obscuring map information or attribution. OpenFreeMap's quick start says custom style JSON must be hosted; verify whether an app-bundled style works before introducing separate hosting. Do not add a paid/card-dependent host without approval.
+- Add verified decimal-degree `latitude` and `longitude` pairs to approved place data. The app ignores missing, incomplete, non-numeric, or out-of-range coordinates; legacy schematic `mapX`/`mapY` values are no longer used. Update existing Supabase tables with the nullable coordinate columns and relax legacy schematic fields using the setup guide.
 - Obtain and check coordinates for approved places and the PLV Annex/CPAG origins.
-- Replace the schematic map only after real, approved coordinates and a suitable map approach are available.
 - Open directions in Google Maps using the selected place's real coordinates or verified address; handle missing Google Maps/app availability with a clear fallback.
-- Keep the MVP free of a Maps SDK, Google Maps Platform API key, and billing account; opening external directions does not require them.
+- Do not add an in-app ETA in this phase. The owner selected Google Maps for directions; any future in-app ETA needs a separate decision about source, mode, origin, limitations, and cost.
+- Keep the MVP free of a Google Maps SDK, API key, and billing account; Google Maps URLs can open directions without an API key.
 - Keep any unverified or placeholder map visibly marked and never use prototype coordinates to launch real navigation.
 
-**Acceptance:** map markers correspond to the agreed listings and campus origins; selecting a place opens the intended Google Maps destination, or clearly explains why directions are unavailable.
+**Acceptance:** the styled map shows markers matching verified listings and campus origins with required attribution; places without verified coordinates are not plotted. Selecting a mapped place opens the intended Google Maps destination, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
 
 ### Phase 4 — Optional mood check-in
 

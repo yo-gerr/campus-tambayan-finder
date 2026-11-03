@@ -2,7 +2,7 @@
 
 ## Scope
 
-The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. Flutter is the framework for the current class-demo MVP, although it is not school-mandated. The class-demo MVP reads shared listings from a Supabase Free-plan table, with bundled local JSON as seed and offline fallback. Production framework, minimum Android version, map renderer, and any production backend remain undecided.
+The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. Flutter is the framework for the current class-demo MVP, although it is not school-mandated. The class-demo MVP reads shared listings from a Supabase Free-plan table, with bundled local JSON as seed and offline fallback. Production framework, minimum Android version, production map stack, and any production backend remain undecided.
 
 ## Guiding boundaries
 
@@ -20,7 +20,7 @@ These are capabilities in the agreed product direction. Their presentation prior
 
 - **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Search behavior remains to be specified.
 - **Place details:** show verified-as-possible listing information such as address, photos, amenities, estimated prices, and operating hours.
-- **Map and travel estimates:** map is a high-priority presentation feature. The team prefers opening directions in Google Maps; the in-app map renderer, travel modes, and whether ETA is displayed in-app or by Google Maps remain open.
+- **Map and directions:** the owner approved MapLibre Flutter with OpenFreeMap public tiles/styles and OpenStreetMap-derived data for the current class demo, subject to an eligible representative accepting the terms and rechecking availability. Keep provider code in the map feature's presentation/infrastructure boundary and place coordinates in approved listing data. The app opens directions in Google Maps; no in-app ETA is included in the current phase. Preserve attribution and do not assume the public tile service has a guaranteed SLA.
 - **Listing operations:** the team plans to provide approximately 15–20 initial entries with available photos and details. Authorized team members will edit listing information manually in the Supabase dashboard (no custom in-app admin screen). Listings are loaded from Supabase when configured, with bundled local JSON as the seed and offline fallback. Each listing can have an ordered, Storage-backed gallery with optional bundled fallbacks.
 - **Bilingual experience and guidance:** support Filipino and English and provide first-use and in-app instructions.
 - **Location-aware behavior:** request device location only when needed and provide a useful experience if permission is denied.
@@ -64,7 +64,7 @@ lib/
   features/
     places/             # Place model, repository port, bundled and shared sources,
                         # sync/fallback policy, browse/filter/detail UI
-    map/                # Non-geographic illustrative map UI
+    map/                # MapLibre renderer and verified-coordinate markers
     onboarding/         # Intro guide
 assets/data/
   sample_places.json    # Canonical demo listings; also the offline fallback
@@ -74,7 +74,7 @@ test/
   synced_places_repository_test.dart
 ```
 
-This layout is an implementation detail for the current MVP, not a commitment to production architecture. Replace the sample repository or schematic map only after scope and provider decisions are confirmed.
+This layout is an implementation detail for the current MVP, not a commitment to production architecture. Replace the sample repository only after scope and data decisions are confirmed.
 
 ### Listing data flow
 
@@ -84,6 +84,8 @@ This layout is an implementation detail for the current MVP, not a commitment to
 - The client is read-only. The app ships the publishable key, row-level security permits `select` only, and there is no sign-in. No student account or profile is created.
 - Shared listings are enabled with `--dart-define` build values. Without them the app runs on the bundled listings alone, so tests and offline builds need no network or credentials.
 - The repository JSON is the canonical bundled copy and is imported into Supabase one way. Its nested offline `photos` entries map to the separate shared `place_photos` table, so dashboard edits to either table must be exported back before an APK build to prevent drift.
+- Places may include a nullable latitude/longitude pair in decimal degrees. The map shows only places with a complete, in-range pair; old schematic `mapX`/`mapY` values are ignored. The real map renderer is initialized only when the user opens the map and at least one place has valid coordinates, so sample data cannot trigger tile requests or appear as real pins.
+- The map feature renders OpenFreeMap's Positron style with MapLibre and keeps the attribution control enabled. Map tiles require internet. The current bundled places have no geographic coordinates, so the map shows a clear waiting state and preserves the place cards until verified data is supplied.
 - Photos use a `place_photos` child table: up to 10 ordered entries per place, with one marked cover, public Storage URL, and optional bundled asset/captions. The detail interface displays an ordered swipeable gallery; cards use the cover. The existing optional `places.photoUrl` and `photoAsset` remain a compatibility fallback for bundled rows and older single-photo data. The interface prefers Storage and falls back to a bundled asset when it is missing or cannot load, then a neutral placeholder. Network photo loading uses an accessible, static skeleton styled from the app theme. Detail-gallery and card photos use a consistent cover crop; gallery photos can open in a separate full-screen `InteractiveViewer` that contains the full image and overlays a transparent app bar with a dark readability gradient. This presentation behavior does not change the read-only data model. Mood and nickname data must never be added to the shared project as part of listing work.
 
 In smaller projects, combine layers where the framework makes separate files clearer than separate packages. Keep dependencies directed inward: presentation and adapters may depend on application/domain contracts; domain rules should not depend on presentation or vendor SDKs.

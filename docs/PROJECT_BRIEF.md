@@ -13,7 +13,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - Help students discover places for studying, eating, relaxing, and socializing.
 - Limit the initial coverage area to Malinta, particularly around PLV Annex and CPAG.
 - Support Filipino (Tagalog) and English.
-- Provide useful listing details, maps, estimated travel times, and filters so students can choose a suitable place.
+- Provide useful listing details, an in-app map, and filters so students can choose a suitable place. In-app travel-time estimates are deferred; directions open in Google Maps.
 - The team will provide the initial compiled listing set; the development team will manage and verify listing information as much as possible.
 - Shop owners will not need app accounts, identification submissions, or in-app payments. The development team manages listings and updates.
 
@@ -31,7 +31,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - **Deliverable:** installable Android APK for class presentation and testing.
 - **Google Play:** publication is not required.
 - **Separate public webpage:** not required for this delivery.
-- **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide.
+- **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide. The original ranking is retained, but in-app travel-time estimates are deferred from the current map phase.
 - Filters remain part of the concept and MVP scope; the team did not rank them in this priority list.
 
 ### Places and listings
@@ -63,13 +63,14 @@ The agreed direction includes filters for:
 
 ### Map, travel time, and location
 
-- Show estimated travel times from PLV Annex or CPAG to selected places; estimates may vary by route and travel mode.
+- Confirmed November 4, 2026: use the MapLibre Flutter renderer with the OpenFreeMap public tile/style service and OpenStreetMap-derived data for the class-demo map. The map foundation uses OpenFreeMap's Positron style; it loads only after the user opens the map and at least one place has a valid coordinate pair.
+- OpenFreeMap currently advertises no registration, API key, fee, or map-view limit. Using the service is subject to its terms, which currently require an integrator to be at least 18 and legally able to accept them, or to have authority to bind the represented organization. Before live use, confirm the integrator is eligible. The public service has no warranty or SLA, may be discontinued, and requires internet access; recheck current terms, availability, and attribution before presentation. Do not treat the OpenStreetMap Foundation's public tile servers as an unrestricted app tile API.
+- The current Positron style is a light, neutral baseline. A custom warm, student-centered style remains a visual improvement to evaluate; OpenFreeMap's guide says a customized style JSON must be hosted, so check whether an app-bundled style is supported before choosing separate hosting. Preserve required attribution.
+- Obtain and check coordinates for approved places and PLV Annex/CPAG before showing real markers or launching directions. Place latitude/longitude fields are now optional decimal-degree pairs; do not use old prototype normalized coordinates as geographic locations.
+- Confirmed November 4, 2026: directions should open in Google Maps; no in-app ETA is included in the current Phase 3 scope. Google Maps URLs do not require a Google Maps API key. Any later in-app ETA requires a separate product and service-cost decision.
 - Request device location permission only when needed for a location-based feature.
-- Updated listings, maps, and location services may require an internet connection.
-
-The map provider, routing provider, travel modes, and fallback behavior when location permission or connectivity is unavailable are undecided.
-
-The team prefers opening directions in Google Maps rather than implementing in-app navigation. The presentation priority also includes estimated travel time to a place; confirm whether the estimate should appear in this app or be shown by Google Maps after opening directions. Do not assume a Google Maps SDK, Routes API, billing setup, or in-app ETA until this is settled. A map visible inside the app is still a stated priority, but its data/rendering provider and implementation approach remain undecided.
+- No device-location permission is needed for fixed campus/place markers or Google Maps directions to verified destinations. Add location access only if a later approved feature needs the user's current position.
+- Live maps and directions may require an internet connection. Provide clear unavailable states; do not show fabricated coordinates or travel estimates.
 
 ### Guidance and participation
 
@@ -119,9 +120,9 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Current class-demo MVP framework | Flutter |
 | Production framework and minimum Android version | Open |
 | Current delivery | Confirmed installable APK for class presentation and testing; Google Play publication not required |
-| Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide |
-| Map renderer/data provider and routing provider | Open; directions should open Google Maps |
-| Estimated travel time display, travel modes, and estimate source | Open; clarify whether shown in-app or by Google Maps |
+| Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide; in-app ETA deferred from current map phase |
+| Map renderer/data provider | Confirmed November 4, 2026: MapLibre Flutter with OpenFreeMap public tiles/styles and OSM-derived data, subject to eligible representative accepting terms and current service review |
+| Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps; no in-app ETA in the current Phase 3 scope. Revisit ETA only through a separate decision |
 | Meaning of "available time" | Confirmed to mean shop operating hours; estimated travel time to the place is a separate desired detail |
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |

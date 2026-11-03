@@ -20,8 +20,6 @@ const _bundledPlace = Place(
   amenities: ['wifi'],
   setting: 'indoor',
   activities: ['study'],
-  mapX: 0.2,
-  mapY: 0.3,
 );
 
 const _livePlace = Place(
@@ -37,8 +35,6 @@ const _livePlace = Place(
   amenities: ['wifi', 'aircon'],
   setting: 'indoor',
   activities: ['study', 'eat'],
-  mapX: 0.6,
-  mapY: 0.4,
 );
 
 class _BundledRepository implements PlacesRepository {

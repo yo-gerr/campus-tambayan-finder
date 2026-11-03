@@ -37,6 +37,25 @@ These are official service references researched on 2026-10-30 to compare likely
 - Adaptation notes: An OSM-based Android map still needs a renderer/library and a tile source. Use a suitable provider or hosting plan for an app rather than assuming the community tile servers are a free production map API.
 - Caveats: The public tile service is best-effort, has no SLA, imposes caching/attribution/identification requirements, and may block unsuitable usage. Check ODbL obligations for data use.
 
+#### MapLibre Flutter
+- Source: https://pub.dev/packages/maplibre_gl and https://github.com/maplibre/flutter-maplibre-gl
+- License: The package includes a BSD-style license; review its full license and bundled notices before distribution (checked 2026-11-04).
+- Relevant ideas: MapLibre is an open-source renderer, not map data or a tile-hosting service. Its Flutter plugin supports Android, custom vector-map styles, markers, and other map layers.
+- Adaptation notes: A MapLibre style can be customized to use a warm, calm palette and emphasize useful campus features. Pair it with a separately selected style/tile source; do not make MapLibre itself responsible for listing coordinates or route estimates.
+- Caveats: The current pub.dev page requires Flutter 3.44+, Dart 3.12+, JDK 21, and Android 7.0/API 24+. Confirm the demo devices meet the Android minimum. A map still needs network access unless offline tiles are deliberately prepared.
+
+#### OpenFreeMap public instance
+- Source: https://openfreemap.org/, https://openfreemap.org/quick_start/, and https://openfreemap.org/tos/
+- Relevant ideas: OpenFreeMap serves OSM-derived vector tiles and MapLibre-compatible styles. Its site currently says the public instance has no registration, API key, view limit, or fee; the map styles can be customized.
+- Adaptation notes: It is a candidate tile/style source for a small, internet-connected class demo using MapLibre. Its current terms allow commercial use and limit offline downloads to 3,000 tiles or 50 MB per download, at most four parallel requests, with a unique identifying User-Agent. Its quick start says a customized style JSON must be hosted by the app developer; verify whether the Flutter plugin can instead load an app-bundled style before introducing a separate hosting service.
+- Caveats: The service is donation-supported, supplied as-is with no warranty or SLA, and may be discontinued without notice. Its terms (last updated 2026-10-14) require an integrator to be at least 18 and legally able to accept them, or to have authority to bind the represented organization. The service may use Cloudflare as a CDN. Recheck terms and availability before integration and presentation.
+
+#### Google Maps URLs
+- Source: https://developers.google.com/maps/documentation/urls/get-started
+- Relevant ideas: A universal directions URL can open the Google Maps app or browser without a Google Maps API key.
+- Adaptation notes: This matches the team's preference to hand off navigation to Google Maps. Use a verified destination coordinate/address; this does not provide an in-app ETA.
+- Caveats: URL directions require valid destination data and an internet connection; provide a clear fallback if the URL cannot be opened.
+
 #### Nominatim public geocoding policy
 - Source: https://operations.osmfoundation.org/policies/nominatim/
 - Relevant ideas: Address lookup/geocoding is a separate capability from displaying OSM tiles or calculating routes.

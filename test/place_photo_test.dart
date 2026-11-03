@@ -23,8 +23,6 @@ Place _place({
   amenities: const [],
   setting: 'indoor',
   activities: const ['study'],
-  mapX: 0.5,
-  mapY: 0.5,
   photoUrl: photoUrl,
   photoAsset: photoAsset,
   photos: photos,

@@ -4,6 +4,21 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Integrated the map foundation
+
+- Clarified that OpenFreeMap needs no registration or API key; use is still subject to its published terms and integrator eligibility requirements.
+- Replaced the schematic coordinate fields with optional latitude/longitude data, added safe coordinate validation and the Supabase schema update, and integrated MapLibre with OpenFreeMap's Positron style. The map is lazy-loaded only after opening the map tab and only when at least one place has a valid coordinate pair; pins use the app theme and attribution remains enabled. Bundled samples contain no geographic coordinates and display a localized waiting state.
+- Added Android internet permission and updated the README, project brief, architecture, MVP plan, and Supabase setup guide. Google Maps directions and custom theme styling remain outstanding.
+- Validation: 25 Flutter tests passed, `flutter analyze` passed, Android debug APK built, hot restart succeeded with no runtime errors, and `git diff --check` passed.
+- Remaining work: obtain and verify place and PLV Annex/CPAG coordinates; confirm an eligible integrator before live OpenFreeMap use; decide whether custom style JSON can be bundled. Then complete origin markers and Google Maps directions. No live map request was made because current data has no coordinates.
+
+### 2026-11-04 — Researched Phase 3 map options
+
+- The owner approved the MapLibre Flutter + OpenFreeMap public tile/style service approach for the class demo and selected Google Maps directions with no in-app ETA for now. OSM data, renderer, tile hosting, and directions are separate concerns.
+- Recorded attribution/licensing, Android/toolchain requirements, internet reliance, and OpenFreeMap's no-SLA/discontinuation and integrator eligibility terms in `docs/REFERENCES.md`.
+- Updated the agreed map direction in `docs/PROJECT_BRIEF.md`, `docs/ARCHITECTURE.md`, and `docs/MVP_PLAN.md`. No map code, coordinates, location permission, route calculation, or ETA behavior changed.
+- Remaining work: confirm an adult/authorized legal representative can accept OpenFreeMap's terms; obtain and verify approved place and PLV Annex/CPAG coordinates; confirm demo devices meet MapLibre's Android requirements; decide whether the custom style JSON can be bundled or needs separate hosting. Then implement the map and Google Maps URL handoff. No build/test run was applicable; `git diff --check` passed.
+
 ### 2026-11-04 — Added transparent app bar to full-screen photo viewer
 
 - The owner approved a transparent app-bar overlay with a readability scrim. The viewer now draws its image behind a transparent app bar with a dark top gradient, white title/close control, and light status-bar icons.

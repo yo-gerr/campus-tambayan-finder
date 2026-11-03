@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../features/map/illustrative_map_screen.dart';
+import '../features/map/places_map_screen.dart';
 import '../features/onboarding/intro_dialog.dart';
 import '../features/places/place.dart';
 import '../features/places/place_detail_sheet.dart';
@@ -55,6 +55,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
   PlaceFilters _filters = const PlaceFilters();
   String _campus = 'plv';
   int _tabIndex = 0;
+  bool _mapOpened = false;
 
   AppCopy get _copy => AppCopy(_language);
 
@@ -169,22 +170,29 @@ class _TambayanHomeState extends State<_TambayanHome> {
                 onClearFilters: () =>
                     setState(() => _filters = const PlaceFilters()),
                 onPlaceSelected: _openPlace,
-                onMapPressed: () => setState(() => _tabIndex = 1),
+                onMapPressed: () => setState(() {
+                  _mapOpened = true;
+                  _tabIndex = 1;
+                }),
               ),
-              IllustrativeMapScreen(
-                places: visiblePlaces,
-                copy: _copy,
-                campus: _campus,
-                onCampusChanged: (campus) => setState(() => _campus = campus),
-                onPlaceSelected: _openPlace,
-              ),
+              if (_mapOpened)
+                PlacesMapScreen(
+                  places: visiblePlaces,
+                  copy: _copy,
+                  onPlaceSelected: _openPlace,
+                )
+              else
+                const SizedBox.shrink(),
             ],
           );
         },
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tabIndex,
-        onDestinationSelected: (index) => setState(() => _tabIndex = index),
+        onDestinationSelected: (index) => setState(() {
+          if (index == 1) _mapOpened = true;
+          _tabIndex = index;
+        }),
         destinations: [
           NavigationDestination(
             key: const Key('nav-explore'),
