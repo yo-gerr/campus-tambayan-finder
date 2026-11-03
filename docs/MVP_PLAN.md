@@ -65,7 +65,10 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 - Refine list, search, filters, and details using the confirmed listing fields and content.
 - Show each place's ordered gallery of up to 10 approved photos, with one cover for list cards; prefer the shared Storage copy and fall back to bundled assets. Anything missing keeps a neutral placeholder.
-- **Planned image polish (not implemented yet):** preserve the full image in the detail gallery for mixed portrait/landscape uploads while retaining cropped card covers; show an accessible shimmer/skeleton while a network image loads; open a selected gallery image in a full-screen pinch-to-zoom viewer without conflicting with gallery swipes.
+- Use a consistent, edge-to-edge crop for photos in the detail gallery and list cards. **Restored 2026-11-04** after emulator screenshots showed portrait images rendered too narrowly in the fixed-height detail area; the full-screen viewer remains available for seeing the complete photo.
+- Show an accessible, static, theme-based skeleton while a network photo loads. **Implemented 2026-11-04.** Loading and error states remain distinct; failed network images keep the existing bundled-photo or neutral-placeholder fallback.
+- Let users open a gallery photo in a full-screen pinch-to-zoom viewer that contains the complete portrait or landscape image. Separate the zoom view from the swipeable gallery to avoid gesture conflicts. **Implemented 2026-11-04.**
+- The inline shop-detail gallery uses a 210 dp height for a larger photo preview while retaining edge-to-edge cropping; listing cards remain unchanged.
 - Establish and document image-preparation guidance: preferred JPEG or WebP uploads, a recommended maximum long edge of 2048 px and roughly 2 MB per image, plus review/removal of unnecessary EXIF location metadata when practical. These are guidance, not automatic client-side validation.
 - Preserve category, budget, amenity, setting, and activity filters unless the team reprioritizes them.
 - Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates.

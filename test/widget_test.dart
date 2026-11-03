@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
+import 'package:campus_tambayan_finder/features/places/place_photo.dart';
 import 'package:campus_tambayan_finder/features/places/places_repository.dart';
 
 class _TestPlacesRepository implements PlacesRepository {
@@ -97,6 +98,10 @@ void main() {
     await tester.tap(find.byKey(const Key('place-card-sample-study-corner')));
     await tester.pumpAndSettle();
 
+    expect(
+      tester.widget<PlacePhotoGallery>(find.byType(PlacePhotoGallery)).height,
+      210,
+    );
     expect(
       find.textContaining('Sample information for prototype review only.'),
       findsOneWidget,

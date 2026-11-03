@@ -81,13 +81,16 @@ class _PlaceDetailSheet extends StatelessWidget {
           PlacePhotoGallery(
             place: place,
             width: double.infinity,
-            height: 170,
+            height: 210,
             borderRadius: 18,
+            loadingLabel: copy.get('loading_photo'),
             placeholder: _DetailPhotoPlaceholder(
               category: place.category,
               copy: copy,
             ),
             photoPosition: copy.photoPosition,
+            viewPhotoLabel: copy.get('view_photo'),
+            closeLabel: copy.get('close'),
           ),
           const SizedBox(height: 18),
           Container(

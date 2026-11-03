@@ -4,6 +4,63 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added transparent app bar to full-screen photo viewer
+
+- The owner approved a transparent app-bar overlay with a readability scrim. The viewer now draws its image behind a transparent app bar with a dark top gradient, white title/close control, and light status-bar icons.
+- Added a widget assertion for the transparent app-bar configuration and documented the viewer treatment in architecture notes.
+- Validation: all 5 photo widget tests passed; analyzer, formatting, and `git diff --check` clean. Android debug app hot restart succeeded with no runtime errors.
+- Remaining work: none specific to this viewer styling.
+
+### 2026-11-04 — Increased shop-detail photo preview height
+
+- Increased the inline detail-gallery height from 170 dp to 210 dp at the owner's direction, preserving the edge-to-edge crop and separate full-screen viewer.
+- Added a widget assertion for the selected detail-gallery height and documented it in the MVP plan.
+- Validation: focused detail-sheet widget test passed; `flutter analyze` clean; Dart formatting and `git diff --check` clean. Android debug app hot restart succeeded with no runtime errors.
+- Remaining work: none specific to the height change; content below the image remains scrollable.
+
+### 2026-11-04 — Restored edge-to-edge crop in detail gallery
+
+- Restored `BoxFit.cover` for inline detail-gallery images to match the cohesive layout shown in the supplied emulator screenshots. Portrait photos may be cropped in the inline view; tapping still opens the full-screen viewer, which uses `BoxFit.contain` and pinch zoom to inspect the complete image. Card cropping is unchanged.
+- Updated the MVP plan, project brief, architecture, and README to describe the actual behavior.
+- Validation: gallery widget tests passed (5), full Flutter test suite passed (22), `flutter analyze` clean, Dart formatting and `git diff --check` clean. Android debug app hot restart succeeded with no runtime errors.
+- Remaining work: none specific to the fit change.
+
+### 2026-11-04 — Reconsidered detail-gallery portrait image fit
+
+- Reviewed the supplied emulator screenshots: landscape photos fill the gallery well, while a portrait photo rendered with `BoxFit.contain` occupies a narrow strip and leaves conspicuous side gaps in the fixed-height detail card.
+- Recommendation: use the original cropped `BoxFit.cover` presentation in the inline detail gallery for consistent, edge-to-edge framing; keep `BoxFit.contain` and pinch zoom in the separate full-screen viewer for inspecting the complete image. This intentionally trades some inline cropping for a more cohesive detail layout while retaining access to the full photo.
+- Analysis only; no code or scope changed. Await owner approval before changing the gallery fit.
+
+### 2026-11-04 — Completed gallery display and zoom polish
+
+- Detail gallery photos now use `BoxFit.contain` to preserve portrait and landscape images; list-card covers remain cropped.
+- Tapping a gallery image opens a separate full-screen `InteractiveViewer` with pinch zoom/pan, a translated close control, and existing image loading/fallback behavior. This keeps zoom gestures separate from gallery swipes.
+- Updated the MVP plan, project brief, architecture, and README to reflect completion.
+- Validation: all 22 Flutter tests passed, including gallery fit/viewer open-close coverage; `flutter analyze` clean; Dart formatting and `git diff --check` clean. Android debug app hot restart succeeded with no runtime errors.
+- Remaining work: no gallery polish items from this recommendation remain.
+
+### 2026-11-04 — Prioritized remaining gallery polish
+
+- Recommended preserving full portrait/landscape photos in detail view with `BoxFit.contain` and a theme-based backdrop, while keeping card covers cropped. Full-screen zoom was implemented in a separate view so zoom gestures do not conflict with gallery swipes.
+- The page counter already exists and has live-region semantics. Keep the current skeleton flash on revisited pages under observation; avoid retaining all decoded images or adding disk caching until device testing shows a meaningful problem, since galleries can contain up to 10 large photos.
+- Optional visible previous/next controls or approved bilingual captions may improve usability, but are lower priority and should be validated with users/content first.
+- Recommendations only; no code or decisions changed. Validation: reviewed current gallery implementation and Phase 2 plan; `git diff --check` clean.
+
+### 2026-11-04 — Added static photo-loading skeleton
+
+- Implemented an accessible, non-animated skeleton for network photo loads, using the active Material color scheme and a translated loading label. Existing bundled-image and neutral-placeholder error fallbacks are unchanged; no dependency was added.
+- Updated the MVP plan, project brief, architecture, and README to mark this part of Phase 2 complete while keeping mixed-orientation rendering and full-screen zoom planned.
+- Validation: focused photo tests passed (5); full Flutter test suite passed (22); `flutter analyze` clean; Dart formatting and `git diff --check` clean. Android debug app hot restart succeeded with no runtime errors.
+- Remaining work: mixed-orientation rendering and full-screen pinch-to-zoom are still planned.
+
+### 2026-11-04 — Recommended Phase 2 work while listing content is pending
+
+- Reviewed current Phase 2 scope against the agreed APK deliverable and existing app. Recommended starting with the already-planned photo presentation polish, using clearly fictional/test images: preserve mixed image orientations in the detail gallery, add an accessible loading skeleton, and support full-screen pinch-to-zoom without interfering with gallery swipes.
+- Checked the proposed `shimmer` 4.0 package against the project: installed Flutter 3.47.9 meets its stated Flutter 3.44+ requirement, but the package also brings `material_ui` and requires its compatibility bridge around existing Flutter Material subtrees. It is an option, not an approved dependency; compare that integration cost with a static theme-based placeholder before deciding.
+- Other low-dependency candidates for owner approval: improve search/filter empty and combined states, and run bilingual/accessibility checks across list, details, gallery, and filters. Avoid adding favorites, reviews, owner submissions, accounts, or mood persistence; these are not confirmed and some create new privacy/moderation scope.
+- No application code changed. Validation: reviewed project brief, architecture, MVP plan, latest handoff, and clean initial worktree; handoff-only change checked with `git diff --check`.
+- Status: recommendations only; no feature is approved or implemented. Wait for the owner to select or revise scope.
+
 ### 2026-11-03 — Documented planned Phase 2 image presentation work
 
 - Clarified Phase 1 listing intake: each place may supply up to 10 approved, ordered photos with one cover, and both `places` and `place_photos` must be maintained in the canonical/export workflow.

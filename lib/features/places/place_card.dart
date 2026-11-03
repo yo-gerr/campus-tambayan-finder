@@ -33,6 +33,7 @@ class PlaceCard extends StatelessWidget {
                 width: 68,
                 height: 74,
                 borderRadius: 15,
+                loadingLabel: copy.get('loading_photo'),
                 placeholder: _PlaceIllustration(category: place.category),
               ),
               const SizedBox(width: 14),

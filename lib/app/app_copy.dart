@@ -55,6 +55,11 @@ class AppCopy {
       'Naka-bundle na kopya · walang live updates',
     ],
     'no_photo': ['No photo yet', 'Wala pang larawan'],
+    'loading_photo': ['Loading photo', 'Naglo-load ang larawan'],
+    'view_photo': [
+      'View photo full screen',
+      'Tingnan ang larawan sa buong screen',
+    ],
     'demo_badge': ['DEMO LISTING', 'HALIMBAWANG LISTAHAN'],
     'sample_data': [
       'Sample information for prototype review only.',

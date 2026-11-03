@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../app/app_theme.dart';
 import 'place.dart';
@@ -26,6 +27,7 @@ class PlacePhoto extends StatelessWidget {
     required this.width,
     required this.height,
     required this.borderRadius,
+    this.loadingLabel = 'Loading photo',
     this.placeholder,
     super.key,
   });
@@ -34,13 +36,18 @@ class PlacePhoto extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
+  final String loadingLabel;
   final Widget? placeholder;
 
   @override
   Widget build(BuildContext context) {
     final fallback = placeholder ?? _NoPhoto(width: width, height: height);
 
-    final child = _PhotoImage(photo: place.coverPhoto, fallback: fallback);
+    final child = _PhotoImage(
+      photo: place.coverPhoto,
+      fallback: fallback,
+      loadingLabel: loadingLabel,
+    );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
@@ -58,7 +65,10 @@ class PlacePhotoGallery extends StatefulWidget {
     required this.height,
     required this.borderRadius,
     required this.placeholder,
+    this.loadingLabel = 'Loading photo',
     required this.photoPosition,
+    required this.viewPhotoLabel,
+    required this.closeLabel,
     super.key,
   });
 
@@ -67,7 +77,10 @@ class PlacePhotoGallery extends StatefulWidget {
   final double height;
   final double borderRadius;
   final Widget placeholder;
+  final String loadingLabel;
   final String Function(int current, int total) photoPosition;
+  final String viewPhotoLabel;
+  final String closeLabel;
 
   @override
   State<PlacePhotoGallery> createState() => _PlacePhotoGalleryState();
@@ -78,13 +91,27 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
 
   @override
   Widget build(BuildContext context) {
-    final photos = widget.place.photos;
+    final photos = widget.place.photos.isNotEmpty
+        ? widget.place.photos
+        : [?widget.place.coverPhoto];
     if (photos.length < 2) {
+      if (photos.isNotEmpty) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          child: SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: _galleryPhoto(context, photos.single, 0),
+          ),
+        );
+      }
+
       return PlacePhoto(
         place: widget.place,
         width: widget.width,
         height: widget.height,
         borderRadius: widget.borderRadius,
+        loadingLabel: widget.loadingLabel,
         placeholder: widget.placeholder,
       );
     }
@@ -101,10 +128,8 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
               key: Key('place-photo-gallery-${widget.place.id}'),
               itemCount: photos.length,
               onPageChanged: (index) => setState(() => _currentPage = index),
-              itemBuilder: (context, index) => _PhotoImage(
-                photo: photos[index],
-                fallback: widget.placeholder,
-              ),
+              itemBuilder: (context, index) =>
+                  _galleryPhoto(context, photos[index], index),
             ),
             Positioned(
               right: 10,
@@ -138,27 +163,218 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
       ),
     );
   }
+
+  Widget _galleryPhoto(
+    BuildContext context,
+    PlaceGalleryPhoto photo,
+    int index,
+  ) {
+    return Semantics(
+      button: true,
+      label: widget.viewPhotoLabel,
+      child: GestureDetector(
+        key: Key('photo-gallery-open-${widget.place.id}-$index'),
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _showPhotoViewer(
+          context,
+          placeName: widget.place.name,
+          photo: photo,
+          fallback: widget.placeholder,
+          loadingLabel: widget.loadingLabel,
+          closeLabel: widget.closeLabel,
+        ),
+        child: _PhotoImage(
+          photo: photo,
+          fallback: widget.placeholder,
+          loadingLabel: widget.loadingLabel,
+        ),
+      ),
+    );
+  }
 }
 
 class _PhotoImage extends StatelessWidget {
-  const _PhotoImage({required this.photo, required this.fallback});
+  const _PhotoImage({
+    required this.photo,
+    required this.fallback,
+    required this.loadingLabel,
+    this.fit = BoxFit.cover,
+  });
 
   final PlaceGalleryPhoto? photo;
   final Widget fallback;
+  final String loadingLabel;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
     if (photo?.photoUrl != null) {
       return Image.network(
         photo!.photoUrl!,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, image, progress) =>
-            progress == null ? image : fallback,
+        fit: fit,
+        frameBuilder: (context, image, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded || frame != null) return image;
+          return PlacePhotoLoadingSkeleton(label: loadingLabel);
+        },
         errorBuilder: (context, error, stackTrace) =>
             _assetOrFallback(photo!.photoAsset, fallback),
       );
     }
-    return _assetOrFallback(photo?.photoAsset, fallback);
+    final asset = photo?.photoAsset;
+    if (asset == null) return fallback;
+    return Image.asset(
+      asset,
+      fit: fit,
+      errorBuilder: (context, error, stackTrace) => fallback,
+    );
+  }
+}
+
+Future<void> _showPhotoViewer(
+  BuildContext context, {
+  required String placeName,
+  required PlaceGalleryPhoto photo,
+  required Widget fallback,
+  required String loadingLabel,
+  required String closeLabel,
+}) {
+  return Navigator.of(context).push<void>(
+    MaterialPageRoute<void>(
+      fullscreenDialog: true,
+      builder: (context) => _PhotoViewerScreen(
+        placeName: placeName,
+        photo: photo,
+        fallback: fallback,
+        loadingLabel: loadingLabel,
+        closeLabel: closeLabel,
+      ),
+    ),
+  );
+}
+
+class _PhotoViewerScreen extends StatelessWidget {
+  const _PhotoViewerScreen({
+    required this.placeName,
+    required this.photo,
+    required this.fallback,
+    required this.loadingLabel,
+    required this.closeLabel,
+  });
+
+  final String placeName;
+  final PlaceGalleryPhoto photo;
+  final Widget fallback;
+  final String loadingLabel;
+  final String closeLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        key: const Key('photo-viewer-app-bar'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        flexibleSpace: IgnorePointer(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.78),
+                  Colors.black.withValues(alpha: 0.48),
+                  Colors.transparent,
+                ],
+                stops: const [0, 0.58, 1],
+              ),
+            ),
+          ),
+        ),
+        title: Text(placeName),
+        leading: IconButton(
+          tooltip: closeLabel,
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.close),
+        ),
+      ),
+      body: SafeArea(
+        top: false,
+        child: LayoutBuilder(
+          builder: (context, constraints) => InteractiveViewer(
+            minScale: 1,
+            maxScale: 4,
+            child: SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: _PhotoImage(
+                photo: photo,
+                fallback: fallback,
+                loadingLabel: loadingLabel,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PlacePhotoLoadingSkeleton extends StatelessWidget {
+  const PlacePhotoLoadingSkeleton({required this.label, super.key});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Semantics(
+      liveRegion: true,
+      label: label,
+      child: ExcludeSemantics(
+        child: ColoredBox(
+          color: colors.surfaceContainerHighest,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final shapeColor = colors.surfaceContainerLow;
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  Align(
+                    alignment: const Alignment(0, -0.2),
+                    child: Container(
+                      width: constraints.maxWidth * 0.18,
+                      height: constraints.maxWidth * 0.18,
+                      decoration: BoxDecoration(
+                        color: shapeColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: const Alignment(0, 0.42),
+                    child: Container(
+                      width: constraints.maxWidth * 0.58,
+                      height: constraints.maxHeight * 0.2,
+                      decoration: BoxDecoration(
+                        color: shapeColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
 

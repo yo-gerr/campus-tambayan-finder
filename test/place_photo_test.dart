@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
 import 'package:campus_tambayan_finder/features/places/place_photo.dart';
 
@@ -29,6 +31,7 @@ Place _place({
 );
 
 Widget _wrap(Place place) => MaterialApp(
+  theme: buildAppTheme(),
   home: Scaffold(
     body: PlacePhoto(place: place, width: 100, height: 100, borderRadius: 8),
   ),
@@ -67,6 +70,44 @@ void main() {
     expect(find.byKey(const Key('place-photo-fallback')), findsOneWidget);
   });
 
+  testWidgets('shows an accessible theme-based photo loading skeleton', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: Scaffold(
+          body: const PlacePhotoLoadingSkeleton(
+            key: Key('photo-loading-skeleton'),
+            label: 'Naglo-load ang larawan',
+          ),
+        ),
+      ),
+    );
+
+    final skeleton = find.byKey(const Key('photo-loading-skeleton'));
+    expect(skeleton, findsOneWidget);
+    expect(
+      tester.getSemantics(skeleton),
+      matchesSemantics(label: 'Naglo-load ang larawan', isLiveRegion: true),
+    );
+    final background = tester.widget<ColoredBox>(
+      find.descendant(
+        of: skeleton,
+        matching: find.byWidgetPredicate(
+          (widget) =>
+              widget is ColoredBox &&
+              widget.color ==
+                  buildAppTheme().colorScheme.surfaceContainerHighest,
+        ),
+      ),
+    );
+    expect(
+      background.color,
+      buildAppTheme().colorScheme.surfaceContainerHighest,
+    );
+  });
+
   testWidgets(
     'shows an ordered, swipeable gallery when multiple photos exist',
     (tester) async {
@@ -97,6 +138,8 @@ void main() {
               borderRadius: 8,
               placeholder: const ColoredBox(color: Colors.grey),
               photoPosition: (current, total) => 'Photo $current of $total',
+              viewPhotoLabel: 'View photo full screen',
+              closeLabel: 'Close',
             ),
           ),
         ),
@@ -107,6 +150,23 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('1 / 2'), findsOneWidget);
+      expect(tester.widget<Image>(find.byType(Image).first).fit, BoxFit.cover);
+
+      await tester.tap(
+        find.byKey(const Key('photo-gallery-open-photo-place-0')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(InteractiveViewer), findsOneWidget);
+      expect(find.text('Photo Place'), findsOneWidget);
+      expect(tester.widget<Image>(find.byType(Image).last).fit, BoxFit.contain);
+      final viewerAppBar = tester.widget<AppBar>(
+        find.byKey(const Key('photo-viewer-app-bar')),
+      );
+      expect(viewerAppBar.backgroundColor, Colors.transparent);
+      expect(viewerAppBar.systemOverlayStyle, SystemUiOverlayStyle.light);
+      expect(viewerAppBar.flexibleSpace, isA<IgnorePointer>());
+      await tester.tap(find.byTooltip('Close'));
+      await tester.pumpAndSettle();
 
       await tester.drag(
         find.byKey(const Key('place-photo-gallery-photo-place')),
