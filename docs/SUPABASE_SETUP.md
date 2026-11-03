@@ -5,7 +5,7 @@ This guide covers the optional shared listing source for the class-demo MVP. The
 ## Decision summary
 
 - **Listings:** Supabase Free plan (`places` table) with the bundled JSON kept as the seed and offline fallback.
-- **Photos:** bundled with the app for the demo. Supabase Storage is available on the Free plan if the team later wants to replace photos without rebuilding, but photos are not required to come from the network.
+- **Photos:** an ordered gallery of up to 10 approved images per place. Supabase Storage URLs are primary; optional bundled APK assets cover offline use. One gallery image is the cover for place cards.
 - **Edits:** authorized team members edit rows in the Supabase dashboard. There is no in-app admin screen.
 - **Client access:** read-only. The app ships only the publishable (anon) key; row-level security allows `select` and nothing else.
 - **Canonical copy:** the repository JSON/CSV stays the source of truth and is imported into Supabase one way. Do not edit both directions.
@@ -47,11 +47,21 @@ alter table public.places enable row level security;
 revoke all on table public.places from anon, authenticated;
 grant select on table public.places to anon, authenticated;
 
-create policy "Public read of listings"
-  on public.places
-  for select
-  to anon, authenticated
-  using (true);
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'places'
+      and policyname = 'Public read of listings'
+  ) then
+    create policy "Public read of listings"
+      on public.places
+      for select
+      to anon, authenticated
+      using (true);
+  end if;
+end $$;
 ```
 
 No insert, update, or delete policy is created for `anon`, so the shipped key cannot change listings even if it is extracted from the APK.
@@ -63,36 +73,150 @@ alter table public.places add column if not exists "photoUrl" text;
 alter table public.places add column if not exists "photoAsset" text;
 ```
 
-## 3. Enable realtime updates
+## 3. Create the ordered photo gallery
+
+Run this after the `places` table exists. The gallery permits at most 10 rows
+per place and one optional marked cover. The app uses the marked cover first,
+then the lowest `sortOrder` when a cover has not yet been chosen.
+
+```sql
+create table if not exists public.place_photos (
+  id bigint generated always as identity primary key,
+  place_id text not null references public.places(id) on delete cascade,
+  "photoUrl" text not null,
+  "photoAsset" text,
+  "sortOrder" integer not null,
+  "isCover" boolean not null default false,
+  "captionEn" text,
+  "captionTl" text,
+  constraint place_photos_sort_order_nonnegative check ("sortOrder" >= 0),
+  constraint place_photos_place_order_unique unique (place_id, "sortOrder")
+);
+
+create unique index if not exists place_photos_one_cover_per_place
+  on public.place_photos (place_id)
+  where "isCover";
+
+create or replace function public.limit_place_photos()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if (
+    select count(*)
+    from public.place_photos
+    where place_id = new.place_id
+      and id is distinct from new.id
+  ) >= 10 then
+    raise exception 'A place can have at most 10 photos';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists place_photos_limit on public.place_photos;
+create trigger place_photos_limit
+  before insert or update of place_id on public.place_photos
+  for each row execute function public.limit_place_photos();
+
+alter table public.place_photos enable row level security;
+revoke all on table public.place_photos from anon, authenticated;
+grant select on table public.place_photos to anon, authenticated;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'place_photos'
+      and policyname = 'Public read of place photos'
+  ) then
+    create policy "Public read of place photos"
+      on public.place_photos
+      for select
+      to anon, authenticated
+      using (true);
+  end if;
+end $$;
+```
+
+For an existing single cover photo, migrate it once into the gallery:
+
+```sql
+insert into public.place_photos (
+  place_id, "photoUrl", "photoAsset", "sortOrder", "isCover"
+)
+select id, "photoUrl", "photoAsset", 0, true
+from public.places
+where "photoUrl" is not null
+on conflict (place_id, "sortOrder") do nothing;
+```
+
+## 4. Enable realtime updates
 
 The app listens for changes so two phones stay in sync. Run this once:
 
 ```sql
 alter publication supabase_realtime add table public.places;
+alter publication supabase_realtime add table public.place_photos;
 ```
 
 If the table is already in the publication, the statement errors with "already member of publication"; that is safe to ignore.
 
-## 4. Load the listings
+## 5. Load the listings
 
 Use the dashboard's CSV import or the SQL editor, keeping the column names exactly as defined above. Array columns (`amenities`, `activities`) need Postgres array values such as `{wifi,outlets}`, not a bare comma-separated list. Verify the first import in the Table Editor before relying on it.
 
-Keep `assets/data/sample_places.json` as the canonical copy. When the team supplies new listings, update the repository copy and the bundled asset together, then re-import. Export the table back to JSON before each APK build if anyone has edited it in the dashboard.
+Keep `assets/data/sample_places.json` as the canonical bundled copy. Its optional `photos` array holds offline gallery entries; it is not a `places` column, so omit it from a `places` CSV import. Keep the related `place_photos` rows in a separate CSV/export. When the team supplies new listings, update both repository records and import the matching `places` and `place_photos` data. Export both tables back before each APK build if anyone has edited them in the dashboard.
 
-### Photos
+### Photos and galleries
 
-Two optional columns and one Storage bucket cover place photos:
+The legacy optional `places` photo columns keep older bundled data compatible:
 
-- `photoUrl` — public URL of the current photo. The app tries it first, so a photo can be replaced in the dashboard without rebuilding the APK.
-- `photoAsset` — path to a copy bundled in the APK, used when `photoUrl` is missing or fails to load (offline, weak signal, deleted file).
+- `photoUrl` — public URL of the single legacy/cover photo.
+- `photoAsset` — path to a single legacy bundled fallback.
 
-Create the bucket once: **Storage → New bucket**, name `place-photos`, and enable the public bucket option. Public read is what lets the shipped publishable key fetch images; do not add insert, update, or delete policies for `anon`. The Free plan includes 1 GB and needs no card.
+New galleries are managed through `place_photos`. For each entry, use:
 
-Upload each file named after the place id, for example `sample-kape-stop.jpg`, then copy its public URL — it looks like `https://YOUR-PROJECT.supabase.co/storage/v1/object/public/place-photos/sample-kape-stop.jpg` — and paste it into the row's `photoUrl`.
+- `place_id` — the matching `places.id`.
+- `photoUrl` — public URL of the Storage object (required).
+- `sortOrder` — unique display order starting at `0`.
+- `isCover` — `true` for exactly one card cover photo.
+- `photoAsset`, `captionEn`, and `captionTl` — optional; asset paths are APK-only backups, and captions are reserved for approved bilingual copy.
 
-A row with no photo shows a neutral placeholder, which is the expected state until the team supplies approved images. Bundled copies go under `assets/photos/` and are referenced as `assets/photos/sample-kape-stop.jpg`; add `assets/photos/` to `pubspec.yaml` when the first image arrives. Do not bundle a photo the team has not cleared for use.
+Use the existing bucket **`places-photos`** (or create it once through **Storage → New bucket** if it is absent) and enable the public bucket option. Public read is what lets the shipped publishable key fetch images; do not add insert, update, or delete policies for `anon`. The Free plan includes 1 GB and needs no card.
 
-## 5. Run the app against the shared source
+Organize files by place id, for example `sample-kape-stop/cover.jpg` and `sample-kape-stop/interior.jpg`. Copy each public URL — it looks like `https://YOUR-PROJECT.supabase.co/storage/v1/object/public/places-photos/sample-kape-stop/cover.jpg` — into a `place_photos.photoUrl` row.
+
+Example gallery insert:
+
+```sql
+insert into public.place_photos (
+  place_id, "photoUrl", "sortOrder", "isCover"
+) values
+  ('sample-kape-stop',
+   'https://YOUR-PROJECT.supabase.co/storage/v1/object/public/places-photos/sample-kape-stop/cover.jpg',
+   0, true),
+  ('sample-kape-stop',
+   'https://YOUR-PROJECT.supabase.co/storage/v1/object/public/places-photos/sample-kape-stop/interior.jpg',
+   1, false);
+```
+
+A place with no usable photo shows a neutral placeholder, which is expected until the team supplies approved images. The detail sheet becomes swipeable when a place has two or more gallery entries; the list card always uses the cover. Bundled copies go under `assets/photos/` and are referenced as `assets/photos/sample-kape-stop/cover.jpg`; add `assets/photos/` to `pubspec.yaml` when the first image arrives. Do not upload or bundle photos without permission, including photos with identifiable people whose use has not been cleared.
+
+### Image preparation and planned Phase 2 presentation
+
+Mixed portrait and landscape photos are supported as uploaded. Prepare images before upload to keep the gallery responsive on student devices and within the Free-plan storage allowance:
+
+- Prefer JPEG or WebP; retain enough quality for a phone screen rather than uploading camera originals.
+- Recommended maximum: 2048 px on the longest edge and roughly 2 MB per file.
+- Use a meaningful filename and the place-id folder structure above.
+- Review whether an image contains people, copyrighted material, or unnecessary EXIF location metadata before publishing. Supabase Storage and the current app do not automatically remove metadata or verify photo permissions.
+
+Phase 2 plans, but does not yet implement, three presentation improvements: uncropped full-image rendering in the detail gallery for mixed orientations, an accessible shimmer/skeleton while a network image loads, and a full-screen pinch-to-zoom viewer. List-card cover images may remain cropped to keep cards visually consistent.
+
+## 6. Run the app against the shared source
 
 Pass the URL and publishable key at build time so no key is committed:
 
@@ -123,7 +247,7 @@ adb logcat -s flutter:V | Select-String 'Shared listings'
 | `Shared listings table is empty; keeping the bundled copy` | The connection works but the table has no rows. |
 | `Shared listings unavailable, using bundled copy` | The shared source failed; the notice is showing. |
 
-## 6. Free plan limits (verified 2026-11-02)
+## 7. Free plan limits (verified 2026-11-02)
 
 | Limit | Free plan |
 |---|---|
@@ -138,7 +262,7 @@ adb logcat -s flutter:V | Select-String 'Shared listings'
 
 The pausing rule is the main operational risk. The paid plan (from USD 25/month) removes it but is not approved and is not needed for this demo.
 
-## 7. Demo runbook
+## 8. Demo runbook
 
 1. **48 hours before:** open the Supabase dashboard and confirm the project is not paused. A paused project must be restored manually, and the app would otherwise fall back to the bundled copy.
 2. **Before the demo:** confirm the table has the agreed listings and the app shows them without the offline notice. Rehearse on the venue's network, not only at home.
@@ -152,4 +276,4 @@ The pausing rule is the main operational risk. The paid plan (from USD 25/month)
 - Live updates require connectivity. Once disconnected, the last live listings stay on screen; nothing is cached across app restarts beyond the bundled copy.
 - No automatic backups on the Free plan. The repository JSON and periodic exports are the backup.
 - The app does not retry a failed shared connection automatically; reopen the app to reconnect. A fresh launch always starts from the bundled copy.
-- Photos are not part of the shared table yet.
+- Photo galleries require a `place_photos` Realtime publication and usable network access; the bundled JSON only contains whatever approved asset fallbacks are included at build time.

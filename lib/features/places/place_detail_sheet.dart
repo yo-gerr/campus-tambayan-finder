@@ -78,7 +78,7 @@ class _PlaceDetailSheet extends StatelessWidget {
                 ?.copyWith(color: AppColors.mutedInk),
           ),
           const SizedBox(height: 14),
-          PlacePhoto(
+          PlacePhotoGallery(
             place: place,
             width: double.infinity,
             height: 170,
@@ -87,6 +87,7 @@ class _PlaceDetailSheet extends StatelessWidget {
               category: place.category,
               copy: copy,
             ),
+            photoPosition: copy.photoPosition,
           ),
           const SizedBox(height: 18),
           Container(

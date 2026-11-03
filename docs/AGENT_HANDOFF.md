@@ -4,6 +4,22 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-03 — Documented planned Phase 2 image presentation work
+
+- Clarified Phase 1 listing intake: each place may supply up to 10 approved, ordered photos with one cover, and both `places` and `place_photos` must be maintained in the canonical/export workflow.
+- Recorded, but did not implement, Phase 2 image polish: preserve full portrait/landscape images in the detail gallery, accessible shimmer/skeleton loading, and a full-screen pinch-to-zoom viewer. List-card covers may stay cropped.
+- Added image preparation guidance to the Supabase guide: JPEG/WebP preferred, recommended 2048 px longest edge and roughly 2 MB per image, plus permission/copyright/identifiable-person and EXIF-location review. The app and Storage do not perform automatic moderation or metadata stripping.
+- Updated `docs/MVP_PLAN.md`, `docs/PROJECT_BRIEF.md`, `docs/ARCHITECTURE.md`, `docs/SUPABASE_SETUP.md`, and `README.md`. No application code changed; validation is documentation review and `git diff --check`.
+
+### 2026-11-03 — Added ordered place-photo galleries
+
+- Confirmed a production-shaped gallery direction for the class-demo MVP: each place can have up to 10 approved ordered photos, with one cover photo for cards. Gallery photos use public Supabase Storage URLs first; optional bundled assets remain an offline fallback.
+- Code: added `PlaceGalleryPhoto` and ordered `Place.photos`; existing `photoUrl`/`photoAsset` values remain a compatibility cover fallback. `SupabasePlacesSource` now reads `places` with `place_photos` and listens for Realtime changes on both tables. The detail sheet uses a swipeable, accessible gallery when there are at least two photos; the card retains the cover image.
+- Data/docs: the bundled seed now has empty `photos` arrays. `docs/SUPABASE_SETUP.md` includes idempotent policy creation, the `place_photos` schema, one-cover constraint, 10-photo database limit, RLS, Realtime publication, Storage organization, migration from existing single cover rows, and separate import/export guidance. Updated project brief, architecture, MVP plan, and README.
+- Privacy/content: only upload photos the team is permitted to use. Check identifiable people before publishing. Captions are optional and reserved for approved English/Tagalog copy.
+- Validation: `flutter analyze` clean; `flutter test` 21 passed; `flutter build apk --debug` succeeded with the shared-source build defines; `git diff --check` clean.
+- Required next setup: run the documented `place_photos` SQL and Realtime publication migration in Supabase, then add at least two photo rows for one place to verify the live swipeable gallery and Realtime refresh on a connected device. Existing single `photoUrl` data remains usable until that migration is applied.
+
 ### 2026-11-03 — Improved shop-detail amenity chip contrast
 
 - Set chip background and label colors from the app's Material color scheme, so amenity chips in shop details use a coordinated, high-contrast theme pair instead of Flutter defaults.

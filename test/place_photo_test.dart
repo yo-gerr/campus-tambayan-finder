@@ -4,7 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
 import 'package:campus_tambayan_finder/features/places/place_photo.dart';
 
-Place _place({String? photoUrl, String? photoAsset}) => Place(
+Place _place({
+  String? photoUrl,
+  String? photoAsset,
+  List<PlaceGalleryPhoto> photos = const [],
+}) => Place(
   id: 'photo-place',
   name: 'Photo Place',
   category: 'coffee',
@@ -21,6 +25,7 @@ Place _place({String? photoUrl, String? photoAsset}) => Place(
   mapY: 0.5,
   photoUrl: photoUrl,
   photoAsset: photoAsset,
+  photos: photos,
 );
 
 Widget _wrap(Place place) => MaterialApp(
@@ -61,4 +66,55 @@ void main() {
 
     expect(find.byKey(const Key('place-photo-fallback')), findsOneWidget);
   });
+
+  testWidgets(
+    'shows an ordered, swipeable gallery when multiple photos exist',
+    (tester) async {
+      final place = _place(
+        photos: const [
+          PlaceGalleryPhoto(
+            photoUrl: 'https://example.test/cover.jpg',
+            photoAsset: null,
+            sortOrder: 0,
+            isCover: true,
+          ),
+          PlaceGalleryPhoto(
+            photoUrl: 'https://example.test/inside.jpg',
+            photoAsset: null,
+            sortOrder: 1,
+            isCover: false,
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PlacePhotoGallery(
+              place: place,
+              width: 200,
+              height: 120,
+              borderRadius: 8,
+              placeholder: const ColoredBox(color: Colors.grey),
+              photoPosition: (current, total) => 'Photo $current of $total',
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byKey(const Key('place-photo-gallery-photo-place')),
+        findsOneWidget,
+      );
+      expect(find.text('1 / 2'), findsOneWidget);
+
+      await tester.drag(
+        find.byKey(const Key('place-photo-gallery-photo-place')),
+        const Offset(-200, 0),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('2 / 2'), findsOneWidget);
+    },
+  );
 }

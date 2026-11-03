@@ -83,7 +83,8 @@ There will be no persistent student profile for the requested mood check-in. Cla
 ### Listing maintenance and service costs
 
 - The team does not want a custom in-app admin screen. Authorized team members may manually edit listing information using an agreed data/provider dashboard; the provider and access controls are not yet selected.
-- Confirmed November 2, 2026: the class-demo APK loads listings from a shared Supabase (Free plan) table, while the bundled JSON listings stay in the build as the seed and offline fallback. Resolved November 3, 2026: photos use a hybrid — a public Supabase Storage bucket supplies the primary photo URL, and a bundled copy is the offline fallback; a place with no photo shows a placeholder.
+- Confirmed November 2, 2026: the class-demo APK loads listings from a shared Supabase (Free plan) table, while the bundled JSON listings stay in the build as the seed and offline fallback. Resolved November 3, 2026: photos use a hybrid — public Supabase Storage supplies an ordered gallery of up to 10 approved images per place, with one cover photo; optional bundled copies are offline fallbacks, and a place with no usable photo shows a placeholder.
+- Planned Phase 2 photo presentation work (not implemented): preserve full portrait and landscape images in the detail gallery, show an accessible loading skeleton, and offer full-screen pinch-to-zoom viewing. Card covers may remain cropped for a consistent list layout. Upload preparation guidance will recommend reasonably sized JPEG/WebP files and review of unnecessary EXIF location metadata; it does not make the app an image-moderation or metadata-removal service.
 - The repository JSON/CSV is the canonical listing copy and is imported into Supabase one way. Dashboard edits must be exported back before an APK build so the bundled fallback and the shared table do not drift apart.
 - The app reads shared listings with the publishable key only. Row-level security allows reads and no writes, so no student account or sign-in is introduced. Who owns the Supabase organization and who holds dashboard edit access remain open.
 - The team accepts an approach that prefers no-cost/no-card services where feasible and requires advance disclosure and approval before enabling paid services or card-dependent billing.
@@ -123,11 +124,12 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Estimated travel time display, travel modes, and estimate source | Open; clarify whether shown in-app or by Google Maps |
 | Meaning of "available time" | Confirmed to mean shop operating hours; estimated travel time to the place is a separate desired detail |
 | Listing update cadence and correction/reporting process | Open |
-| Initial listing set | Approximately 15–20; team will provide a compiled list, available photos, and available information, including names, locations, descriptions, hours, and prices |
+| Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |
 | Photo permissions, data template, translation source, and verification criteria | Open |
 | Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually in the Supabase dashboard; who holds access is open |
-| Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan table, with bundled local JSON as seed and offline fallback |
-| Listing photos (class demo) | Confirmed November 3, 2026: hybrid — public Supabase Storage photo URL preferred, bundled copy as the offline fallback, placeholder when neither exists |
+| Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan `places` and `place_photos` tables, with bundled local JSON as seed and offline fallback |
+| Listing photos (class demo) | Confirmed November 3, 2026: hybrid ordered gallery of up to 10 approved images per place; Storage URLs preferred, optional bundled copies as offline fallback, and a placeholder when no usable photo exists |
+| Phase 2 photo presentation | Planned, not implemented: full-image portrait/landscape gallery display, accessible loading skeleton, and full-screen pinch-to-zoom viewer; card covers remain cropped |
 | Student accounts, ratings, comments | No student profile or ratings/comments requested for browsing |
 | Mood check-in | Optional and prioritized for class presentation; nickname may be used, but response must not be linked to a user profile. Persistence, nickname necessity, consent, retention, and access are open |
 | Public landing/information page | Not needed for current class-demo deliverable |

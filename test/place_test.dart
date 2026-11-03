@@ -2,7 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:campus_tambayan_finder/features/places/place.dart';
 
-Map<String, dynamic> _row({Object? photoUrl, Object? photoAsset}) => {
+Map<String, dynamic> _row({
+  Object? photoUrl,
+  Object? photoAsset,
+  Object? photos,
+}) => {
   'id': 'live-place',
   'name': 'Live Place',
   'category': 'coffee',
@@ -19,6 +23,7 @@ Map<String, dynamic> _row({Object? photoUrl, Object? photoAsset}) => {
   'mapY': 0.4,
   'photoUrl': photoUrl,
   'photoAsset': photoAsset,
+  'place_photos': photos,
 };
 
 void main() {
@@ -56,5 +61,39 @@ void main() {
     final place = Place.fromJson(withoutKeys);
     expect(place.photoUrl, isNull);
     expect(place.photoAsset, isNull);
+  });
+
+  test('maps, orders, and selects a gallery cover photo', () {
+    final place = Place.fromJson(
+      _row(
+        photos: [
+          {
+            'photoUrl': 'https://example.test/second.jpg',
+            'photoAsset': null,
+            'sortOrder': 2,
+            'isCover': false,
+          },
+          {
+            'photoUrl': 'https://example.test/cover.jpg',
+            'photoAsset': null,
+            'sortOrder': 1,
+            'isCover': true,
+          },
+        ],
+      ),
+    );
+
+    expect(place.photos, hasLength(2));
+    expect(place.photos.first.photoUrl, 'https://example.test/cover.jpg');
+    expect(place.coverPhoto?.photoUrl, 'https://example.test/cover.jpg');
+  });
+
+  test('uses the legacy single photo as cover when the gallery is empty', () {
+    final place = Place.fromJson(
+      _row(photoUrl: 'https://example.test/legacy-cover.jpg'),
+    );
+
+    expect(place.photos, isEmpty);
+    expect(place.coverPhoto?.photoUrl, 'https://example.test/legacy-cover.jpg');
   });
 }

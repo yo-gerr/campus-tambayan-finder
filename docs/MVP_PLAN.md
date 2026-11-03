@@ -12,7 +12,7 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 
 - **Target:** Android APK for class presentation/testing; no Google Play release.
 - **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide.
-- **Initial listings:** approximately 15–20. The team will provide a compiled list, available photos, names, locations, descriptions, hours, and prices.
+- **Initial listings:** approximately 15–20. The team will provide a compiled list, names, locations, descriptions, hours, prices, and up to 10 approved ordered photos per place.
 - **Listing edits:** authorized team members edit listing information manually in the Supabase dashboard; no custom in-app admin screen.
 - **Listing source:** shared Supabase Free-plan table, with the bundled JSON listings kept as seed and offline fallback. See [Shared Listings Setup](SUPABASE_SETUP.md).
 - **Directions:** open Google Maps rather than implementing in-app navigation.
@@ -51,20 +51,22 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 **Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), but the table still holds the four fictional sample rows. No approved listings, photos, or data template exist yet.
 
 - Receive the compiled list and available photos for approximately 15–20 establishments.
-- Agree on a simple spreadsheet/data template and required fields.
+- Agree on a simple spreadsheet/data template and required fields, including up to 10 gallery photos per place, one marked cover photo, display order, public Storage URL, optional captions, and bundled fallback path when supplied.
 - Confirm photo permissions, translation responsibility, and how the team expects information to be checked and updated.
 - Replace fictional records with the team's approved information while preserving clear labels for any unknown or estimated values.
-- Keep the repository JSON canonical and import it into the Supabase `places` table one way; export dashboard edits back before an APK build.
+- Keep the repository JSON canonical and import it into the related Supabase `places` and `place_photos` tables one way; export dashboard edits from both tables back before an APK build.
 - Confirm Supabase organization ownership and dashboard edit access. Keep the project on the Free plan unless a paid service is separately approved.
 
-**Acceptance:** the agreed listings display accurate, supplied details; missing or estimated data is identified rather than invented; the app remains usable for browsing and shows the bundled copy with a clear notice when the shared source is unavailable.
+**Acceptance:** the agreed listings display accurate, supplied details; each supplied gallery has no more than 10 approved, ordered images and a correct cover; missing or estimated data is identified rather than invented; the app remains usable for browsing and shows the bundled copy with a clear notice when the shared source is unavailable.
 
 ### Phase 2 — Place discovery and details
 
 **Priority: highest; prototype implementation exists and must be completed against approved data.**
 
 - Refine list, search, filters, and details using the confirmed listing fields and content.
-- Show each place's photo, preferring the shared copy and falling back to the bundled one. Use only team-approved images; anything missing keeps a neutral placeholder.
+- Show each place's ordered gallery of up to 10 approved photos, with one cover for list cards; prefer the shared Storage copy and fall back to bundled assets. Anything missing keeps a neutral placeholder.
+- **Planned image polish (not implemented yet):** preserve the full image in the detail gallery for mixed portrait/landscape uploads while retaining cropped card covers; show an accessible shimmer/skeleton while a network image loads; open a selected gallery image in a full-screen pinch-to-zoom viewer without conflicting with gallery swipes.
+- Establish and document image-preparation guidance: preferred JPEG or WebP uploads, a recommended maximum long edge of 2048 px and roughly 2 MB per image, plus review/removal of unnecessary EXIF location metadata when practical. These are guidance, not automatic client-side validation.
 - Preserve category, budget, amenity, setting, and activity filters unless the team reprioritizes them.
 - Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates.
 - Confirm whether place browsing must work offline for the class demo.

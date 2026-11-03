@@ -15,7 +15,8 @@
     "mapX": 0.26,
     "mapY": 0.34,
     "photoUrl": null,
-    "photoAsset": null
+    "photoAsset": null,
+    "photos": []
   },
   {
     "id": "sample-kape-stop",
@@ -33,7 +34,8 @@
     "mapX": 0.67,
     "mapY": 0.25,
     "photoUrl": null,
-    "photoAsset": null
+    "photoAsset": null,
+    "photos": []
   },
   {
     "id": "sample-luntiang-pahingahan",
@@ -51,7 +53,8 @@
     "mapX": 0.49,
     "mapY": 0.56,
     "photoUrl": null,
-    "photoAsset": null
+    "photoAsset": null,
+    "photos": []
   },
   {
     "id": "sample-budget-kainan",
@@ -69,6 +72,7 @@
     "mapX": 0.76,
     "mapY": 0.69,
     "photoUrl": null,
-    "photoAsset": null
+    "photoAsset": null,
+    "photos": []
   }
 ]

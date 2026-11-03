@@ -18,6 +18,7 @@ class Place implements PlaceLike {
     required this.mapY,
     this.photoUrl,
     this.photoAsset,
+    this.photos = const [],
   });
 
   final String id;
@@ -52,6 +53,26 @@ class Place implements PlaceLike {
   /// supplies approved images.
   final String? photoAsset;
 
+  /// Ordered gallery entries loaded from the shared `place_photos` table.
+  ///
+  /// Existing bundled rows can omit this safely. [coverPhoto] then preserves
+  /// the original single-photo fields as the card image.
+  final List<PlaceGalleryPhoto> photos;
+
+  PlaceGalleryPhoto? get coverPhoto {
+    for (final photo in photos) {
+      if (photo.isCover) return photo;
+    }
+    if (photos.isNotEmpty) return photos.first;
+    if (photoUrl == null && photoAsset == null) return null;
+    return PlaceGalleryPhoto(
+      photoUrl: photoUrl,
+      photoAsset: photoAsset,
+      sortOrder: 0,
+      isCover: true,
+    );
+  }
+
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
       id: json['id'] as String,
@@ -70,8 +91,50 @@ class Place implements PlaceLike {
       mapY: (json['mapY'] as num).toDouble(),
       photoUrl: _optionalText(json['photoUrl']),
       photoAsset: _optionalText(json['photoAsset']),
+      photos: _photos(json['place_photos'] ?? json['photos']),
     );
   }
+}
+
+class PlaceGalleryPhoto {
+  const PlaceGalleryPhoto({
+    required this.photoUrl,
+    required this.photoAsset,
+    required this.sortOrder,
+    required this.isCover,
+    this.captionEn,
+    this.captionTl,
+  });
+
+  final String? photoUrl;
+  final String? photoAsset;
+  final int sortOrder;
+  final bool isCover;
+  final String? captionEn;
+  final String? captionTl;
+
+  factory PlaceGalleryPhoto.fromJson(Map<String, dynamic> json) {
+    return PlaceGalleryPhoto(
+      photoUrl: _optionalText(json['photoUrl']),
+      photoAsset: _optionalText(json['photoAsset']),
+      sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
+      isCover: json['isCover'] == true,
+      captionEn: _optionalText(json['captionEn']),
+      captionTl: _optionalText(json['captionTl']),
+    );
+  }
+}
+
+List<PlaceGalleryPhoto> _photos(Object? value) {
+  if (value is! List) return const [];
+  final photos =
+      value
+          .whereType<Map<String, dynamic>>()
+          .map(PlaceGalleryPhoto.fromJson)
+          .where((photo) => photo.photoUrl != null || photo.photoAsset != null)
+          .toList()
+        ..sort((first, second) => first.sortOrder.compareTo(second.sortOrder));
+  return List.unmodifiable(photos);
 }
 
 /// Treats a missing, null, blank, or non-string value as "no photo" so a
