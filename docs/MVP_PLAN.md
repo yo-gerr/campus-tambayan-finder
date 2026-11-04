@@ -37,6 +37,7 @@ Retain the existing calm, welcoming student-oriented visual style as a design hy
 **Status: implemented.**
 
 - Android Flutter app shell and shared Material 3 theme.
+- Native Android launch splash using the provisional app-bar emblem and warm app background; revisit the artwork if the team approves final branding.
 - Fictional local JSON records, browsing/search, place details, category/budget/amenity/setting/activity filters.
 - English/Filipino interface toggle, introductory guide, and schematic map.
 - Sample data and map/directions behavior are labeled illustrative.

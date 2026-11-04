@@ -55,6 +55,8 @@ flutter test
 flutter analyze
 ```
 
+When changing the native splash configuration or artwork, regenerate its Android resources with `dart run flutter_native_splash:create`.
+
 By default the app uses the bundled listings and needs no network or credentials. To load shared listings during a build, pass the Supabase values described in [Shared Listings Setup](docs/SUPABASE_SETUP.md):
 
 ```powershell

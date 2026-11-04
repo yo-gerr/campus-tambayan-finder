@@ -4,6 +4,12 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added a native Android launch splash
+
+- Added the `flutter_native_splash` 2.4.8 build-time dependency and generated Android splash resources using the existing app-bar emblem, warm background, and Android 12-specific image. Kept it to the native launch interval without adding an in-app splash screen or delay. Documented artwork status and regeneration command in the MVP plan and README.
+- Validation: generated and visually inspected both splash artwork assets and a cold-start emulator screenshot; all 32 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android debug APK built and installed, hot restart succeeded, and Android Flutter logs showed no Dart runtime errors.
+- Remaining: revisit splash artwork if the team approves final branding.
+
 ### 2026-11-04 — Added Google Maps directions for verified locations
 
 - Added external Google Maps directions URLs, gated on valid coordinates and an explicit verification flag. Unverified/missing locations and launch failures have localized messages; bundled sample coordinates remain ineligible. Added the default-false Supabase `location_verified` column and migration guidance.
