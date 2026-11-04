@@ -41,10 +41,13 @@ abstract final class AppColors {
   static const onScrim = Color(0xFFFFFFFF);
   static const viewerBackground = Color(0xFF000000);
 
-  /// Category tints for the no-photo placeholder.
+  /// Category tints for the no-photo placeholder. Tambayan reuses [sage].
+  /// Kept distinct from each other so the placeholder still hints at the
+  /// category, but every tint carries the same primary-colored icon.
   static const coffeeTint = Color(0xFFF3E7D7);
   static const parkTint = Color(0xFFE1EDDF);
   static const eateryTint = Color(0xFFF6E6DC);
+  static const otherTint = Color(0xFFE6EAF1);
 }
 
 ThemeData buildAppTheme() {

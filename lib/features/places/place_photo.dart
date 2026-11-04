@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../app/app_theme.dart';
 import 'place.dart';
+import 'place_categories.dart';
 
 /// Caps the pixels the app decodes for display. Uploads can be several
 /// thousand pixels wide; decoding them at full size exhausts the image cache
@@ -536,13 +537,12 @@ class PlacePhotoPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (icon, tint) = switch (category) {
-      'coffee' => (Icons.local_cafe_outlined, AppColors.coffeeTint),
-      'park' => (Icons.park_outlined, AppColors.parkTint),
-      'eatery' => (Icons.restaurant_outlined, AppColors.eateryTint),
-      'tambayan' => (Icons.menu_book_outlined, AppColors.sage),
-      _ => (Icons.image_outlined, AppColors.sage),
-    };
+    final categoryKey = category;
+    final categoryInfo = categoryKey == null
+        ? null
+        : PlaceCategory.fromKey(categoryKey);
+    final icon = categoryInfo?.icon ?? Icons.image_outlined;
+    final tint = categoryInfo?.tint ?? AppColors.sage;
     final text = label;
 
     return ColoredBox(

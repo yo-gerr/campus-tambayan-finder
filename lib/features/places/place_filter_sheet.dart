@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
+import 'place_categories.dart';
 import 'place_filters.dart';
+
+/// Preset budget limits in pesos, shown as chips for consistency with the
+/// other filter groups. "Any budget" is the separate null state, so no preset
+/// acts as a hidden ceiling.
+const _budgetChoices = <int>[50, 100, 150, 200, 300, 500];
 
 Future<PlaceFilters?> showPlaceFilterSheet({
   required BuildContext context,
@@ -35,7 +41,7 @@ class _PlaceFilterSheet extends StatefulWidget {
 
 class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
   late String? _category = widget.initialFilters.category;
-  late double _maxBudget = widget.initialFilters.maxBudget;
+  late int? _maxBudget = widget.initialFilters.maxBudget;
   late Set<String> _amenities = {...widget.initialFilters.amenities};
   late String? _setting = widget.initialFilters.setting;
   late String? _activity = widget.initialFilters.activity;
@@ -45,7 +51,7 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
   void _reset() {
     setState(() {
       _category = null;
-      _maxBudget = 600;
+      _maxBudget = null;
       _amenities = {};
       _setting = null;
       _activity = null;
@@ -97,33 +103,35 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
                       selected: _category == null,
                       onSelected: () => setState(() => _category = null),
                     ),
-                    for (final category in const [
-                      'tambayan',
-                      'coffee',
-                      'park',
-                      'eatery',
-                    ])
+                    for (final category in PlaceCategory.values)
                       _choice(
-                        key: Key('category-$category-filter'),
-                        label: copy.category(category),
-                        selected: _category == category,
-                        onSelected: () => setState(() => _category = category),
+                        key: Key('category-${category.key}-filter'),
+                        label: category.label(copy.isTagalog),
+                        selected: _category == category.key,
+                        onSelected: () =>
+                            setState(() => _category = category.key),
                       ),
                   ],
                 ),
                 _sectionTitle(copy.get('budget')),
-                Text(
-                  _maxBudget >= 600
-                      ? copy.get('any_price')
-                      : '₱${_maxBudget.round()}',
-                ),
-                Slider(
-                  key: const Key('budget-filter'),
-                  min: 0,
-                  max: 600,
-                  divisions: 12,
-                  value: _maxBudget,
-                  onChanged: (value) => setState(() => _maxBudget = value),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    _choice(
+                      key: const Key('budget-any-filter'),
+                      label: copy.get('any_price'),
+                      selected: _maxBudget == null,
+                      onSelected: () => setState(() => _maxBudget = null),
+                    ),
+                    for (final budget in _budgetChoices)
+                      _choice(
+                        key: Key('budget-$budget-filter'),
+                        label: '₱$budget',
+                        selected: _maxBudget == budget,
+                        onSelected: () => setState(() => _maxBudget = budget),
+                      ),
+                  ],
                 ),
                 _sectionTitle(copy.get('amenities')),
                 Wrap(

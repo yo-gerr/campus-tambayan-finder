@@ -1,14 +1,19 @@
 class PlaceFilters {
   const PlaceFilters({
     this.category,
-    this.maxBudget = 600,
+    this.maxBudget,
     this.amenities = const {},
     this.setting,
     this.activity,
   });
 
   final String? category;
-  final double maxBudget;
+
+  /// Highest per-person budget in pesos, or null for no limit.
+  ///
+  /// Null is a real state, not a sentinel: "Any budget" must not exclude
+  /// listings priced above whatever ceiling the control happens to stop at.
+  final int? maxBudget;
   final Set<String> amenities;
   final String? setting;
   final String? activity;
@@ -16,7 +21,7 @@ class PlaceFilters {
   int get activeCount {
     var count = 0;
     if (category != null) count++;
-    if (maxBudget < 600) count++;
+    if (maxBudget != null) count++;
     count += amenities.length;
     if (setting != null) count++;
     if (activity != null) count++;
@@ -24,8 +29,18 @@ class PlaceFilters {
   }
 
   bool matches(PlaceLike place) {
+    final budget = maxBudget;
+    final priceMin = place.priceMin;
+    final priceMax = place.priceMax;
+    if (budget != null) {
+      // A listing without a reliable range cannot be shown to fit a budget, so
+      // it is excluded while a limit is active. Half-known ranges count as
+      // unknown rather than guessed.
+      if (priceMin == null || priceMax == null || priceMin > budget) {
+        return false;
+      }
+    }
     return (category == null || place.category == category) &&
-        place.priceMin <= maxBudget &&
         amenities.every(place.amenities.contains) &&
         (setting == null || place.setting == setting) &&
         (activity == null || place.activities.contains(activity));
@@ -34,7 +49,13 @@ class PlaceFilters {
 
 abstract interface class PlaceLike {
   String get category;
-  int get priceMin;
+
+  /// Lowest estimated spend, or null when no reliable price is known.
+  int? get priceMin;
+
+  /// Highest estimated spend, or null when no reliable price is known.
+  int? get priceMax;
+
   List<String> get amenities;
   String get setting;
   List<String> get activities;

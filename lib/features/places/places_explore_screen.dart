@@ -4,6 +4,7 @@ import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import 'place.dart';
 import 'place_card.dart';
+import 'place_categories.dart';
 import 'place_filters.dart';
 
 class PlacesExploreScreen extends StatefulWidget {
@@ -50,6 +51,18 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
           place.area.toLowerCase().contains(query) ||
           copy.category(place.category).toLowerCase().contains(query);
     }).toList();
+
+    // A category is selectable before any listing uses it. Distinguish "we have
+    // nothing in this category yet" from "your filters excluded everything", so
+    // the empty state does not blame the filters for missing data.
+    final selectedCategory = widget.filters.category;
+    String? missingCategory;
+    if (selectedCategory != null &&
+        !widget.places.any((place) => place.category == selectedCategory)) {
+      missingCategory =
+          PlaceCategory.fromKey(selectedCategory)?.label(copy.isTagalog) ??
+          selectedCategory;
+    }
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
@@ -150,6 +163,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
         if (results.isEmpty)
           _EmptyResults(
             copy: copy,
+            missingCategory: missingCategory,
             onClear: () {
               setState(() => _query = '');
               widget.onClearFilters();
@@ -198,21 +212,38 @@ class _CampusSelector extends StatelessWidget {
 }
 
 class _EmptyResults extends StatelessWidget {
-  const _EmptyResults({required this.copy, required this.onClear});
+  const _EmptyResults({
+    required this.copy,
+    required this.onClear,
+    this.missingCategory,
+  });
 
   final AppCopy copy;
   final VoidCallback onClear;
 
+  /// Bilingual label of the selected category when the dataset has no listing
+  /// in it at all. Null when results are empty for other reasons.
+  final String? missingCategory;
+
   @override
   Widget build(BuildContext context) {
+    final category = missingCategory;
+    final title = category == null
+        ? copy.get('empty_title')
+        : copy.get('empty_category_title').replaceAll('{category}', category);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 18),
       child: Column(
         children: [
-          const Icon(Icons.search_off, size: 42, color: AppColors.mutedInk),
+          Icon(
+            category == null ? Icons.search_off : Icons.place_outlined,
+            size: 42,
+            color: AppColors.mutedInk,
+          ),
           const SizedBox(height: 12),
           Text(
-            copy.get('empty_title'),
+            title,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium
                 ?.copyWith(fontWeight: FontWeight.w700),

@@ -10,6 +10,8 @@ Map<String, dynamic> _row({
   Object? longitude,
   Object? locationVerified,
   Object? address,
+  Object? priceMin = 50,
+  Object? priceMax = 120,
 }) => {
   'id': 'live-place',
   'name': 'Live Place',
@@ -18,8 +20,8 @@ Map<String, dynamic> _row({
   'address': address,
   'descriptionEn': 'English description.',
   'descriptionTl': 'Paglalarawan sa Filipino.',
-  'priceMin': 50,
-  'priceMax': 120,
+  'priceMin': priceMin,
+  'priceMax': priceMax,
   'hours': '8:00 AM–5:00 PM',
   'amenities': <dynamic>['wifi', 'outlets'],
   'setting': 'indoor',
@@ -42,6 +44,31 @@ void main() {
     expect(place.coordinates?.latitude, 14.701);
     expect(place.coordinates?.longitude, 120.984);
     expect(place.priceMax, 120);
+  });
+
+  test('maps a complete price range and treats half-known as unknown', () {
+    final place = Place.fromJson(_row());
+    expect(place.priceMin, 50);
+    expect(place.priceMax, 120);
+
+    // One bound alone would let the budget filter match on a guess, so both
+    // are cleared together.
+    for (final partial in [
+      _row(priceMin: null),
+      _row(priceMax: null),
+      _row(priceMin: '50'),
+    ]) {
+      final incomplete = Place.fromJson(partial);
+      expect(incomplete.priceMin, isNull);
+      expect(incomplete.priceMax, isNull);
+    }
+
+    final withoutKeys = _row()
+      ..remove('priceMin')
+      ..remove('priceMax');
+    final unpriced = Place.fromJson(withoutKeys);
+    expect(unpriced.priceMin, isNull);
+    expect(unpriced.priceMax, isNull);
   });
 
   test('defaults locations to unverified and maps the verification field', () {

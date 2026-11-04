@@ -69,3 +69,7 @@ desktop.ini
 
 # Widget Preview related
 .widget_preview/
+
+# Local-only client concept tracking. Deliberately kept out of the repository
+# so the meeting notes and status annotations stay on the owner's machine.
+docs/CONCEPT_AND_FOLLOW_UP_ANSWERS.md

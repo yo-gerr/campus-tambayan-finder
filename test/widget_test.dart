@@ -5,6 +5,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
+import 'package:campus_tambayan_finder/features/places/place_categories.dart';
 import 'package:campus_tambayan_finder/features/places/place_photo.dart';
 import 'package:campus_tambayan_finder/features/places/places_repository.dart';
 
@@ -279,6 +280,27 @@ void main() {
     expect(find.text('Sample Study Corner'), findsNothing);
   });
 
+  testWidgets('budget uses chips and applies the cheapest estimated spend', (
+    tester,
+  ) async {
+    await pumpPrototype(tester);
+
+    await tester.tap(find.byKey(const Key('open-filters')));
+    await tester.pumpAndSettle();
+
+    // Uniform controls: the budget group is a chip row, not a slider.
+    expect(find.byKey(const Key('budget-filter')), findsNothing);
+    expect(find.byKey(const Key('budget-any-filter')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('budget-50-filter')));
+    await tester.tap(find.byKey(const Key('apply-filters')));
+    await tester.pumpAndSettle();
+
+    // Study Corner starts at ₱0; Kape Stop starts at ₱80.
+    expect(find.text('Sample Study Corner'), findsOneWidget);
+    expect(find.text('Sample Kape Stop'), findsNothing);
+  });
+
   testWidgets('reset clears selected filters before applying', (tester) async {
     await pumpPrototype(tester);
 
@@ -319,6 +341,32 @@ void main() {
     );
     expect(find.byKey(const Key('map-place-carousel')), findsNothing);
     expect(find.text('Sample Kape Stop'), findsNothing);
+  });
+
+  testWidgets('offers every agreed category even with no listing for it', (
+    tester,
+  ) async {
+    await pumpPrototype(tester);
+
+    await tester.tap(find.byKey(const Key('open-filters')));
+    await tester.pumpAndSettle();
+
+    for (final category in PlaceCategory.values) {
+      expect(
+        find.byKey(Key('category-${category.key}-filter')),
+        findsOneWidget,
+      );
+    }
+
+    await tester.tap(find.byKey(const Key('category-other-filter')));
+    await tester.tap(find.byKey(const Key('apply-filters')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('No Other place listings yet'), findsOneWidget);
+    expect(
+      find.text('Try changing or clearing your filters.'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('onboarding can be dismissed and opened again', (tester) async {

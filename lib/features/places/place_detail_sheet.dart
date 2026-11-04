@@ -179,7 +179,7 @@ class _PlaceDetailSheet extends StatelessWidget {
           _DetailRow(
             icon: Icons.payments_outlined,
             title: copy.get('price'),
-            value: '₱${place.priceMin}–₱${place.priceMax}',
+            value: copy.priceRange(place.priceMin, place.priceMax),
           ),
           _DetailRow(
             icon: Icons.schedule_outlined,

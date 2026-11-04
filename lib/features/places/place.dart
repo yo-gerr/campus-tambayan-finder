@@ -9,8 +9,8 @@ class Place implements PlaceLike {
     this.address,
     required this.descriptionEn,
     required this.descriptionTl,
-    required this.priceMin,
-    required this.priceMax,
+    this.priceMin,
+    this.priceMax,
     required this.hours,
     required this.amenities,
     required this.setting,
@@ -34,9 +34,17 @@ class Place implements PlaceLike {
   final String? address;
   final String descriptionEn;
   final String descriptionTl;
+
+  /// Lowest and highest estimated spend in pesos.
+  ///
+  /// Both are null when the team has no reliable price. A half-known range is
+  /// treated as unknown rather than guessed, so a listing never reads as free
+  /// just because its price was not supplied.
   @override
-  final int priceMin;
-  final int priceMax;
+  final int? priceMin;
+
+  @override
+  final int? priceMax;
   final String hours;
   @override
   final List<String> amenities;
@@ -103,6 +111,12 @@ class Place implements PlaceLike {
   }
 
   factory Place.fromJson(Map<String, dynamic> json) {
+    // A price range only counts when both bounds are present. Storing one
+    // bound alone would let the budget filter match on a guess.
+    final priceMin = _optionalInt(json['priceMin']);
+    final priceMax = _optionalInt(json['priceMax']);
+    final hasPrice = priceMin != null && priceMax != null;
+
     return Place(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -111,8 +125,8 @@ class Place implements PlaceLike {
       address: _optionalText(json['address']),
       descriptionEn: json['descriptionEn'] as String,
       descriptionTl: json['descriptionTl'] as String,
-      priceMin: json['priceMin'] as int,
-      priceMax: json['priceMax'] as int,
+      priceMin: hasPrice ? priceMin : null,
+      priceMax: hasPrice ? priceMax : null,
       hours: json['hours'] as String,
       amenities: List<String>.from(json['amenities'] as List<dynamic>),
       setting: json['setting'] as String,
@@ -189,3 +203,5 @@ double? _optionalCoordinate(Object? value) {
   final coordinate = value.toDouble();
   return coordinate.isFinite ? coordinate : null;
 }
+
+int? _optionalInt(Object? value) => value is num ? value.toInt() : null;

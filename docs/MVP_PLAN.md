@@ -148,6 +148,10 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 ## Decisions and inputs still needed
 
 - The team's listing spreadsheet/data template and final 15–20 entries.
+- Capacity filter: whether the single "Roomy" amenity is sufficient, or a numeric/bucketed capacity estimate and filter is required.
+- Budget matching: whether a listing qualifies on its lowest estimated spend (current) or highest estimated spend.
+- Wi-Fi meaning: confirm the `wifi` amenity means free access only.
+- Structured open days: whether per-day opening hours are needed, and whether that should drive an "open now" indicator or a day filter.
 - Photo permissions, translation responsibility, data verification expectations, and update process.
 - Supabase organization ownership, dashboard edit access, and who exports the table back to the repository before each build.
 - In-app map source/renderer and attribution requirements.

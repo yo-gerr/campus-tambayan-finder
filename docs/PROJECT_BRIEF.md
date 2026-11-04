@@ -53,6 +53,8 @@ The team will provide the compiled initial listing information and available pho
 For the first version, the team expects to provide a compiled list of approximately 15–20 establishments, with available photos and information. The requested listing details include establishment names, locations, descriptions, operating hours, and prices. The exact data template, translation source, photo permissions, and completeness/verification expectations still need agreement.
 
 - Confirmed November 4, 2026: each listing may store one optional address as plain text. The detail view shows it only when present; the short neighborhood label stays on cards. Addresses are published only after verification, and fictional demo rows use clearly labeled placeholder addresses.
+- Confirmed November 4, 2026: the price is optional as a pair. A listing without a reliable `priceMin`/`priceMax` range shows a localized "not listed" label instead of an implied free price, and it is hidden while a budget filter is active. `0` always means free and must never stand in for an unknown price.
+- Confirmed November 4, 2026: operating hours are currently one free-text string per listing, displayed as supplied on the detail view. Opening and closing _times_ are therefore supported, but which weekdays a place is open or closed is not structured data, so the app cannot yet say "open today" or filter by day. Structured open days remain a follow-up question recorded in the table below.
 
 ### Discovery and filters
 
@@ -63,6 +65,8 @@ The agreed direction includes filters for:
 - Indoor or outdoor setting.
 - Suitability for studying, eating, relaxing, or socializing.
 - Price range or a user's preferred budget.
+
+Confirmed November 4, 2026: the budget filter is a preset chip row (₱50, ₱100, ₱150, ₱200, ₱300, ₱500) plus "Any budget", matching the other filter groups. "Any budget" applies no limit at all; it is not a maximum preset. The filter currently compares a listing's lowest estimated spend against the selected limit. Whether it should use the highest estimated spend instead is an open follow-up question.
 
 ### Map, travel time, and location
 
@@ -135,6 +139,10 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Meaning of "available time" | Confirmed to mean shop operating hours; estimated travel time to the place is a separate desired detail |
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |
+| Capacity estimate versus spaciousness | Open — follow-up with client: the app currently stores one boolean `capacity` amenity ("Roomy"/"Maluwag"), which covers spaciousness but not an estimated seat count or size bucket. Confirm whether a numeric or bucketed capacity estimate and filter is required |
+| Budget comparison basis | Open — follow-up with client: the app matches a budget against the lowest estimated spend (`priceMin`), so a listing priced ₱80–₱250 appears under a ₱100 limit. Confirm whether the highest estimated spend (`priceMax`) should be used instead |
+| Wi-Fi amenity meaning | Open — follow-up with client: the app labels the `wifi` amenity "Free Wi-Fi" / "Libreng Wi-Fi". Confirm that paid Wi-Fi must be excluded from that value, or whether paid access needs its own value |
+| Structured operating days | Open — follow-up with client: opening/closing times are stored as one free-text string, so the app shows the times as written but cannot represent which weekdays a place is open or closed. Confirm whether per-day open hours are required, and whether an "open now"/"closed today" indicator or a day filter should follow from that |
 | Photo permissions, data template, translation source, and verification criteria | Open |
 | Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually in the Supabase dashboard; who holds access is open |
 | Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan `places` and `place_photos` tables, with bundled local JSON as seed and offline fallback |

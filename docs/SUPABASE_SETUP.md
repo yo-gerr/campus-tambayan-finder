@@ -30,8 +30,8 @@ create table if not exists public.places (
   address text,
   "descriptionEn" text not null,
   "descriptionTl" text not null,
-  "priceMin" integer not null,
-  "priceMax" integer not null,
+  "priceMin" integer,
+  "priceMax" integer,
   hours text not null,
   amenities text[] not null default '{}',
   setting text not null,
@@ -70,8 +70,18 @@ end $$;
 
 No insert, update, or delete policy is created for `anon`, so the shipped key cannot change listings even if it is extracted from the APK.
 
-If the table already exists from an earlier setup, add the new fields and relax
-the old schematic-coordinate columns instead of recreating it:
+### Category values
+
+`category` is free text in the table, but the app groups and labels only the five agreed keys: `tambayan`, `coffee`, `park`, `eatery`, and `other`. Write those exact lowercase values in dashboard edits and CSV imports. Any other spelling, such as `Karinderya`, `Eatery`, or `cafe`, is still displayed verbatim so the mistake is visible, but it will not match a category filter. The list lives in `lib/features/places/place_categories.dart` and is independent of the rows currently stored, so every category stays selectable before listings exist for it.
+
+### Price values
+
+`priceMin` and `priceMax` are optional as a pair. Leave **both** blank when the team has no reliable estimate: the app shows "Price not listed" and excludes the listing while a budget filter is active. Never enter `0` to mean unknown — `0` means free. For an exact price, repeat the same value in both columns; the app displays it once instead of as a range.
+
+The budget filter compares the lowest estimated spend (`priceMin`) with the selected limit. Whether it should use the highest (`priceMax`) instead is an open product question recorded in the project brief, so do not treat the current behavior as final.
+
+If the table already exists from an earlier setup, add the newer fields and
+relax the columns that are now optional instead of recreating it:
 
 ```sql
 alter table public.places add column if not exists latitude double precision;
@@ -79,6 +89,8 @@ alter table public.places add column if not exists longitude double precision;
 alter table public.places add column if not exists address text;
 alter table public.places
   add column if not exists location_verified boolean not null default false;
+alter table public.places alter column "priceMin" drop not null;
+alter table public.places alter column "priceMax" drop not null;
 alter table public.places alter column "mapX" drop not null;
 alter table public.places alter column "mapY" drop not null;
 alter table public.places add column if not exists "photoUrl" text;

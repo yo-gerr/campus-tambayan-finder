@@ -66,7 +66,7 @@ class PlaceCard extends StatelessWidget {
                       children: [
                         _TinyLabel(
                           icon: Icons.payments_outlined,
-                          text: '₱${place.priceMin}–₱${place.priceMax}',
+                          text: copy.priceRange(place.priceMin, place.priceMax),
                         ),
                         ...place.amenities
                             .take(2)

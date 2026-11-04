@@ -1,3 +1,5 @@
+import '../features/places/place_categories.dart';
+
 enum AppLanguage { english, tagalog }
 
 class AppCopy {
@@ -13,11 +15,12 @@ class AppCopy {
     return translations[isTagalog ? 1 : 0];
   }
 
-  String category(String key) {
-    final labels = _categories[key];
-    if (labels == null) return key;
-    return labels[isTagalog ? 1 : 0];
-  }
+  /// Bilingual label for a stored category key.
+  ///
+  /// Labels live in [PlaceCategory] so the chip list, search, and cards cannot
+  /// drift apart. Unknown keys are returned unchanged rather than blanked.
+  String category(String key) =>
+      PlaceCategory.fromKey(key)?.label(isTagalog) ?? key;
 
   String activity(String key) {
     final labels = _activities[key];
@@ -27,6 +30,14 @@ class AppCopy {
 
   String photoPosition(int current, int total) =>
       isTagalog ? 'Larawan $current ng $total' : 'Photo $current of $total';
+
+  /// Estimated spend for a listing, or the "not listed" copy when the team has
+  /// no reliable range. An exact price collapses to a single value instead of
+  /// reading as "₱50–₱50".
+  String priceRange(int? min, int? max) {
+    if (min == null || max == null) return get('price_not_listed');
+    return min == max ? '₱$min' : '₱$min–₱$max';
+  }
 
   /// The language a tap will switch to, kept compact for the app bar.
   String get languageToggleTarget => isTagalog ? 'Eng' : 'Tag';
@@ -73,6 +84,7 @@ class AppCopy {
     ],
     'hours': ['Hours', 'Oras'],
     'price': ['Estimated\nspend', 'Tinatayang gastos'],
+    'price_not_listed': ['Price not listed', 'Hindi nakalista ang presyo'],
     'amenities': ['Amenities', 'Mga amenity'],
     'setting': ['Setting', 'Lugar'],
     'address': ['Address', 'Adres'],
@@ -105,6 +117,10 @@ class AppCopy {
     'empty_title': [
       'No places match those filters',
       'Walang lugar na tugma sa mga filter',
+    ],
+    'empty_category_title': [
+      'No {category} listings yet',
+      'Wala pang listahan para sa {category}',
     ],
     'empty_body': [
       'Try changing or clearing your filters.',
@@ -146,13 +162,6 @@ class AppCopy {
     'choose_origin': ['Choose starting point', 'Piliin ang pinagmulan'],
     'place_count': ['places to explore', 'lugar na matutuklasan'],
     'open_now_unknown': ['Hours are sample data', 'Halimbawa lamang ang oras'],
-  };
-
-  static const _categories = <String, List<String>>{
-    'tambayan': ['Tambayan', 'Tambayan'],
-    'coffee': ['Coffee shop', 'Kapihan'],
-    'park': ['Park / open space', 'Parke / bukas na lugar'],
-    'eatery': ['Affordable eatery', 'Abot-kayang kainan'],
   };
 
   static const _activities = <String, List<String>>{

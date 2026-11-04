@@ -4,6 +4,36 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added an annotated local concept checklist and a structured open-days follow-up
+
+- **Local tracking copy.** `docs/CONCEPT_AND_FOLLOW_UP_ANSWERS.md` now carries a status legend and inline HTML spans so implemented items read green (`#1a7f37`), partial items amber (`#9a6700`), and open items stay plain with `⬜`. Each item also gets a ✅/🟡/⬜ marker so the status survives viewers that strip inline styles. Open and partial items link to their follow-up in `PROJECT_BRIEF.md` and, where one exists, the matching `MVP_PLAN.md` phase or the "Decisions and inputs still needed" list.
+- **Deliberately not committed.** Added the file to `.gitignore`. It was still untracked, so no `git rm --cached` was needed; `git check-ignore -v` resolves it to `.gitignore:75` and `git status` no longer lists it. The meeting notes and status annotations therefore stay local and out of the repository and the Pages build.
+- **New follow-up: structured operating days.** Added to the `PROJECT_BRIEF.md` decisions table and to "Decisions and inputs still needed" in `MVP_PLAN.md`. Hours are currently one free-text string, so opening/closing times render but weekday-level open/closed data does not exist. The brief also records that limitation next to the price/address notes.
+- **Validation.** Documentation-only change; `flutter analyze` clean and `flutter test` 51 passed were re-run to confirm nothing regressed.
+- Remaining: the structured open-days question, plus the earlier capacity, budget-basis, and free-Wi-Fi questions, still need client answers. The local checklist file will not sync between machines unless copied manually.
+
+### 2026-11-04 — Made prices optional and turned the budget control into chips
+
+- **Optional prices (D2).** `priceMin`/`priceMax` are now `int?` in `Place` and `PlaceLike`. `Place.fromJson` clears both when either bound is missing or not numeric, so a half-known range is never used as a guess. Cards and the detail sheet use a new `AppCopy.priceRange()`: an exact price renders once (`₱50`), a range keeps the en dash, and a missing pair renders "Price not listed" / "Hindi nakalista ang presyo". `PlaceFilters.matches` excludes unpriced listings while a budget limit is active and includes them when it is not.
+- **Budget chips (D3 UI).** Replaced the ₱0–₱600 slider with a `ChoiceChip` row matching the other filter groups: "Any budget" plus ₱50/₱100/₱150/₱200/₱300/₱500. `PlaceFilters.maxBudget` changed from `double = 600` to `int?`, where null means no limit.
+- **Uncapped "Any budget" (D4).** The old maximum slider position doubled as the "any" sentinel, so listings with `priceMin > 600` could never appear. Null is now a real no-limit state; a unit test covers an expensive listing surviving "Any budget".
+- **Not changed (D1, Wi-Fi).** Capacity remains the single `capacity` → "Roomy" amenity, and `wifi` remains labeled "Free Wi-Fi". Both are now recorded as client follow-up questions instead of being assumed: see the new rows in `docs/PROJECT_BRIEF.md` and the additions under "Decisions and inputs still needed" in `docs/MVP_PLAN.md`. Budget comparison (`priceMin` vs `priceMax`) is recorded the same way.
+- **Docs.** `docs/SUPABASE_SETUP.md` now declares the price columns nullable, explains "leave both blank, `0` means free", and adds `alter column … drop not null` to the existing-table migration block. `docs/ARCHITECTURE.md` records the optional-pair and no-limit-budget behavior.
+- **Validation.** `flutter analyze` clean; `flutter test` 51 passed, up from 41. New coverage: nullable/partial price parsing, budget including and excluding unpriced listings, the uncapped "any" state, amenity/setting/activity matching, price label formatting, and the chip-based budget flow in the widget test.
+- Remaining:
+  - The live Supabase table still has `NOT NULL` on both price columns. Run the migration block in `docs/SUPABASE_SETUP.md` before entering a listing without a price, or that insert will fail.
+  - Budget-chip presets are a UI choice, not a client decision; adjust if the team prefers other amounts.
+  - The capacity, budget-basis, and free-Wi-Fi questions are documented but unanswered.
+
+### 2026-11-04 — Supported all five agreed place categories independently of data
+
+- The app only knew four category keys (`tambayan`, `coffee`, `park`, `eatery`), so the brief's fifth category had no key at all, and "Karinderya" was missing from the eatery label. Keys, labels, icons, and placeholder tints were duplicated across `lib/app/app_copy.dart`, `place_filter_sheet.dart`, and `place_photo.dart`, which is how the omission slipped through.
+- Added `lib/features/places/place_categories.dart` as the static catalog (key, EN/TL label, icon, tint). `AppCopy.category()` now delegates to it, the filter sheet iterates it, and `PlacePhotoPlaceholder` reads its icon/tint, so adding a category is one edit. Added `AppColors.otherTint`. Eatery labels now read `Karinderya / affordable eatery` and `Karinderya / abot-kayang kainan`; the new fifth category is `other` (`Other place` / `Iba pang lugar`).
+- Categories are deliberately static rather than derived from loaded rows: all five chips appear even when no listing uses them. When the selected category has no listing anywhere in the dataset, the empty state now says "No <category> listings yet"; if listings exist but other filters excluded them, the previous message remains. Unrecognised stored keys are still shown verbatim so import mistakes stay visible.
+- Docs: added the five canonical `places.category` values to `docs/SUPABASE_SETUP.md` (the column is free text, so this is the only guard against `Karinderya`/`cafe`-style values) and the static-vocabulary rule to `docs/ARCHITECTURE.md`.
+- Validation: `flutter analyze` clean; `flutter test` 41 passed, up from 37. New tests cover the catalog contents and key uniqueness, the bilingual labels including the unknown-key fallback, and the empty-category state with no listings for that category.
+- Remaining: no seed row was added for `other` on purpose, so selecting it currently shows the empty-category state. Real Supabase rows must use the five lowercase keys. The five-chip wrap and the new empty state were not visually checked on a device.
+
 ### 2026-11-04 — Prepared the repository for publication and added the client web preview
 
 - **Repository hygiene.** Hardened the root `.gitignore` for gaps that only existed under `android/.gitignore`: root-level `*.jks`/`*.keystore`/`key.properties`, `.env`/`*.env`, `*.apk`/`*.aab`/`*.ipa`, `android/build/` and `android/app/build/` (the root-anchored `/build/` did not cover them), and `Thumbs.db`/`desktop.ini`. Verified each rule with `git check-ignore`; note that directory-only patterns report "not ignored" for paths that do not yet exist, so they were tested with a temporary directory.
