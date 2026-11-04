@@ -28,6 +28,12 @@ class AppCopy {
   String photoPosition(int current, int total) =>
       isTagalog ? 'Larawan $current ng $total' : 'Photo $current of $total';
 
+  /// The language a tap will switch to, kept compact for the app bar.
+  String get languageToggleTarget => isTagalog ? 'Eng' : 'Tag';
+
+  String get languageToggleTooltip =>
+      isTagalog ? 'Lumipat sa English' : 'Switch to Filipino';
+
   static const _translations = <String, List<String>>{
     'explore': ['Explore', 'Mag-explore'],
     'map': ['Map', 'Mapa'],
@@ -66,10 +72,17 @@ class AppCopy {
       'Halimbawang impormasyon para lamang sa prototype.',
     ],
     'hours': ['Hours', 'Oras'],
-    'price': ['Estimated spend', 'Tinatayang gastos'],
+    'price': ['Estimated\nspend', 'Tinatayang gastos'],
     'amenities': ['Amenities', 'Mga amenity'],
     'setting': ['Setting', 'Lugar'],
+    'address': ['Address', 'Adres'],
     'good_for': ['Good for', 'Angkop para sa'],
+    'location': ['Location', 'Lokasyon'],
+    'location_unverified': [
+      'Not yet verified; directions are unavailable.',
+      'Hindi pa beripikado; hindi available ang direksyon.',
+    ],
+    'not_listed': ['Not listed', 'Hindi nakalista'],
     'directions': ['Directions', 'Direksyon'],
     'directions_location_unverified': [
       'Directions are unavailable because this listing’s location has not been verified yet.',

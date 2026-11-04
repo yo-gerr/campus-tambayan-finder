@@ -6,6 +6,7 @@ class Place implements PlaceLike {
     required this.name,
     required this.category,
     required this.area,
+    this.address,
     required this.descriptionEn,
     required this.descriptionTl,
     required this.priceMin,
@@ -27,6 +28,10 @@ class Place implements PlaceLike {
   @override
   final String category;
   final String area;
+
+  /// Optional public business address. Kept untranslated; [area] stays the
+  /// short neighborhood label shown on cards.
+  final String? address;
   final String descriptionEn;
   final String descriptionTl;
   @override
@@ -77,6 +82,12 @@ class Place implements PlaceLike {
   /// the original single-photo fields as the card image.
   final List<PlaceGalleryPhoto> photos;
 
+  /// Temporary marker for the repository's fictional prototype records.
+  ///
+  /// Real listing IDs must not use this reserved prefix. Replace this bridge
+  /// with an explicit listing-status field when the team imports real data.
+  bool get isDemo => id.startsWith('sample-');
+
   PlaceGalleryPhoto? get coverPhoto {
     for (final photo in photos) {
       if (photo.isCover) return photo;
@@ -97,6 +108,7 @@ class Place implements PlaceLike {
       name: json['name'] as String,
       category: json['category'] as String,
       area: json['area'] as String,
+      address: _optionalText(json['address']),
       descriptionEn: json['descriptionEn'] as String,
       descriptionTl: json['descriptionTl'] as String,
       priceMin: json['priceMin'] as int,

@@ -124,13 +124,17 @@ class _TambayanHomeState extends State<_TambayanHome> {
           ],
         ),
         actions: [
-          IconButton(
-            key: const Key('language-toggle'),
-            tooltip: _language == AppLanguage.english
-                ? 'Switch to Filipino'
-                : 'Switch to English',
-            onPressed: _toggleLanguage,
-            icon: const Icon(Icons.translate),
+          Tooltip(
+            message: _copy.languageToggleTooltip,
+            child: Semantics(
+              button: true,
+              label: _copy.languageToggleTooltip,
+              child: TextButton(
+                key: const Key('language-toggle'),
+                onPressed: _toggleLanguage,
+                child: Text(_copy.languageToggleTarget),
+              ),
+            ),
           ),
           IconButton(
             key: const Key('open-guide'),

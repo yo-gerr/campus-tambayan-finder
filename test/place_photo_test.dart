@@ -116,6 +116,7 @@ void main() {
             photoAsset: null,
             sortOrder: 0,
             isCover: true,
+            captionEn: 'Sample cover caption',
           ),
           PlaceGalleryPhoto(
             photoUrl: 'https://example.test/inside.jpg',
@@ -138,6 +139,7 @@ void main() {
               photoPosition: (current, total) => 'Photo $current of $total',
               viewPhotoLabel: 'View photo full screen',
               closeLabel: 'Close',
+              photoCaption: (photo) => photo.captionEn,
             ),
           ),
         ),
@@ -148,6 +150,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('1 / 2'), findsOneWidget);
+      expect(find.text('Sample cover caption'), findsOneWidget);
       expect(tester.widget<Image>(find.byType(Image).first).fit, BoxFit.cover);
 
       await tester.tap(

@@ -98,6 +98,7 @@ class _PlaceDetailSheet extends StatelessWidget {
     final description = copy.isTagalog
         ? place.descriptionTl
         : place.descriptionEn;
+    final address = place.address;
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.85,
       child: ListView(
@@ -118,14 +119,16 @@ class _PlaceDetailSheet extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  copy.get('demo_badge'),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.terracotta,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.6,
-                  ),
-                ),
+                child: place.isDemo
+                    ? Text(
+                        copy.get('demo_badge'),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppColors.terracotta,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.6,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
               IconButton(
                 tooltip: copy.get('close'),
@@ -159,6 +162,9 @@ class _PlaceDetailSheet extends StatelessWidget {
             photoPosition: copy.photoPosition,
             viewPhotoLabel: copy.get('view_photo'),
             closeLabel: copy.get('close'),
+            photoCaption: (photo) => copy.isTagalog
+                ? photo.captionTl ?? photo.captionEn
+                : photo.captionEn ?? photo.captionTl,
           ),
           const SizedBox(height: 18),
           Container(
@@ -173,7 +179,9 @@ class _PlaceDetailSheet extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    '${copy.get('sample_data')} $description',
+                    place.isDemo
+                        ? '${copy.get('sample_data')} $description'
+                        : description,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -196,6 +204,34 @@ class _PlaceDetailSheet extends StatelessWidget {
             title: copy.get('setting'),
             value: copy.get(place.setting),
           ),
+          if (address != null)
+            _DetailRow(
+              icon: Icons.location_on_outlined,
+              title: copy.get('address'),
+              value: address,
+            ),
+          if (!place.locationVerified)
+            _DetailRow(
+              icon: Icons.location_off_outlined,
+              title: copy.get('location'),
+              value: copy.get('location_unverified'),
+            ),
+          if (place.activities.isNotEmpty) ...[
+            const SizedBox(height: 18),
+            Text(
+              copy.get('good_for'),
+              style: Theme.of(context).textTheme.titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: place.activities
+                  .map((activity) => Chip(label: Text(copy.activity(activity))))
+                  .toList(),
+            ),
+          ],
           const SizedBox(height: 18),
           Text(
             copy.get('amenities'),
@@ -207,7 +243,15 @@ class _PlaceDetailSheet extends StatelessWidget {
             spacing: 8,
             runSpacing: 4,
             children: place.amenities.isEmpty
-                ? [Chip(label: Text(copy.get('sample_data')))]
+                ? [
+                    Chip(
+                      label: Text(
+                        place.isDemo
+                            ? copy.get('sample_data')
+                            : copy.get('not_listed'),
+                      ),
+                    ),
+                  ]
                 : place.amenities
                       .map((amenity) => Chip(label: Text(copy.get(amenity))))
                       .toList(),

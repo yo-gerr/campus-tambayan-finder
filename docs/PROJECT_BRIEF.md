@@ -51,6 +51,8 @@ The team will provide the compiled initial listing information and available pho
 
 For the first version, the team expects to provide a compiled list of approximately 15–20 establishments, with available photos and information. The requested listing details include establishment names, locations, descriptions, operating hours, and prices. The exact data template, translation source, photo permissions, and completeness/verification expectations still need agreement.
 
+- Confirmed November 4, 2026: each listing may store one optional address as plain text. The detail view shows it only when present; the short neighborhood label stays on cards. Addresses are published only after verification, and fictional demo rows use clearly labeled placeholder addresses.
+
 ### Discovery and filters
 
 The agreed direction includes filters for:

@@ -23,6 +23,7 @@ class _TestPlacesRepository implements PlacesRepository {
       name: 'Sample Study Corner',
       category: 'tambayan',
       area: 'Demo location near PLV Annex',
+      address: 'Blk 1 Lot 2, Demo Street, Malinta, Valenzuela City (demo only)',
       descriptionEn:
           'A fictional quiet-place example for reviewing the app flow.',
       descriptionTl:
@@ -103,18 +104,46 @@ void main() {
       tester.widget<PlacePhotoGallery>(find.byType(PlacePhotoGallery)).height,
       210,
     );
+    expect(find.text('Estimated\nspend'), findsOneWidget);
     expect(
       find.textContaining('Sample information for prototype review only.'),
       findsOneWidget,
     );
     final detailList = find.byKey(const Key('place-detail-list'));
+    final detailScrollable = find.descendant(
+      of: detailList,
+      matching: find.byType(Scrollable),
+    );
+
+    // The photo pushes these rows below the lazily built part of the list.
+    await tester.scrollUntilVisible(
+      find.text(
+        'Blk 1 Lot 2, Demo Street, Malinta, Valenzuela City (demo only)',
+      ),
+      100,
+      scrollable: detailScrollable,
+    );
+    expect(find.text('Address'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Not yet verified; directions are unavailable.'),
+      100,
+      scrollable: detailScrollable,
+    );
+    expect(find.text('Location'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text('Good for'),
+      100,
+      scrollable: detailScrollable,
+    );
+    expect(find.text('Study'), findsOneWidget);
+    expect(find.text('Relax'), findsOneWidget);
+
     await tester.scrollUntilVisible(
       find.descendant(of: detailList, matching: find.text('Free Wi-Fi')),
       100,
-      scrollable: find.descendant(
-        of: detailList,
-        matching: find.byType(Scrollable),
-      ),
+      scrollable: detailScrollable,
     );
     final amenityChip = find.widgetWithText(Chip, 'Free Wi-Fi');
     expect(amenityChip, findsOneWidget);
@@ -143,9 +172,10 @@ void main() {
     );
     expect(find.text('Sample hours · 8:00 AM–8:00 PM'), findsOneWidget);
     // Scroll back so the header's close button is reachable again.
-    await tester.drag(
-      find.byKey(const Key('place-detail-list')),
-      const Offset(0, 400),
+    await tester.scrollUntilVisible(
+      find.byTooltip('Close'),
+      -100,
+      scrollable: detailScrollable,
     );
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Close'));
@@ -211,9 +241,14 @@ void main() {
   ) async {
     await pumpPrototype(tester);
 
+    expect(find.text('Tag'), findsOneWidget);
+    expect(find.byIcon(Icons.translate), findsNothing);
+    expect(find.byTooltip('Switch to Filipino'), findsOneWidget);
     await tester.tap(find.byKey(const Key('language-toggle')));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Mag-explore'), findsOneWidget);
+    expect(find.text('Eng'), findsOneWidget);
+    expect(find.byTooltip('Lumipat sa English'), findsOneWidget);
 
     await tester.tap(find.text('Mapa'));
     await tester.pump(const Duration(milliseconds: 400));

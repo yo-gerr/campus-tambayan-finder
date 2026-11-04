@@ -27,6 +27,7 @@ create table if not exists public.places (
   name text not null,
   category text not null,
   area text not null,
+  address text,
   "descriptionEn" text not null,
   "descriptionTl" text not null,
   "priceMin" integer not null,
@@ -75,6 +76,7 @@ the old schematic-coordinate columns instead of recreating it:
 ```sql
 alter table public.places add column if not exists latitude double precision;
 alter table public.places add column if not exists longitude double precision;
+alter table public.places add column if not exists address text;
 alter table public.places
   add column if not exists location_verified boolean not null default false;
 alter table public.places alter column "mapX" drop not null;
@@ -180,9 +182,31 @@ Use the dashboard's CSV import or the SQL editor, keeping the column names exact
 
 Keep `assets/data/sample_places.json` as the bundled seed and offline fallback. Its `photos` array holds offline gallery entries; it is not a `places` column, so omit it from a `places` CSV import. Keep related `place_photos` rows in a separate CSV/export. The fictional sample listings contain illustrative coordinates solely to preview the local demo map; do not import those coordinates as actual listing locations. Replace them with verified coordinates, or leave both coordinate fields blank, before publishing real listings. When the team supplies new listings, update the repository records and import the matching `places` and `place_photos` data. Export both tables back before each APK build if anyone has edited them in the dashboard.
 
+Listing ids also drive the in-app demo labels. The app treats any id beginning with `sample-` as fictional prototype data and shows the `DEMO LISTING` badge plus the sample-information note; other ids are presented as normal listings. Do not use that prefix for real listings. This is a temporary convention until an explicit demo/verification field is modeled.
+
 For map pins, enter verified decimal-degree `latitude` and `longitude` values as a pair. Leave both blank until the place's position has been checked; the app omits places without a valid pair rather than plotting the old schematic `mapX`/`mapY` values. Those legacy columns are retained only for existing project data and are not used by the geographic map.
 
 The `location_verified` flag must remain `false` unless the listing's actual location and coordinates have been checked. The app defaults missing flags to `false` and only enables Google Maps directions when this flag is `true` and the coordinate pair is valid. Existing rows get `false` from the migration; CSV imports that omit this field also use the default. Bundled sample rows use illustrative coordinates and must never be marked verified or imported as real destinations. In the repository JSON the matching field is `locationVerified`.
+
+### Addresses
+
+`address` is a single optional, untranslated text field. Keep `area` as the short neighborhood label used on cards and the subtitle; `address` appears only in the detail sheet when present. Publish an address only after checking it against the establishment's own listing or another authoritative source, and update or clear it if the shop moves. The fictional demo rows use obviously fake addresses ending in `(demo only)`; never replace them with a real address until the listing is approved, and never present an unverified address as confirmed. CSV imports can leave the field blank.
+
+After adding the column, label the fictional demo rows so they match `assets/data/sample_places.json`:
+
+```sql
+update public.places as p
+set address = v.address
+from (values
+  ('sample-study-corner', 'Blk 1 Lot 2, Demo Street, Malinta, Valenzuela City (demo only)'),
+  ('sample-kape-stop', 'Blk 3 Lot 4, Sample Avenue, Malinta, Valenzuela City (demo only)'),
+  ('sample-luntiang-pahingahan', 'Demo Park, Illustrative Road, Malinta, Valenzuela City (demo only)'),
+  ('sample-budget-kainan', 'Blk 5 Lot 6, Prototype Lane, Malinta, Valenzuela City (demo only)')
+) as v(id, address)
+where p.id = v.id;
+```
+
+Replace these placeholders with verified addresses only when the team approves the real listing.
 
 ### Photos and galleries
 
@@ -197,7 +221,7 @@ New galleries are managed through `place_photos`. For each entry, use:
 - `photoUrl` — public URL of the Storage object (required).
 - `sortOrder` — unique display order starting at `0`.
 - `isCover` — `true` for exactly one card cover photo.
-- `photoAsset`, `captionEn`, and `captionTl` — optional; asset paths are APK-only backups, and captions are reserved for approved bilingual copy.
+- `photoAsset`, `captionEn`, and `captionTl` — optional; asset paths are APK-only backups, and captions appear under the gallery photo. Use approved bilingual copy; the app falls back to the other language when one translation is missing.
 
 Use the existing bucket **`places-photos`** (or create it once through **Storage → New bucket** if it is absent) and enable the public bucket option. Public read is what lets the shipped publishable key fetch images; do not add insert, update, or delete policies for `anon`. The Free plan includes 1 GB and needs no card.
 

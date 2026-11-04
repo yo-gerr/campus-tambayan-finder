@@ -69,6 +69,7 @@ class PlacePhotoGallery extends StatefulWidget {
     required this.photoPosition,
     required this.viewPhotoLabel,
     required this.closeLabel,
+    this.photoCaption,
     super.key,
   });
 
@@ -81,6 +82,7 @@ class PlacePhotoGallery extends StatefulWidget {
   final String Function(int current, int total) photoPosition;
   final String viewPhotoLabel;
   final String closeLabel;
+  final String? Function(PlaceGalleryPhoto photo)? photoCaption;
 
   @override
   State<PlacePhotoGallery> createState() => _PlacePhotoGalleryState();
@@ -101,7 +103,13 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
           child: SizedBox(
             width: widget.width,
             height: widget.height,
-            child: _galleryPhoto(context, photos.single, 0),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _galleryPhoto(context, photos.single, 0),
+                _caption(photos.single, hasPositionIndicator: false),
+              ],
+            ),
           ),
         );
       }
@@ -158,6 +166,10 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
                 ),
               ),
             ),
+            _caption(
+              photos[_currentPage.clamp(0, photos.length - 1)],
+              hasPositionIndicator: true,
+            ),
           ],
         ),
       ),
@@ -187,6 +199,39 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
           photo: photo,
           fallback: widget.placeholder,
           loadingLabel: widget.loadingLabel,
+        ),
+      ),
+    );
+  }
+
+  Widget _caption(
+    PlaceGalleryPhoto photo, {
+    required bool hasPositionIndicator,
+  }) {
+    final caption = widget.photoCaption?.call(photo);
+    if (caption == null || caption.isEmpty) return const SizedBox.shrink();
+
+    return Positioned(
+      left: 10,
+      right: hasPositionIndicator ? 62 : 10,
+      bottom: 10,
+      // Labels must not steal the tap that opens the full-screen viewer.
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.black54,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            child: Text(
+              caption,
+              key: const Key('place-photo-caption'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
         ),
       ),
     );

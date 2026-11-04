@@ -9,11 +9,13 @@ Map<String, dynamic> _row({
   Object? latitude,
   Object? longitude,
   Object? locationVerified,
+  Object? address,
 }) => {
   'id': 'live-place',
   'name': 'Live Place',
   'category': 'coffee',
   'area': 'Malinta',
+  'address': address,
   'descriptionEn': 'English description.',
   'descriptionTl': 'Paglalarawan sa Filipino.',
   'priceMin': 50,
@@ -80,6 +82,18 @@ void main() {
 
     expect(coordinates?.latitude, 0);
     expect(coordinates?.longitude, 0);
+  });
+
+  test('maps an address and treats blank or missing as absent', () {
+    expect(
+      Place.fromJson(_row(address: '12 Sample Street, Malinta')).address,
+      '12 Sample Street, Malinta',
+    );
+    expect(Place.fromJson(_row()).address, isNull);
+    expect(Place.fromJson(_row(address: '   ')).address, isNull);
+
+    final withoutKey = _row()..remove('address');
+    expect(Place.fromJson(withoutKey).address, isNull);
   });
 
   test('maps photo fields when the row supplies them', () {

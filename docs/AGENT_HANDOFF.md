@@ -4,6 +4,53 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added the optional listing address
+
+- Added nullable `places.address` (single, untranslated text) plus `Place.address` parsing; the detail sheet shows an “Address” row only when the field is non-empty, after Setting and before the location-status row. New copy key: `address` (Address / Adres). `area` remains the short neighborhood label on cards.
+- The four bundled fictional rows now carry clearly labeled demo addresses (each ends with `(demo only)`) so offline fallback matches the shared data; no real addresses were invented.
+- Docs: `docs/SUPABASE_SETUP.md` gains the column in the create table block and migration, plus an Addresses subsection covering verification, demo placeholders, and blank CSV values. `docs/PROJECT_BRIEF.md` records the confirmed field decision.
+- Tests: `test/place_test.dart` covers address mapping and blank/missing values; `test/widget_test.dart` asserts the address row and demo value in the detail sheet.
+- Validation: `flutter analyze` clean, all 33 tests passed, `git diff --check` clean, and `flutter build apk --debug` succeeded. Emulator checks: the bundled copy shows the Address row with the demo value in English and Adres in Tagalog; after the owner applied the Supabase migration, a live-data build (with the Supabase defines) shows the shared address for `sample-kape-stop`, confirming the field flows from `places.address` through the realtime source. Screenshot: `%LOCALAPPDATA%\Temp\opencode\live-address-2.png` (not committed).
+- Applied by the owner in Supabase:
+  - `alter table public.places add column if not exists address text;`
+  - the demo-label `update` documented in `docs/SUPABASE_SETUP.md` → Addresses, for the four `sample-*` rows.
+- Remaining / decisions:
+  - The owner confirmed the fictional rows should not be marked verified, but the reset has not run yet; all four still have `location_verified = true`. Run `update public.places set location_verified = false where id like 'sample-%';`. Map pins remain because they only require coordinates; directions become unavailable for the demo rows.
+  - The capacity filter still has no listing data path; the owner chose to leave it as is. Selecting “Roomy” currently matches nothing.
+  - All changes remain uncommitted.
+
+### 2026-11-04 — Aligned the detail sheet with stored listing fields
+
+- Added a localized “Good for” chip group backed by `places.activities` (shown only when the listing has activities), photo captions under the gallery photo, and an inline location row that appears only for unverified listings. Demo labels are now gated on the temporary `Place.isDemo` id prefix, so real listings no longer inherit `DEMO LISTING` or the sample-description note; a non-demo listing with no amenities shows “Not listed” instead of the sample chip.
+- Gallery captions follow the visible page, fall back to the other language when a translation is missing, and no longer intercept the tap that opens the full-screen viewer. The active gallery index is clamped when the photo list shrinks.
+- New copy keys: `location`, `location_unverified`, `not_listed`. Updated `docs/SUPABASE_SETUP.md` with the `sample-` id convention and the now-visible caption behavior. Tests cover the activities chips, unverified-location row, and gallery captions.
+- Validation: `flutter analyze` clean, all 32 tests passed, `git diff --check` clean, and `flutter build apk --debug` succeeded both with and without the Supabase defines. Emulator checks with live data: English and Tagalog detail sheets show “Good for”/“Angkop para sa”, captions “Sample exterior photo” → “Sample interior seating” with `1 / 3` → `2 / 3`, and full-screen zoom still opens after the caption change. Screenshots: `%LOCALAPPDATA%\Temp\opencode\detail-live-caption.png`, `detail-live-caption-2.png`, `detail-live-tagalog.png` (not committed).
+- Remaining / decisions:
+  - Address was unmodeled at the time; it is implemented in the newer entry above.
+  - The four live demo rows currently have `location_verified = true` with illustrative coordinates, which contradicts the setup guide’s rule that sample rows must never be marked verified. Decide whether to reset them to `false` for the demo or record them as approved demo destinations.
+  - The capacity filter still has no listing data path (`amenities` never contains `capacity`).
+  - All changes remain uncommitted.
+
+### 2026-11-04 — Made the language toggle text-only
+
+- Replaced the translate-icon-and-label control with the requested compact text-only target label: `Tag` in English and `Eng` in Tagalog. Localized tooltip and accessibility action labels remain unchanged.
+- Added a widget assertion that no translate icon is present.
+- Validation: `flutter analyze`, all 6 focused widget tests, `flutter build apk --debug`, and `git diff --check` passed. Installed the debug APK and visually confirmed the text-only `Tag` control on the Android emulator. Screenshot: `%LOCALAPPDATA%\Temp\opencode\language-toggle-text-only.png` (not committed).
+- Remaining: none.
+
+### 2026-11-04 — Clarified the language-toggle target
+
+- Replaced the icon-only app-bar language control with a compact translate icon plus its target-language label: `Tag` while English is active and `Eng` while Tagalog is active. The tooltip and accessibility label describe the same action in the currently active language.
+- Added widget coverage for both label/tooltip states and retained the existing toggle behavior.
+- Validation: `flutter analyze`, all 6 focused widget tests, `flutter build apk --debug`, and `git diff --check` passed. Installed the debug APK on the Android emulator and confirmed `Tag` → `Eng` after toggling. Screenshot: `%LOCALAPPDATA%\Temp\opencode\language-toggle-tagalog.png` (not committed).
+- Remaining: none.
+
+### 2026-11-04 — Wrapped the English estimated-spend label
+
+- Broke the English “Estimated spend” detail label across two lines to match the requested layout; preserved the Tagalog wording and value alignment.
+- Validation: focused widget tests passed, `flutter analyze` and `git diff --check` passed, and the Android app hot-restarted successfully.
+- Remaining: none.
+
 ### 2026-11-04 — Added a native Android launch splash
 
 - Added the `flutter_native_splash` 2.4.8 build-time dependency and generated Android splash resources using the existing app-bar emblem, warm background, and Android 12-specific image. Kept it to the native launch interval without adding an in-app splash screen or delay. Documented artwork status and regeneration command in the MVP plan and README.
