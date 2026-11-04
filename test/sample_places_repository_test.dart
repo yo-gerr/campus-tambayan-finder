@@ -13,6 +13,7 @@ void main() {
     expect(places.first.name, 'Sample Study Corner');
     expect(places.every((place) => place.id.startsWith('sample-')), isTrue);
     expect(places.every((place) => place.coordinates != null), isTrue);
+    expect(places.every((place) => !place.locationVerified), isTrue);
     expect(
       places.every(
         (place) =>

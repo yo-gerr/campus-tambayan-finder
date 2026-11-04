@@ -86,12 +86,12 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - The Positron style is a light neutral baseline. Evaluate a warm app-themed style without obscuring map information or attribution. OpenFreeMap's quick start says custom style JSON must be hosted; verify whether an app-bundled style works before introducing separate hosting. Do not add a paid/card-dependent host without approval.
 - Add verified decimal-degree `latitude` and `longitude` pairs to approved live place data. The app ignores missing, incomplete, non-numeric, or out-of-range coordinates; legacy schematic `mapX`/`mapY` values are no longer used. Never treat the bundled illustrative sample coordinates as real destinations. Update existing Supabase tables with the nullable coordinate columns and relax legacy schematic fields using the setup guide.
 - Visually confirm the owner-supplied PLV Annex and CPAG anchor coordinates against their intended locations. Obtain and check coordinates for approved places before adding their map pins.
-- Open directions in Google Maps using the selected place's real coordinates or verified address; handle missing Google Maps/app availability with a clear fallback.
+- Open Google Maps directions with an external URL only when the listing's `location_verified` flag is true and its coordinates form a valid pair. The flag defaults to false for existing rows; do not mark bundled illustrative coordinates as verified. Explain unverified or missing locations, and report when the external map/browser cannot be opened.
 - Do not add an in-app ETA in this phase. The owner selected Google Maps for directions; any future in-app ETA needs a separate decision about source, mode, origin, limitations, and cost.
 - Keep the MVP free of a Google Maps SDK, API key, and billing account; Google Maps URLs can open directions without an API key.
 - Keep any unverified or placeholder map visibly marked and never use prototype coordinates to launch real navigation.
 
-**Acceptance:** the styled map always shows the PLV Annex and CPAG anchors with required attribution; place pins use valid coordinates, with explicitly illustrative coordinates limited to fictional demo listings. Real listings use verified locations. Selecting a mapped live place opens the intended Google Maps destination, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
+**Acceptance:** the styled map always shows the PLV Annex and CPAG anchors with required attribution; place pins use valid coordinates, with explicitly illustrative coordinates limited to fictional demo listings. Real listings use verified locations. Selecting a mapped live place opens the intended Google Maps destination only when `location_verified` is true, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
 
 ### Phase 4 — Optional mood check-in
 

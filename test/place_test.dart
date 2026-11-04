@@ -8,6 +8,7 @@ Map<String, dynamic> _row({
   Object? photos,
   Object? latitude,
   Object? longitude,
+  Object? locationVerified,
 }) => {
   'id': 'live-place',
   'name': 'Live Place',
@@ -23,6 +24,7 @@ Map<String, dynamic> _row({
   'activities': <dynamic>['study', 'eat'],
   'latitude': latitude,
   'longitude': longitude,
+  'location_verified': locationVerified,
   'photoUrl': photoUrl,
   'photoAsset': photoAsset,
   'place_photos': photos,
@@ -38,6 +40,21 @@ void main() {
     expect(place.coordinates?.latitude, 14.701);
     expect(place.coordinates?.longitude, 120.984);
     expect(place.priceMax, 120);
+  });
+
+  test('defaults locations to unverified and maps the verification field', () {
+    expect(Place.fromJson(_row()).locationVerified, isFalse);
+    expect(
+      Place.fromJson(_row(locationVerified: true)).locationVerified,
+      isTrue,
+    );
+    final camelCaseRow = _row()..remove('location_verified');
+    camelCaseRow['locationVerified'] = true;
+    expect(Place.fromJson(camelCaseRow).locationVerified, isTrue);
+    expect(
+      Place.fromJson(_row(locationVerified: 'true')).locationVerified,
+      isFalse,
+    );
   });
 
   test('keeps places without valid paired geographic coordinates unmapped', () {

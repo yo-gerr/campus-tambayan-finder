@@ -14,6 +14,7 @@
     "activities": ["study", "relax"],
     "latitude": 14.69635,
     "longitude": 120.9674,
+    "locationVerified": false,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -33,6 +34,7 @@
     "activities": ["study", "eat", "socialize"],
     "latitude": 14.6945,
     "longitude": 120.97035,
+    "locationVerified": false,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -52,6 +54,7 @@
     "activities": ["relax", "socialize"],
     "latitude": 14.6952,
     "longitude": 120.9696,
+    "locationVerified": false,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -71,6 +74,7 @@
     "activities": ["eat", "socialize"],
     "latitude": 14.69545,
     "longitude": 120.96795,
+    "locationVerified": false,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []

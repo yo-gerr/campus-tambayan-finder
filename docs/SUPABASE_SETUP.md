@@ -37,6 +37,7 @@ create table if not exists public.places (
   activities text[] not null default '{}',
   latitude double precision,
   longitude double precision,
+  location_verified boolean not null default false,
   "mapX" double precision,
   "mapY" double precision,
   "photoUrl" text,
@@ -68,12 +69,14 @@ end $$;
 
 No insert, update, or delete policy is created for `anon`, so the shipped key cannot change listings even if it is extracted from the APK.
 
-If the table already exists from an earlier setup, add the new nullable fields
-and relax the old schematic-coordinate columns instead of recreating it:
+If the table already exists from an earlier setup, add the new fields and relax
+the old schematic-coordinate columns instead of recreating it:
 
 ```sql
 alter table public.places add column if not exists latitude double precision;
 alter table public.places add column if not exists longitude double precision;
+alter table public.places
+  add column if not exists location_verified boolean not null default false;
 alter table public.places alter column "mapX" drop not null;
 alter table public.places alter column "mapY" drop not null;
 alter table public.places add column if not exists "photoUrl" text;
@@ -178,6 +181,8 @@ Use the dashboard's CSV import or the SQL editor, keeping the column names exact
 Keep `assets/data/sample_places.json` as the bundled seed and offline fallback. Its `photos` array holds offline gallery entries; it is not a `places` column, so omit it from a `places` CSV import. Keep related `place_photos` rows in a separate CSV/export. The fictional sample listings contain illustrative coordinates solely to preview the local demo map; do not import those coordinates as actual listing locations. Replace them with verified coordinates, or leave both coordinate fields blank, before publishing real listings. When the team supplies new listings, update the repository records and import the matching `places` and `place_photos` data. Export both tables back before each APK build if anyone has edited them in the dashboard.
 
 For map pins, enter verified decimal-degree `latitude` and `longitude` values as a pair. Leave both blank until the place's position has been checked; the app omits places without a valid pair rather than plotting the old schematic `mapX`/`mapY` values. Those legacy columns are retained only for existing project data and are not used by the geographic map.
+
+The `location_verified` flag must remain `false` unless the listing's actual location and coordinates have been checked. The app defaults missing flags to `false` and only enables Google Maps directions when this flag is `true` and the coordinate pair is valid. Existing rows get `false` from the migration; CSV imports that omit this field also use the default. Bundled sample rows use illustrative coordinates and must never be marked verified or imported as real destinations. In the repository JSON the matching field is `locationVerified`.
 
 ### Photos and galleries
 

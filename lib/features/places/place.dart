@@ -16,6 +16,7 @@ class Place implements PlaceLike {
     required this.activities,
     this.latitude,
     this.longitude,
+    this.locationVerified = false,
     this.photoUrl,
     this.photoAsset,
     this.photos = const [],
@@ -40,6 +41,7 @@ class Place implements PlaceLike {
   final List<String> activities;
   final double? latitude;
   final double? longitude;
+  final bool locationVerified;
 
   PlaceCoordinates? get coordinates {
     final latitude = this.latitude;
@@ -105,6 +107,8 @@ class Place implements PlaceLike {
       activities: List<String>.from(json['activities'] as List<dynamic>),
       latitude: _optionalCoordinate(json['latitude']),
       longitude: _optionalCoordinate(json['longitude']),
+      locationVerified:
+          json['locationVerified'] == true || json['location_verified'] == true,
       photoUrl: _optionalText(json['photoUrl']),
       photoAsset: _optionalText(json['photoAsset']),
       photos: _photos(json['place_photos'] ?? json['photos']),

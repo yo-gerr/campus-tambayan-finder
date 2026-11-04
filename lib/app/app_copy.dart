@@ -71,9 +71,17 @@ class AppCopy {
     'setting': ['Setting', 'Lugar'],
     'good_for': ['Good for', 'Angkop para sa'],
     'directions': ['Directions', 'Direksyon'],
-    'directions_demo': [
-      'Directions are not connected in this prototype.',
-      'Hindi pa gumagana ang direksyon sa prototype na ito.',
+    'directions_location_unverified': [
+      'Directions are unavailable because this listing’s location has not been verified yet.',
+      'Hindi pa available ang direksyon dahil hindi pa beripikado ang lokasyon ng listahang ito.',
+    ],
+    'directions_coordinates_missing': [
+      'Directions are unavailable because this listing has no valid coordinates yet.',
+      'Hindi pa available ang direksyon dahil wala pang wastong coordinate ang listahang ito.',
+    ],
+    'directions_could_not_open': [
+      'Could not open Google Maps. Check that a maps app or browser is available, then try again.',
+      'Hindi mabuksan ang Google Maps. Tiyaking may maps app o browser, pagkatapos ay subukan muli.',
     ],
     'map_online_note': ['Map needs internet', 'Kailangan ng internet ang mapa'],
     'map_unverified_places': [

@@ -1,29 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import 'google_maps_directions.dart';
 import 'place.dart';
 import 'place_photo.dart';
+
+typedef DirectionsUrlLauncher = Future<bool> Function(Uri url);
 
 Future<void> showPlaceDetails({
   required BuildContext context,
   required Place place,
   required AppCopy copy,
+  DirectionsUrlLauncher? launchDirections,
 }) {
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: AppColors.background,
-    builder: (context) => _PlaceDetailSheet(place: place, copy: copy),
+    builder: (context) => _PlaceDetailSheet(
+      place: place,
+      copy: copy,
+      launchDirections: launchDirections ?? _launchExternalUrl,
+    ),
   );
 }
 
 class _PlaceDetailSheet extends StatelessWidget {
-  const _PlaceDetailSheet({required this.place, required this.copy});
+  const _PlaceDetailSheet({
+    required this.place,
+    required this.copy,
+    required this.launchDirections,
+  });
 
   final Place place;
   final AppCopy copy;
+  final DirectionsUrlLauncher launchDirections;
+
+  Future<void> _openDirections(BuildContext context) async {
+    if (!place.locationVerified) {
+      await _showDirectionsUnavailable(
+        context,
+        copy.get('directions_location_unverified'),
+      );
+      return;
+    }
+
+    final uri = googleMapsDirectionsUri(place);
+    if (uri == null) {
+      await _showDirectionsUnavailable(
+        context,
+        copy.get('directions_coordinates_missing'),
+      );
+      return;
+    }
+
+    var launched = false;
+    try {
+      launched = await launchDirections(uri);
+    } on PlatformException {
+      launched = false;
+    } on MissingPluginException {
+      launched = false;
+    }
+    if (!context.mounted) return;
+    if (!launched) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(copy.get('directions_could_not_open'))),
+      );
+    }
+  }
+
+  Future<void> _showDirectionsUnavailable(
+    BuildContext context,
+    String message,
+  ) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.route_outlined),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(copy.get('got_it')),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,19 +214,8 @@ class _PlaceDetailSheet extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           FilledButton.icon(
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => AlertDialog(
-                icon: const Icon(Icons.route_outlined),
-                content: Text(copy.get('directions_demo')),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(copy.get('got_it')),
-                  ),
-                ],
-              ),
-            ),
+            key: const Key('place-directions'),
+            onPressed: () => _openDirections(context),
             icon: const Icon(Icons.directions_outlined),
             label: Text(copy.get('directions')),
           ),
@@ -166,6 +223,10 @@ class _PlaceDetailSheet extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool> _launchExternalUrl(Uri url) {
+  return launchUrl(url, mode: LaunchMode.externalApplication);
 }
 
 class _DetailPhotoPlaceholder extends StatelessWidget {

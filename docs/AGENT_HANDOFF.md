@@ -4,6 +4,12 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added Google Maps directions for verified locations
+
+- Added external Google Maps directions URLs, gated on valid coordinates and an explicit verification flag. Unverified/missing locations and launch failures have localized messages; bundled sample coordinates remain ineligible. Added the default-false Supabase `location_verified` column and migration guidance.
+- Updated the project brief, architecture, Phase 3 plan, and Supabase setup guide. Validation: all 32 Flutter tests passed, `flutter analyze`, `git diff --check`, and Dart formatting passed; the Android emulator build/install and hot restart succeeded. Android Flutter logs showed no Dart runtime errors. The DTD runtime-error tool had no active app connection, so logs were checked via `adb`.
+- Remaining: apply the SQL migration to the shared Supabase project and only mark real listings verified after checking their locations.
+
 ### 2026-11-04 — Added illustrative coordinates to bundled demo listings
 
 - Added map-preview coordinates around the fixed campus anchors so locally bundled fictional places appear in the map carousel without Supabase. These values are explicitly illustrative and are not verified listing locations.
