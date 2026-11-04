@@ -30,6 +30,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 
 - **Deliverable:** installable Android APK for class presentation and testing.
 - **Google Play:** publication is not required.
+- **Web preview (added November 4, 2026):** the same app is also built for the browser and published to GitHub Pages, so the client can review changes without reinstalling the APK. This is a review channel rather than an additional deliverable; the APK remains what is presented and tested. It is not a landing, marketing, or product-information page.
 - **Separate public webpage:** not required for this delivery.
 - **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide. The original ranking is retained, but in-app travel-time estimates are deferred from the current map phase.
 - Filters remain part of the concept and MVP scope; the team did not rank them in this priority list.
@@ -109,9 +110,13 @@ These are areas for further review, not a determination that a particular legal 
 
 Reassess these considerations whenever a feature change affects personal or precise location data, mood data, nicknames or other identifiers, listing accuracy, user reports, or consumer-facing price/service claims. Agents and developers must not treat this brief as legal advice or claim compliance; obtain qualified review for legal interpretations and final terms.
 
+The approved web preview makes the app reachable at a public URL, and GitHub Pages cannot be password-protected. Anything the app can read is therefore publicly retrievable, including listing details, gallery photos, and any coordinates, including ones marked verified. A search-engine opt-out reduces discoverability but is not access control. Keep the preview limited to fictional or team-approved demo data, and revisit this before real Malinta listings with precise pins are loaded. The Supabase publishable key is exposed by design in the web build, so row-level security on every exposed table must stay read-only.
+
 ## Public landing/information page
 
 The team confirmed that no separate webpage is needed for the class-presentation/testing APK. The contributor-facing repository README is not a product landing page. Do not build or host a companion page for the current delivery unless the team later requests it.
+
+The approved GitHub Pages web preview is not this kind of page. It serves a build of the app itself, carries no marketing or product-information content, and exists only so the client can review changes without reinstalling an APK.
 
 ## Decisions and open questions
 
@@ -138,6 +143,7 @@ The team confirmed that no separate webpage is needed for the class-presentation
 | Student accounts, ratings, comments | No student profile or ratings/comments requested for browsing |
 | Mood check-in | Optional and prioritized for class presentation; nickname may be used, but response must not be linked to a user profile. Persistence, nickname necessity, consent, retention, and access are open |
 | Public landing/information page | Not needed for current class-demo deliverable |
+| Web preview (client review) | Confirmed November 4, 2026: separate browser build of the same app published to GitHub Pages, rebuilt on every push to `master`. Review channel only; the APK remains the deliverable. Public URL, no password; limited to fictional or approved demo data |
 | Hosting, services, costs, and operational ownership | Confirmed: Supabase Free plan for shared listings (no card, no paid add-ons). Paid plans and other services remain unapproved. Ownership of the Supabase organization is open |
 | Distribution channel for APK handoff and account ownership | APK for presentation/testing; exact file handoff/account ownership open; Google Play not required |
 | MVP prioritization and acceptance criteria | Feature ranking agreed; detailed acceptance criteria and deadline still open |

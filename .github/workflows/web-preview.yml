@@ -1,0 +1,65 @@
+name: Web preview
+
+# Rebuilds the client preview on every push to master. The APK remains the
+# class-demo deliverable; this workflow only publishes a browser-viewable
+# preview so the client does not have to reinstall an APK for each change.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  SUPABASE_URL: https://aggpmorccvgzvsfaxspq.supabase.co
+  # Publishable (anon) key: public by design and safe to ship. Never put a
+  # secret or service-role key here. See lib/app/app_config.dart.
+  SUPABASE_PUBLISHABLE_KEY: sb_publishable_LKeTVwPwzHYPGn7DRYGUxA_W2IZWXp4
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to the version this project was validated against, so an
+      # upstream Flutter release cannot break the preview unannounced.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.9
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      # GitHub Pages serves project sites from /<repo>/, so the base href has
+      # to match or every asset request 404s.
+      - name: Build web
+        run: >
+          flutter build web --release
+          --base-href "/${{ github.event.repository.name }}/"
+          --dart-define=SUPABASE_URL=$SUPABASE_URL
+          --dart-define=SUPABASE_PUBLISHABLE_KEY=$SUPABASE_PUBLISHABLE_KEY
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

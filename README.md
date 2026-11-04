@@ -33,6 +33,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Platform | Android |
 | App languages | Filipino (Tagalog) and English |
 | Requested delivery | Installable Android APK for class presentation/testing; no Google Play release |
+| Web preview | Browser build published to GitHub Pages so the client can review changes without reinstalling the APK. Review channel only; the APK remains the deliverable |
 | Initial listings | About 15–20; compiled data and available photos supplied by the team |
 | Listing storage for class demo | Confirmed: shared Supabase Free-plan table with bundled JSON as seed and offline fallback |
 | Directions | Open Google Maps; in-app ETA and map provider remain undecided |
@@ -64,3 +65,17 @@ flutter run --dart-define=SUPABASE_URL=https://YOUR-PROJECT.supabase.co --dart-d
 ```
 
 The current app is a Flutter MVP baseline with fictional listings, an optional shared Supabase listing source, and a MapLibre/OpenFreeMap map foundation. The bundled sample places have no verified coordinates, so the map shows a waiting state instead of plotting fictional pins. See the [MVP plan](docs/MVP_PLAN.md) for remaining data and service prerequisites. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).
+
+## Web preview
+
+A browser build of the same app is published to GitHub Pages so the client can review changes without reinstalling the APK. It is a review channel, not an additional deliverable: the Android APK remains what is presented and tested, and there is still no landing or marketing page.
+
+`.github/workflows/web-preview.yml` rebuilds and redeploys it on every push to `master`. One-time setup after creating the repository: **Settings → Pages → Source: GitHub Actions**.
+
+To reproduce the deployed build locally, pass the same base href and configuration the workflow uses:
+
+```powershell
+flutter build web --release --base-href "/campus-tambayan-finder/" --dart-define=SUPABASE_URL=https://YOUR-PROJECT.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
+```
+
+GitHub Pages serves project sites from `/<repository>/`, so `--base-href` must match the repository name or every asset request 404s. The preview has no password; treat anything the app can read as public.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. Flutter is the framework for the current class-demo MVP, although it is not school-mandated. The class-demo MVP reads shared listings from a Supabase Free-plan table, with bundled local JSON as seed and offline fallback. Production framework, minimum Android version, production map stack, and any production backend remain undecided.
+The agreed target is an Android application, initially serving students near PLV Annex and CPAG in Malinta, Valenzuela City, with Filipino (Tagalog) and English language support. The current delivery target is an installable APK for class presentation/testing; Google Play publication and a separate public webpage are not required. Flutter is the framework for the current class-demo MVP, although it is not school-mandated. A browser build of the same app is also published to GitHub Pages as a client review channel; it is not a deliverable and does not change the Android target. The class-demo MVP reads shared listings from a Supabase Free-plan table, with bundled local JSON as seed and offline fallback. Production framework, minimum Android version, production map stack, and any production backend remain undecided.
 
 ## Guiding boundaries
 
@@ -102,6 +102,16 @@ Request location access only when needed, explain why it is requested, and provi
 Mood check-ins and precise location can reveal sensitive information about a person. Keep mood functionality optional and isolated; before implementing it, define consent, purpose, data linkage, storage, access, retention, deletion, and whether any aggregate analysis is intended. Do not frame correlations as diagnoses or causal conclusions.
 
 Listing photos, map data, and route estimates may have separate permission, attribution, licensing, or provider terms. Verify the applicable terms and obtain appropriate permissions before publication.
+
+### Web preview target
+
+The browser build exists only so the client can review changes without reinstalling the APK. Add web platform files (`web/`) and a GitHub Actions workflow; keep application code platform-neutral so this does not fork the Android implementation.
+
+- **Platform support:** `maplibre_gl` declares web support through its `maplibre_gl_web` implementation, and the existing `MapLibreMap` usage works unchanged. The web build injects `maplibre-gl` as an ES module from `unpkg.com` by default; a strict Content-Security-Policy or a blocked CDN breaks the map, and `MapLibreMap.webLibrarySource` is the escape hatch if the library must be self-hosted.
+- **Hosting:** GitHub Pages serves the release build from `/<repo>/`, so builds must pass `--base-href` matching the repository name. Deployment uses GitHub Actions, so the preview updates on every push to `master` without a manual step.
+- **Data access:** the Supabase REST and Storage endpoints return permissive CORS headers, so the same read-only publishable key works from the browser. This is what makes the key's public exposure meaningful: row-level security must remain read-only, since anyone can call it.
+- **Known gaps:** `flutter_native_splash` is disabled for web, so the browser shows the index background until Flutter's first frame. `url_launcher` ignores `LaunchMode.externalApplication` on web and simply opens a new tab. The generated web icons are still the Flutter defaults.
+- **Scope discipline:** do not treat the preview as a second product surface. No analytics, no landing content, and no web-only features get added without a separate decision.
 
 ## Revisit when
 
