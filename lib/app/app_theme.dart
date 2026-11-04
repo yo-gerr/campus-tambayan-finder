@@ -6,22 +6,32 @@ import 'package:flutter/material.dart';
 /// them, instead of declaring their own color literals. Keeping the palette in
 /// one place is what `docs/ARCHITECTURE.md` requires and what lets the
 /// provisional palette be replaced without hunting through widgets.
+///
+/// Warm Campus palette (see `docs/MVP_PLAN.md`): a warm cream canvas, a deep
+/// teal-green for trust and primary actions, and a single mango accent for
+/// selected states. The accent is a *fill* only — [AppColors.accent] on
+/// [AppColors.background] is about 1.8:1, so text on the accent must use
+/// [AppColors.onAccent].
 abstract final class AppColors {
-  static const primary = Color(0xFF215B50);
+  static const primary = Color(0xFF14594A);
   static const onPrimary = Color(0xFFFFFFFF);
-  static const background = Color(0xFFF7F5EF);
+  static const background = Color(0xFFFBF7EE);
   static const surface = Color(0xFFFFFFFF);
-  static const sage = Color(0xFFE7EEE8);
-  static const terracotta = Color(0xFFB4543A);
-  static const ink = Color(0xFF252B28);
-  static const mutedInk = Color(0xFF5C6862);
-  static const outline = Color(0xFFE8E8E1);
-  static const outlineStrong = Color(0xFFE0E5DF);
+  static const sage = Color(0xFFE3EFE8);
+  static const terracotta = Color(0xFFA8452C);
+  static const ink = Color(0xFF1C2320);
+  static const mutedInk = Color(0xFF57675F);
+  static const outline = Color(0xFFE7E2D5);
+  static const outlineStrong = Color(0xFFE0DACB);
 
-  /// Demo/status surfaces. [onDemoContainer] is deliberately darker than
-  /// [terracotta] so the small uppercase banner text clears 4.5:1.
-  static const demoContainer = Color(0xFFFFEDE4);
-  static const onDemoContainer = Color(0xFFA8452C);
+  /// Demo/status surfaces. [onDemoContainer] clears 4.5:1 on the tinted
+  /// container, which the previous pair did not.
+  static const demoContainer = Color(0xFFFFF1E7);
+  static const onDemoContainer = terracotta;
+
+  /// Fill-only emphasis for selected states. Never use as a text color.
+  static const accent = Color(0xFFF2B23E);
+  static const onAccent = Color(0xFF231A00);
 
   static const map = Color(0xFFE8E8D9);
   static const road = Color(0xFFFFFEFA);
@@ -32,9 +42,9 @@ abstract final class AppColors {
   static const viewerBackground = Color(0xFF000000);
 
   /// Category tints for the no-photo placeholder.
-  static const coffeeTint = Color(0xFFF2E5D6);
+  static const coffeeTint = Color(0xFFF3E7D7);
   static const parkTint = Color(0xFFE1EDDF);
-  static const eateryTint = Color(0xFFF4E4DB);
+  static const eateryTint = Color(0xFFF6E6DC);
 }
 
 ThemeData buildAppTheme() {
@@ -52,11 +62,33 @@ ThemeData buildAppTheme() {
         outlineVariant: AppColors.outlineStrong,
       );
 
-  return ThemeData(
+  final base = ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.background,
     fontFamily: 'Roboto',
+  );
+
+  final textTheme = base.textTheme.copyWith(
+    headlineSmall: base.textTheme.headlineSmall?.copyWith(
+      fontWeight: FontWeight.w800,
+      height: 1.15,
+      letterSpacing: -0.4,
+    ),
+    titleLarge: base.textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w700,
+      letterSpacing: -0.2,
+    ),
+    titleMedium: base.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+    ),
+    titleSmall: base.textTheme.titleSmall?.copyWith(
+      fontWeight: FontWeight.w700,
+    ),
+  );
+
+  return base.copyWith(
+    textTheme: textTheme,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.background,
       foregroundColor: AppColors.ink,
@@ -93,10 +125,43 @@ ThemeData buildAppTheme() {
       backgroundColor: scheme.secondaryContainer,
       shape: const StadiumBorder(),
       side: const BorderSide(color: AppColors.outlineStrong),
-      selectedColor: AppColors.sage,
+      selectedColor: AppColors.accent,
       labelStyle: TextStyle(
         color: scheme.onSecondaryContainer,
         fontWeight: FontWeight.w600,
+      ),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: AppColors.surface,
+      indicatorColor: AppColors.accent,
+      surfaceTintColor: Colors.transparent,
+      labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        final selected = states.contains(WidgetState.selected);
+        return TextStyle(
+          fontWeight: FontWeight.w700,
+          color: selected ? AppColors.onAccent : AppColors.mutedInk,
+        );
+      }),
+      iconTheme: WidgetStateProperty.resolveWith((states) {
+        final selected = states.contains(WidgetState.selected);
+        return IconThemeData(
+          color: selected ? AppColors.onAccent : AppColors.mutedInk,
+        );
+      }),
+    ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return selected ? AppColors.accent : AppColors.surface;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          final selected = states.contains(WidgetState.selected);
+          return selected ? AppColors.onAccent : AppColors.ink;
+        }),
+        side: WidgetStateProperty.resolveWith(
+          (states) => const BorderSide(color: AppColors.outlineStrong),
+        ),
       ),
     ),
   );

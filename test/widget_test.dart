@@ -189,6 +189,14 @@ void main() {
     );
   });
 
+  test('selected-state text clears AA contrast on the accent fill', () {
+    // The accent is a fill, not a text color; this guards the onAccent pairing.
+    expect(
+      _contrastRatio(AppColors.onAccent, AppColors.accent),
+      greaterThanOrEqualTo(4.5),
+    );
+  });
+
   testWidgets('cards and details share one no-photo placeholder', (
     tester,
   ) async {
@@ -227,7 +235,7 @@ void main() {
     final coffeeChip = tester.widget<ChoiceChip>(
       find.byKey(const Key('category-coffee-filter')),
     );
-    expect(allChip.labelStyle?.color, AppColors.primary);
+    expect(allChip.labelStyle?.color, AppColors.onAccent);
     expect(coffeeChip.labelStyle?.color, AppColors.ink);
 
     await tester.tap(find.byKey(const Key('category-coffee-filter')));

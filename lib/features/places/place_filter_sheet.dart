@@ -237,7 +237,7 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
       label: Text(label),
       selected: selected,
       labelStyle: TextStyle(
-        color: selected ? AppColors.primary : AppColors.ink,
+        color: selected ? AppColors.onAccent : AppColors.ink,
         fontWeight: FontWeight.w600,
       ),
       onSelected: (_) => onSelected(),

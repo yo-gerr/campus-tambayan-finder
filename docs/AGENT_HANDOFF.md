@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Centralized the theme tokens and applied the Warm Campus palette
+
+- Audit found five one-off hex literals and about a dozen `Colors.*` usages outside `lib/app/app_theme.dart`, plus drift between duplicate components: two drag-handle colors, three different no-photo placeholders, and a demo badge duplicated with different letter spacing. `docs/ARCHITECTURE.md` already required screens to consume theme values, so this was a documented-principle violation rather than a new decision.
+- Commit `4e883d5 refactor(theme): centralize color tokens and unify shared UI`: added semantic tokens (outline, demo container, scrim, viewer backdrop, category tints), moved every remaining literal into the theme, added `SheetHandle` (`lib/app/app_widgets.dart`) and `DemoBadge` (`lib/features/places/demo_badge.dart`), and replaced the three placeholders with one `PlacePhotoPlaceholder`. Fixed the only AA failure found by measurement: the demo banner text was 4.33:1 and is now 5.20:1.
+- Commit `feat(theme): apply warm campus palette` (see `docs/MVP_PLAN.md` → Provisional visual direction): `background #FBF7EE`, `primary #14594A`, `sage #E3EFE8`, `demo #A8452C` on `#FFF1E7`, `accent #F2B23E` with `onAccent #231A00`. The accent is fill-only (1.75:1 on the background) and appears only in the navigation indicator, selected chips, the selected campus segment, and map emphasis; `FilledButton` stays primary. Added `textTheme`, `navigationBarTheme`, and `segmentedButtonTheme` so screens stop styling ad hoc.
+- Also updated the native splash, which hardcoded the old palette in two places that are easy to miss: `values-v31`/`values-night-v31` `styles.xml` and the 1×1 `drawable/background.png` / `drawable-v21/background.png`.
+- Validation: `flutter analyze` clean, 37 tests passed (added demo-banner and accent contrast assertions plus a placeholder-consistency test), `git diff --check` clean. Built a debug APK with the Supabase defines and checked English and Filipino on the emulator: list, filter sheet, detail sheet, and map. Screenshots: `%LOCALAPPDATA%\Temp\opencode\theme-a-*.png` and `theme-b-*.png` (not committed).
+- Remaining:
+  - The palette is still a demo hypothesis, not approved final branding; confirm with the team before treating it as fixed.
+  - The MapLibre Positron basemap stays neutral grey and does not match the warm app palette. A custom warm style needs a hosted style JSON; see the open question in `docs/MVP_PLAN.md`.
+  - No dark theme was added; the app remains light-only.
+
 ### 2026-11-04 — Fixed gallery photos reloading to the skeleton
 
 - Symptom: swiping the detail gallery away from a photo and back showed the loading skeleton again even though the photo had already been displayed.
