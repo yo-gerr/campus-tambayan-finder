@@ -4,6 +4,15 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Moved the open/closed state into a filled card badge
+
+- **New shared widget.** `lib/features/places/open_status_badge.dart` renders the pill for both the card and the detail sheet, replacing the detail sheet's private `_OpenStatusPill` so the two surfaces cannot drift.
+- **Card layout.** Dropped the inline dot label from the price/amenity row, which was already carrying three items and read the status as one more equal fact. The badge now sits opposite the "DEMO LISTING" text in the card's header row, i.e. the top-right of the content area. The demo badge stays visible because the docs treat demo labelling as a safety requirement.
+- **Colours.** Open is `AppColors.primary` with `AppColors.onPrimary` text; closed is `AppColors.outline` with `AppColors.mutedInk` text. Red was rejected on purpose: it reads as an error or a permanent closure rather than "shut for the night". Text stays "Open now" / "Closed now" so the state reads as live rather than permanent.
+- **Still conditional.** No badge when the current day's hours are unknown; the header row then holds only the demo badge, so nothing implies "closed".
+- **Validation.** `flutter analyze` clean; `flutter test` 69 passed, up from 67. New coverage: AA contrast for both badge pairs, and a deterministic card test asserting the filled badge replaces the dot and flips from "Open now" to "Closed now".
+- Remaining: the map pins themselves stay unmarked, which is the unanswered client follow-up. The live preview also still needs the pushed commits and the demo `hoursByDay` update before any badge appears.
+
 ### 2026-11-04 — Added structured per-day hours, an open/closed indicator, and an "Open now" filter
 
 - **Why now.** The concept document requires each listing to display "the days when it is open or closed", so per-day hours are an agreed requirement, not an inference. The "Open now" badge and filter are our own addition built on the same data.

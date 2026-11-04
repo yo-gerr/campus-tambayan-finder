@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import 'demo_badge.dart';
+import 'open_status_badge.dart';
 import 'place.dart';
 import 'place_photo.dart';
 
@@ -47,7 +48,15 @@ class PlaceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DemoBadge(label: copy.get('demo_badge')),
+                    Row(
+                      children: [
+                        DemoBadge(label: copy.get('demo_badge')),
+                        if (status != null) ...[
+                          const Spacer(),
+                          OpenStatusBadge(open: status, copy: copy),
+                        ],
+                      ],
+                    ),
                     const SizedBox(height: 4),
                     Text(
                       place.name,
@@ -69,16 +78,6 @@ class PlaceCard extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 4,
                       children: [
-                        if (status != null)
-                          _TinyLabel(
-                            icon: Icons.circle,
-                            color: status
-                                ? AppColors.primary
-                                : AppColors.terracotta,
-                            text: copy.get(
-                              status ? 'open_now' : 'closed_now',
-                            ),
-                          ),
                         _TinyLabel(
                           icon: Icons.payments_outlined,
                           text: copy.priceRange(place.priceMin, place.priceMax),
@@ -107,26 +106,19 @@ class PlaceCard extends StatelessWidget {
 }
 
 class _TinyLabel extends StatelessWidget {
-  const _TinyLabel({required this.icon, required this.text, this.color});
+  const _TinyLabel({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final tint = color ?? AppColors.mutedInk;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13, color: tint),
+        Icon(icon, size: 13, color: AppColors.mutedInk),
         const SizedBox(width: 3),
-        Text(
-          text,
-          style: Theme.of(
-            context,
-          ).textTheme.labelSmall?.copyWith(color: color),
-        ),
+        Text(text, style: Theme.of(context).textTheme.labelSmall),
       ],
     );
   }

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
+import 'package:campus_tambayan_finder/app/app_copy.dart';
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
+import 'package:campus_tambayan_finder/features/places/open_status_badge.dart';
 import 'package:campus_tambayan_finder/features/places/opening_hours.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
+import 'package:campus_tambayan_finder/features/places/place_card.dart';
 import 'package:campus_tambayan_finder/features/places/place_categories.dart';
 import 'package:campus_tambayan_finder/features/places/place_photo.dart';
 import 'package:campus_tambayan_finder/features/places/places_repository.dart';
@@ -196,6 +199,64 @@ void main() {
       _contrastRatio(AppColors.onDemoContainer, AppColors.demoContainer),
       greaterThanOrEqualTo(4.5),
     );
+  });
+
+  test('open and closed status badges clear AA contrast', () {
+    expect(
+      _contrastRatio(AppColors.onPrimary, AppColors.primary),
+      greaterThanOrEqualTo(4.5),
+    );
+    expect(
+      _contrastRatio(AppColors.mutedInk, AppColors.outline),
+      greaterThanOrEqualTo(4.5),
+    );
+  });
+
+  testWidgets('card replaces the inline dot with a filled status badge', (
+    tester,
+  ) async {
+    const place = Place(
+      id: 'badge-place',
+      name: 'Badge Place',
+      category: 'coffee',
+      area: 'Malinta',
+      descriptionEn: 'English description.',
+      descriptionTl: 'Paglalarawan sa Filipino.',
+      hours: 'Mon 8:00 AM–8:00 PM',
+      openingHours: OpeningHours({
+        DateTime.monday: DayHours(openMinutes: 480, closeMinutes: 1200),
+      }),
+      amenities: ['wifi'],
+      setting: 'indoor',
+      activities: ['study'],
+    );
+
+    Future<void> pumpCard(DateTime now) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildAppTheme(),
+          home: Scaffold(
+            body: PlaceCard(
+              place: place,
+              copy: const AppCopy(AppLanguage.english),
+              now: now,
+              onTap: () {},
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+    }
+
+    // Manila Monday 10:00 is UTC 02:00.
+    await pumpCard(DateTime.utc(2026, 11, 2, 2));
+    expect(find.byType(OpenStatusBadge), findsOneWidget);
+    expect(find.text('Open now'), findsOneWidget);
+    expect(find.byIcon(Icons.circle), findsNothing);
+
+    // Manila Monday 21:00 is UTC 13:00.
+    await pumpCard(DateTime.utc(2026, 11, 2, 13));
+    expect(find.text('Closed now'), findsOneWidget);
   });
 
   test('campus-blue selected states clear AA contrast', () {

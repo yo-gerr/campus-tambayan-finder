@@ -7,6 +7,7 @@ import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
 import 'demo_badge.dart';
 import 'google_maps_directions.dart';
+import 'open_status_badge.dart';
 import 'opening_hours.dart';
 import 'place.dart';
 import 'place_photo.dart';
@@ -321,7 +322,7 @@ class _WeeklyHours extends StatelessWidget {
               ),
               if (status != null) ...[
                 const SizedBox(width: 10),
-                _OpenStatusPill(open: status, copy: copy),
+                OpenStatusBadge(open: status, copy: copy),
               ],
             ],
           ),
@@ -369,32 +370,6 @@ class _WeeklyHours extends StatelessWidget {
     if (day == null) return copy.get('closed');
     return '${copy.timeOfDay(day.openMinutes)}–'
         '${copy.timeOfDay(day.closeMinutes)}';
-  }
-}
-
-class _OpenStatusPill extends StatelessWidget {
-  const _OpenStatusPill({required this.open, required this.copy});
-
-  final bool open;
-  final AppCopy copy;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = open ? AppColors.primary : AppColors.terracotta;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        copy.get(open ? 'open_now' : 'closed_now'),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: color,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
   }
 }
 
