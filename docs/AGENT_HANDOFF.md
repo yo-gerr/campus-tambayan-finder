@@ -4,6 +4,35 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added optional Google Maps location to the intake sheet
+
+- Added a plain-language, optional "Google Maps link or coordinates" field so the team can paste a shared map link without needing to extract coordinates. Updated the spreadsheet header.
+- Validation: confirmed the CSV header matches the guide and `git diff --check` passed.
+- Remaining: none; unverified locations will still be checked before being used as real map destinations.
+
+### 2026-11-04 — Simplified the place and photo intake sheets
+
+- Replaced the database-oriented draft with everyday spreadsheet labels: one simple row per place, with category, area, description, prices, operating days/hours, amenities, setting, and suitability. Removed technical identifiers and codes.
+- Simplified photo intake to shop/place name, attached photos or a shared folder, and whether permission is okay or needs checking. Multiple images are welcome; no team reference, sort order, or database fields are requested.
+- Updated the Phase 1 plan. Repository still has unrelated app changes (`lib/app/app_copy.dart`, `lib/features/places/place_card.dart`, and `test/widget_test.dart`); these were left untouched.
+- Validation: checked the sheets and guidance for plain-language consistency; `git diff --check` passed. No app tests run because only documentation and intake templates changed.
+- Remaining: share the revised intake request; the team may still suggest fields.
+
+### 2026-11-04 — Prepared a draft listing-data intake template
+
+- Added spreadsheet-friendly places and photo CSV intake sheets plus field guidance. The draft reflects current app fields but distinguishes intake-only details from database fields; the team may revise it before adoption.
+- Prepared a client update that clarifies the web preview is for development review, offline fallback currently uses bundled sample data, the guide appears each launch and remains available from Help, and final listings are still pending.
+- Updated the Phase 1 status in `docs/MVP_PLAN.md`; no product requirements or data were approved or changed.
+- Validation: reviewed the CSV headers against the current `Place` model and Supabase setup guide; `git diff --check` passed.
+- Remaining: send the message and draft template to the team; agree on the final template and verify supplied content before publication.
+
+### 2026-11-04 — Prevented Tagalog open-status badge overflow
+
+- Replaced the place-card header `Row` with a wrapping layout, so the complete status badge moves to another line when necessary instead of overflowing beside the demo label. The shared badge, including the detail-sheet presentation, keeps its full translation and existing styling.
+- Added a widget test for a narrow card in Tagalog that checks the full "Bukas ngayon" label, verifies it wraps below the demo label, and asserts no layout exception.
+- Validation: all 70 Flutter tests passed, `flutter analyze` is clean, and `git diff --check` passed. Hot-restarted the Android emulator build and found no Dart runtime errors; visually confirmed the Tagalog card header wraps while retaining the complete label.
+- Remaining: none.
+
 ### 2026-11-04 — Aligned the documentation with the implemented feature set
 
 - **Audit.** Compared the docs against `lib/` and the bundled data. Two claims were outright stale: photo presentation was still marked "planned, not implemented" in the brief and the Supabase guide even though the skeleton, full-image gallery, and zoom viewer shipped; and the README still said the samples had no coordinates and the map showed a waiting state, while `assets/data/sample_places.json` has illustrative coordinates and the map renders pins and the carousel.

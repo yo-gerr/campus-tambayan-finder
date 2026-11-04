@@ -61,10 +61,10 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: first. Depends on the team supplying approved content.**
 
-**Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), including the optional price pair, nullable `hours`, and structured `hoursByDay`, but the table still holds the four fictional sample rows. No approved listings, photos, or data template exist yet.
+**Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), including the optional price pair, nullable `hours`, and structured `hoursByDay`, but the table still holds the four fictional sample rows. A plain-language draft intake sheet is available for team review; the final template, approved listings, and photos are still pending.
 
 - Receive the compiled list and available photos for approximately 15–20 establishments.
-- Agree on a simple spreadsheet/data template and required fields, including up to 10 gallery photos per place, one marked cover photo, display order, public Storage URL, optional captions, and bundled fallback path when supplied.
+- Agree on a simple, non-technical spreadsheet for place details and a way to receive multiple photos per place. The development team will organize and map the submission into app records, select a cover photo, and handle photo storage.
 - Confirm photo permissions, translation responsibility, and how the team expects information to be checked and updated.
 - Replace fictional records with the team's approved information while preserving clear labels for any unknown or estimated values.
 - Keep the repository JSON canonical and import it into the related Supabase `places` and `place_photos` tables one way; export dashboard edits from both tables back before an APK build.
