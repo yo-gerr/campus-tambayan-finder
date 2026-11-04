@@ -56,31 +56,32 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
       children: [
         Text(
           copy.get('welcome'),
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w800,
-                height: 1.15,
-              ),
+          style: Theme.of(context).textTheme.headlineSmall
+              ?.copyWith(fontWeight: FontWeight.w800, height: 1.15),
         ),
         const SizedBox(height: 17),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFFFFEDE4),
+            color: AppColors.demoContainer,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Row(
             children: [
-              const Icon(Icons.science_outlined,
-                  size: 19, color: AppColors.terracotta),
+              const Icon(
+                Icons.science_outlined,
+                size: 19,
+                color: AppColors.onDemoContainer,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   copy.get('demo_banner'),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.terracotta,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.3,
-                      ),
+                    color: AppColors.onDemoContainer,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.3,
+                  ),
                 ),
               ),
             ],
@@ -116,9 +117,9 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
               child: Text(
                 copy.get('starting_near'),
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: AppColors.mutedInk,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  color: AppColors.mutedInk,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             _CampusSelector(
@@ -134,9 +135,8 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
             Expanded(
               child: Text(
                 '${results.length} ${copy.get('place_count')}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w800),
               ),
             ),
             TextButton.icon(
@@ -187,14 +187,8 @@ class _CampusSelector extends StatelessWidget {
     return SegmentedButton<String>(
       key: const Key('campus-selector'),
       segments: [
-        ButtonSegment(
-          value: 'plv',
-          label: Text(copy.get('campus_plv')),
-        ),
-        ButtonSegment(
-          value: 'cpag',
-          label: Text(copy.get('campus_cpag')),
-        ),
+        ButtonSegment(value: 'plv', label: Text(copy.get('campus_plv'))),
+        ButtonSegment(value: 'cpag', label: Text(copy.get('campus_cpag'))),
       ],
       selected: {campus},
       showSelectedIcon: false,
@@ -220,17 +214,15 @@ class _EmptyResults extends StatelessWidget {
           Text(
             copy.get('empty_title'),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(context).textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           Text(
             copy.get('empty_body'),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.mutedInk,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium
+                ?.copyWith(color: AppColors.mutedInk),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -269,10 +261,10 @@ class _OfflineNotice extends StatelessWidget {
             child: Text(
               copy.get('offline_notice'),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.3,
-                  ),
+                color: AppColors.primary,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.3,
+              ),
             ),
           ),
         ],

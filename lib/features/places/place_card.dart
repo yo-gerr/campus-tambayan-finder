@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import 'demo_badge.dart';
 import 'place.dart';
 import 'place_photo.dart';
 
@@ -34,38 +35,29 @@ class PlaceCard extends StatelessWidget {
                 height: 74,
                 borderRadius: 15,
                 loadingLabel: copy.get('loading_photo'),
-                placeholder: _PlaceIllustration(category: place.category),
+                placeholder: PlacePhotoPlaceholder(category: place.category),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      copy.get('demo_badge'),
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AppColors.terracotta,
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w800,
-                          ),
-                    ),
+                    DemoBadge(label: copy.get('demo_badge')),
                     const SizedBox(height: 4),
                     Text(
                       place.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                      style: Theme.of(context).textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       '${copy.category(place.category)} · ${place.area}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.mutedInk,
-                          ),
+                      style: Theme.of(context).textTheme.bodySmall
+                          ?.copyWith(color: AppColors.mutedInk),
                     ),
                     const SizedBox(height: 9),
                     Wrap(
@@ -76,7 +68,9 @@ class PlaceCard extends StatelessWidget {
                           icon: Icons.payments_outlined,
                           text: '₱${place.priceMin}–₱${place.priceMax}',
                         ),
-                        ...place.amenities.take(2).map(
+                        ...place.amenities
+                            .take(2)
+                            .map(
                               (amenity) => _TinyLabel(
                                 icon: _amenityIcon(amenity),
                                 text: copy.get(amenity),
@@ -93,32 +87,6 @@ class PlaceCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _PlaceIllustration extends StatelessWidget {
-  const _PlaceIllustration({required this.category});
-
-  final String category;
-
-  @override
-  Widget build(BuildContext context) {
-    final (icon, color) = switch (category) {
-      'coffee' => (Icons.local_cafe_outlined, const Color(0xFFF2E5D6)),
-      'park' => (Icons.park_outlined, const Color(0xFFE1EDDF)),
-      'eatery' => (Icons.restaurant_outlined, const Color(0xFFF4E4DB)),
-      _ => (Icons.menu_book_outlined, AppColors.sage),
-    };
-
-    return Container(
-      width: 68,
-      height: 74,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Icon(icon, size: 31, color: AppColors.primary),
     );
   }
 }
@@ -143,8 +111,8 @@ class _TinyLabel extends StatelessWidget {
 }
 
 IconData _amenityIcon(String amenity) => switch (amenity) {
-      'wifi' => Icons.wifi,
-      'aircon' => Icons.ac_unit,
-      'outlets' => Icons.power,
-      _ => Icons.check_circle_outline,
-    };
+  'wifi' => Icons.wifi,
+  'aircon' => Icons.ac_unit,
+  'outlets' => Icons.power,
+  _ => Icons.check_circle_outline,
+};

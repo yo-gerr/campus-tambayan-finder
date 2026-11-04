@@ -182,6 +182,39 @@ void main() {
     await tester.pumpAndSettle();
   });
 
+  test('demo status text clears AA contrast on its container', () {
+    expect(
+      _contrastRatio(AppColors.onDemoContainer, AppColors.demoContainer),
+      greaterThanOrEqualTo(4.5),
+    );
+  });
+
+  testWidgets('cards and details share one no-photo placeholder', (
+    tester,
+  ) async {
+    await pumpPrototype(tester);
+
+    final cardPlaceholder = tester.widget<PlacePhotoPlaceholder>(
+      find.descendant(
+        of: find.byKey(const Key('place-card-sample-study-corner')),
+        matching: find.byType(PlacePhotoPlaceholder),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('place-card-sample-study-corner')));
+    await tester.pumpAndSettle();
+
+    final detailPlaceholder = tester.widget<PlacePhotoPlaceholder>(
+      find.descendant(
+        of: find.byType(PlacePhotoGallery),
+        matching: find.byType(PlacePhotoPlaceholder),
+      ),
+    );
+
+    expect(cardPlaceholder.category, 'tambayan');
+    expect(detailPlaceholder.category, cardPlaceholder.category);
+  });
+
   testWidgets('filters local places by category', (tester) async {
     await pumpPrototype(tester);
 

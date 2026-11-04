@@ -110,7 +110,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
               child: const Icon(
                 Icons.spa_outlined,
                 size: 20,
-                color: Colors.white,
+                color: AppColors.onPrimary,
               ),
             ),
             const SizedBox(width: 10),

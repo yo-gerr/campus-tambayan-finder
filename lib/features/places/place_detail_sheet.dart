@@ -4,6 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import '../../app/app_widgets.dart';
+import 'demo_badge.dart';
 import 'google_maps_directions.dart';
 import 'place.dart';
 import 'place_photo.dart';
@@ -105,29 +107,13 @@ class _PlaceDetailSheet extends StatelessWidget {
         key: const Key('place-detail-list'),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
         children: [
-          Center(
-            child: Container(
-              width: 38,
-              height: 4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFD8D8D0),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
+          const Center(child: SheetHandle()),
           const SizedBox(height: 18),
           Row(
             children: [
               Expanded(
                 child: place.isDemo
-                    ? Text(
-                        copy.get('demo_badge'),
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.terracotta,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.6,
-                        ),
-                      )
+                    ? DemoBadge(label: copy.get('demo_badge'))
                     : const SizedBox.shrink(),
               ),
               IconButton(
@@ -155,9 +141,10 @@ class _PlaceDetailSheet extends StatelessWidget {
             height: 210,
             borderRadius: 18,
             loadingLabel: copy.get('loading_photo'),
-            placeholder: _DetailPhotoPlaceholder(
+            placeholder: PlacePhotoPlaceholder(
               category: place.category,
-              copy: copy,
+              label: copy.get('no_photo'),
+              iconSize: 40,
             ),
             photoPosition: copy.photoPosition,
             viewPhotoLabel: copy.get('view_photo'),
@@ -271,39 +258,6 @@ class _PlaceDetailSheet extends StatelessWidget {
 
 Future<bool> _launchExternalUrl(Uri url) {
   return launchUrl(url, mode: LaunchMode.externalApplication);
-}
-
-class _DetailPhotoPlaceholder extends StatelessWidget {
-  const _DetailPhotoPlaceholder({required this.category, required this.copy});
-
-  final String category;
-  final AppCopy copy;
-
-  @override
-  Widget build(BuildContext context) {
-    final icon = switch (category) {
-      'coffee' => Icons.local_cafe_outlined,
-      'park' => Icons.park_outlined,
-      'eatery' => Icons.restaurant_outlined,
-      _ => Icons.menu_book_outlined,
-    };
-
-    return ColoredBox(
-      color: AppColors.sage,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 40, color: AppColors.primary),
-          const SizedBox(height: 8),
-          Text(
-            copy.get('no_photo'),
-            style: Theme.of(context).textTheme.labelSmall
-                ?.copyWith(color: AppColors.mutedInk),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class _DetailRow extends StatelessWidget {

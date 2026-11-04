@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import '../../app/app_widgets.dart';
 import 'place_filters.dart';
 
 Future<PlaceFilters?> showPlaceFilterSheet({
@@ -58,16 +59,9 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
       height: MediaQuery.sizeOf(context).height * 0.9,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 4),
-            child: Container(
-              width: 36,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
+          const Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 4),
+            child: SheetHandle(),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 8, 12, 8),

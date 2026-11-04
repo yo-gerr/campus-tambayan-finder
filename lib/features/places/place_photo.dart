@@ -64,7 +64,12 @@ class PlacePhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallback = placeholder ?? _NoPhoto(width: width, height: height);
+    final fallback =
+        placeholder ??
+        PlacePhotoPlaceholder(
+          key: const Key('place-photo-fallback'),
+          category: place.category,
+        );
 
     final child = _PhotoImage(
       photo: place.coverPhoto,
@@ -191,7 +196,7 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
                 label: widget.photoPosition(_currentPage + 1, photos.length),
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: Colors.black54,
+                    color: AppColors.scrim,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Padding(
@@ -202,7 +207,7 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
                     child: Text(
                       '${_currentPage + 1} / ${photos.length}',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.white,
+                        color: AppColors.onScrim,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -265,7 +270,7 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
       child: IgnorePointer(
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.black54,
+            color: AppColors.scrim,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
@@ -275,7 +280,7 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
               key: const Key('place-photo-caption'),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: AppColors.onScrim),
             ),
           ),
         ),
@@ -388,12 +393,12 @@ class _PhotoViewerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.viewerBackground,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         key: const Key('photo-viewer-app-bar'),
         backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.onScrim,
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
@@ -405,8 +410,8 @@ class _PhotoViewerScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withValues(alpha: 0.78),
-                  Colors.black.withValues(alpha: 0.48),
+                  AppColors.viewerBackground.withValues(alpha: 0.78),
+                  AppColors.viewerBackground.withValues(alpha: 0.48),
                   Colors.transparent,
                 ],
                 stops: const [0, 0.58, 1],
@@ -511,21 +516,53 @@ Widget _assetOrFallback(String? asset, Widget fallback, int? cacheWidth) {
   );
 }
 
-class _NoPhoto extends StatelessWidget {
-  const _NoPhoto({required this.width, required this.height});
+/// The single no-photo placeholder used by cards, the detail gallery, and the
+/// generic photo slot.
+///
+/// Categories keep their own tint so an offline listing looks the same in the
+/// list and in its details, instead of switching between a category tint and a
+/// flat neutral block.
+class PlacePhotoPlaceholder extends StatelessWidget {
+  const PlacePhotoPlaceholder({
+    required this.category,
+    this.label,
+    this.iconSize = 31,
+    super.key,
+  });
 
-  final double width;
-  final double height;
+  final String? category;
+  final String? label;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      key: const Key('place-photo-fallback'),
-      width: width,
-      height: height,
-      color: AppColors.sage,
-      alignment: Alignment.center,
-      child: const Icon(Icons.image_outlined, color: AppColors.mutedInk),
+    final (icon, tint) = switch (category) {
+      'coffee' => (Icons.local_cafe_outlined, AppColors.coffeeTint),
+      'park' => (Icons.park_outlined, AppColors.parkTint),
+      'eatery' => (Icons.restaurant_outlined, AppColors.eateryTint),
+      'tambayan' => (Icons.menu_book_outlined, AppColors.sage),
+      _ => (Icons.image_outlined, AppColors.sage),
+    };
+    final text = label;
+
+    return ColoredBox(
+      color: tint,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: iconSize, color: AppColors.primary),
+            if (text != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                text,
+                style: Theme.of(context).textTheme.labelSmall
+                    ?.copyWith(color: AppColors.mutedInk),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
