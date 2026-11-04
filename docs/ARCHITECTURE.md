@@ -18,7 +18,7 @@ The agreed target is an Android application, initially serving students near PLV
 
 These are capabilities in the agreed product direction. Their presentation priority is recorded in the project brief; details still need definition:
 
-- **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Search behavior remains to be specified.
+- **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Search matches the place name, area, and localized category label with a simple in-memory substring match; it is not geo or fuzzy search.
 - **Place details:** show verified-as-possible listing information such as address, photos, amenities, estimated prices, and operating hours.
 - **Map and directions:** the owner approved MapLibre Flutter with OpenFreeMap public tiles/styles and OpenStreetMap-derived data for the current class demo, subject to an eligible representative accepting the terms and rechecking availability. Keep provider code in the map feature's presentation/infrastructure boundary and place coordinates in approved listing data. The app opens directions in Google Maps; no in-app ETA is included in the current phase. Preserve attribution and do not assume the public tile service has a guaranteed SLA.
 - **Listing operations:** the team plans to provide approximately 15–20 initial entries with available photos and details. Authorized team members will edit listing information manually in the Supabase dashboard (no custom in-app admin screen). Listings are loaded from Supabase when configured, with bundled local JSON as the seed and offline fallback. Each listing can have an ordered, Storage-backed gallery with optional bundled fallbacks.
@@ -69,7 +69,14 @@ lib/
 assets/data/
   sample_places.json    # Canonical demo listings; also the offline fallback
 test/
-  widget_test.dart      # Main interaction smoke tests
+  widget_test.dart                  # Main interaction and contrast tests
+  place_test.dart                   # Model parsing
+  place_filters_test.dart           # Filter matching and budget limits
+  opening_hours_test.dart           # Weekly schedule, timezone, boundaries
+  place_categories_test.dart        # Category catalog and labels
+  place_photo_test.dart             # Gallery and photo fallbacks
+  places_map_test.dart              # Map markers and carousel
+  google_maps_directions_test.dart  # Directions URL and gating
   sample_places_repository_test.dart
   synced_places_repository_test.dart
 ```
@@ -82,6 +89,7 @@ This layout is an implementation detail for the current MVP, not a commitment to
 - Category vocabulary is fixed in `lib/features/places/place_categories.dart`, not derived from loaded rows. All five agreed categories stay visible, selectable, and searchable before any listing uses them, and the filter chips, card labels, search, and no-photo placeholder all read that one list. An unrecognised stored key is shown verbatim rather than hidden, so an import mistake stays visible. When no listing exists in the selected category, the empty state says so instead of implying the filters are wrong.
 - Price ranges are optional as a pair. A listing without both bounds shows a localized "not listed" label and is excluded while a budget limit is active; the null budget state means "any", so no preset acts as a hidden ceiling. Filtering currently compares the lowest estimated spend, and whether that bound is the right choice remains an open product question recorded in the brief.
 - Opening hours are stored twice on purpose. `hoursByDay` is the structured weekly schedule and is the only source for the derived open/closed state; `hours` is an optional human-readable note. The derived state is computed from `opening_hours.dart` against Asia/Manila time (fixed UTC+8, no DST), opening minute inclusive and closing minute exclusive, and overnight windows are supported. Cards and the detail sheet recompute it from one shared timestamp, and the explore screen refreshes that timestamp every minute and on app resume so the badge does not go stale. Nothing is inferred from the free-text field, and days with no entry stay unknown rather than reading as closed.
+- Language choice and the intro guide are session state, not persisted. The English/Filipino toggle is held in memory and resets to English on relaunch, and the guide opens at launch and can be reopened from Help. Whether the guide should appear only on first launch is an open client question recorded in the brief.
 - `SamplePlacesRepository` reads the bundled JSON. `PlacesRemoteSource` isolates the shared provider, implemented by `SupabasePlacesSource` against the `places` table.
 - `SyncedPlacesRepository` composes them: it shows the bundled listings immediately, waits up to five seconds for the first shared snapshot, streams later updates, and labels the copy as an offline fallback when the shared source fails. An empty shared table never blanks the list.
 - The client is read-only. The app ships the publishable key, row-level security permits `select` only, and there is no sign-in. No student account or profile is created.

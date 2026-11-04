@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Aligned the documentation with the implemented feature set
+
+- **Audit.** Compared the docs against `lib/` and the bundled data. Two claims were outright stale: photo presentation was still marked "planned, not implemented" in the brief and the Supabase guide even though the skeleton, full-image gallery, and zoom viewer shipped; and the README still said the samples had no coordinates and the map showed a waiting state, while `assets/data/sample_places.json` has illustrative coordinates and the map renders pins and the carousel.
+- **`docs/MVP_PLAN.md`.** Added the GitHub Pages preview to the delivery boundaries; expanded the Phase 0 baseline to the current feature set (static five-category catalog, optional prices, budget chips, structured hours with badge/filter, shared-source fallback, web build); marked Phase 2 core-implemented against sample data and resolved the offline-browsing question; changed Phase 3 to implemented-but-awaiting-approved-coordinates and recorded that pins carry no closed state; added explicit status lines to Phases 4–6; removed the answered map renderer/attribution item from the open-inputs list; added the guide-display question.
+- **`docs/PROJECT_BRIEF.md`.** Replaced the stale Phase 2 photo row with the implemented behavior, corrected "first-use introduction" to the actual launch-and-Help behavior, and added decision rows for the static category catalog, chip-based budget control, and guide display.
+- **`docs/SUPABASE_SETUP.md`.** Retitled the image section, replaced the "does not yet implement" paragraph, clarified how `hours` renders beside or instead of the weekly list, and noted that the `00:00`–`23:59` round-the-clock workaround leaves a one-minute gap.
+- **`README.md`.** Updated the status paragraph and the decisions table (map renderer confirmed, Directions gated on verification, new rows for categories/prices/hours/budget), and replaced the stale map sentence with the illustrative-but-unverified coordinate behavior.
+- **`docs/ARCHITECTURE.md`.** Documented the implemented search scope, listed the actual test files, and recorded that language choice and the guide are session state rather than persisted.
+- **Follow-up added.** Guide display now mirrors the other client questions: the app opens the guide on every launch; should it appear only on first launch? Recorded in the brief, the MVP plan, and the local concept checklist.
+- **Validation.** Documentation-only change. `flutter analyze` and `flutter test` re-run to confirm nothing regressed.
+- Remaining: the client questions (capacity, budget basis, free Wi-Fi, closed map pins, 24-hour places, guide display) are still unanswered; no approved listings or verified coordinates exist yet.
+
 ### 2026-11-04 — Moved the open/closed state into a filled card badge
 
 - **New shared widget.** `lib/features/places/open_status_badge.dart` renders the pill for both the card and the detail sheet, replacing the detail sheet's private `_OpenStatusPill` so the two surfaces cannot drift.

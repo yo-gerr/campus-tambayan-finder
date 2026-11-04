@@ -6,7 +6,7 @@ This repository README is for project contributors and agents; it is not a publi
 
 ## Project status
 
-The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings can load from a shared Supabase Free-plan table, with the bundled JSON kept as seed and offline fallback; in-app map rendering, ETA presentation, and mood-data handling still need decisions.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings can load from a shared Supabase Free-plan table, with the bundled JSON kept as seed and offline fallback. The shipped baseline covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
 
 ## Start here
 
@@ -28,15 +28,19 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 
 | Topic | Status |
 |---|---|
-| Product direction | Student place finder with listings, filters, map, and travel estimates |
+| Product direction | Student place finder with listings, filters, and a map; in-app travel estimates are deferred |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
 | App languages | Filipino (Tagalog) and English |
 | Requested delivery | Installable Android APK for class presentation/testing; no Google Play release |
 | Web preview | Browser build published to GitHub Pages so the client can review changes without reinstalling the APK. Review channel only; the APK remains the deliverable |
 | Initial listings | About 15–20; compiled data and available photos supplied by the team |
+| Place categories | Five static categories: tambayan, coffee shop, park/open space, karinderya/affordable eatery, and other place. All stay selectable before listings exist for them |
+| Price display | Optional `priceMin`/`priceMax` pair; an unknown price shows "Price not listed" and is excluded while a budget limit is active |
+| Budget filter | Preset chips from ₱50 to ₱500 plus "Any budget"; "Any budget" applies no limit |
+| Operating hours | Structured `hoursByDay` drives the weekly list, the open/closed badge, and the "Open now" filter in Manila time; free-text `hours` is a note only |
 | Listing storage for class demo | Confirmed: shared Supabase Free-plan table with bundled JSON as seed and offline fallback |
-| Directions | Open Google Maps; in-app ETA and map provider remain undecided |
+| Directions | Open Google Maps, only for listings with verified coordinates; in-app ETA is deferred. Map renderer confirmed: MapLibre with OpenFreeMap tiles/styles |
 | Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
 | Listing edits | Authorized team members edit rows in the Supabase dashboard; no in-app admin screen |
 | Listing photos | Hybrid gallery: up to 10 approved Storage images per place, with optional bundled offline fallbacks; accessible loading skeleton and separate full-image zoom viewer; detail and card images are consistently cropped |
@@ -64,7 +68,7 @@ By default the app uses the bundled listings and needs no network or credentials
 flutter run --dart-define=SUPABASE_URL=https://YOUR-PROJECT.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
 ```
 
-The current app is a Flutter MVP baseline with fictional listings, an optional shared Supabase listing source, and a MapLibre/OpenFreeMap map foundation. The bundled sample places have no verified coordinates, so the map shows a waiting state instead of plotting fictional pins. See the [MVP plan](docs/MVP_PLAN.md) for remaining data and service prerequisites. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).
+The current app is a Flutter MVP baseline with fictional listings, an optional shared Supabase listing source, and a MapLibre/OpenFreeMap map. The bundled samples carry clearly unverified illustrative coordinates, so they appear as pins and in the map carousel, but their Directions button stays disabled with an explanation. See the [MVP plan](docs/MVP_PLAN.md) for remaining data and service prerequisites. Later production service choices remain open in the [project brief](docs/PROJECT_BRIEF.md).
 
 ## Web preview
 

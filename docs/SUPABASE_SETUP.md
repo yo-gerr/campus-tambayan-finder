@@ -85,7 +85,7 @@ The budget filter compares the lowest estimated spend (`priceMin`) with the sele
 
 Two fields describe hours, and they answer different questions.
 
-`hours` is a free-text summary or note, such as `8:00 AM–8:00 PM` or `Closed on holidays`. It is what the detail view shows when no weekly schedule exists. It is optional and is never parsed to decide whether a place is open.
+`hours` is a free-text summary or note, such as `8:00 AM–8:00 PM` or `Closed on holidays`. When no weekly schedule exists, the detail view shows this line alone. When `"hoursByDay"` is present, the app renders the weekly list and shows this text beneath it as a note. It is optional and is never parsed to decide whether a place is open.
 
 `"hoursByDay"` is the structured weekly schedule. It is the only field that powers the "Open now" badge and filter. Leave it `NULL` when the team has no reliable schedule; the app then shows nothing rather than guessing. Write the object keyed by three-letter weekday:
 
@@ -111,7 +111,7 @@ Rules the app applies:
 - Opening time is inclusive, closing time exclusive, so a place that closes at `20:00` reads as closed at `20:00`.
 - A window whose `close` is earlier than its `open` crosses midnight, such as `20:00`–`02:00`.
 - An entry with an unreadable time is treated as unknown for that day, not as closed.
-- Identical `open` and `close` values are treated as **unknown**, because "00:00–00:00" could mean 24 hours or a typo. Whether to support a 24-hour marker is an open question in the project brief. For a place open around the clock today, write `00:00`–`23:59`.
+- Identical `open` and `close` values are treated as **unknown**, because "00:00–00:00" could mean 24 hours or a typo. Whether to support a 24-hour marker is an open question in the project brief. For a place open around the clock today, write `00:00`–`23:59`; that leaves a one-minute closed window at 23:59, which is exactly why a real 24-hour value is still being considered.
 
 Reject typo'd weekday keys without blocking normal edits:
 
@@ -307,7 +307,7 @@ insert into public.place_photos (
 
 A place with no usable photo shows a neutral placeholder, which is expected until the team supplies approved images. The detail sheet becomes swipeable when a place has two or more gallery entries; the list card always uses the cover. Bundled copies go under `assets/photos/` and are referenced as `assets/photos/sample-kape-stop/cover.jpg`; add `assets/photos/` to `pubspec.yaml` when the first image arrives. Do not upload or bundle photos without permission, including photos with identifiable people whose use has not been cleared.
 
-### Image preparation and planned Phase 2 presentation
+### Image preparation and presentation behavior
 
 Mixed portrait and landscape photos are supported as uploaded. Prepare images before upload to keep the gallery responsive on student devices and within the Free-plan storage allowance:
 
@@ -316,7 +316,7 @@ Mixed portrait and landscape photos are supported as uploaded. Prepare images be
 - Use a meaningful filename and the place-id folder structure above.
 - Review whether an image contains people, copyrighted material, or unnecessary EXIF location metadata before publishing. Supabase Storage and the current app do not automatically remove metadata or verify photo permissions.
 
-Phase 2 plans, but does not yet implement, three presentation improvements: uncropped full-image rendering in the detail gallery for mixed orientations, an accessible shimmer/skeleton while a network image loads, and a full-screen pinch-to-zoom viewer. List-card cover images may remain cropped to keep cards visually consistent.
+The app implements three presentation behaviors: the detail gallery renders the full image for mixed orientations, an accessible skeleton covers a network photo while it loads, and a separate full-screen pinch-to-zoom viewer shows the complete photo. List-card cover images remain cropped to keep cards visually consistent.
 
 ## 6. Run the app against the shared source
 

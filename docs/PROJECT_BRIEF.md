@@ -83,7 +83,7 @@ Confirmed November 4, 2026: the budget filter is a preset chip row (₱50, ₱10
 
 ### Guidance and participation
 
-- Provide a first-use introduction to the main features and keep instructions accessible in the app.
+- Provide an in-app guide to the main features. The current build opens the guide at launch and keeps it reopenable from Help; whether it should appear only on first launch is an open question in the table below.
 - Students primarily browse listings; no ratings or comments are requested.
 - An optional mood check-in with a nickname is requested, but responses must not be linked to a user profile.
 - Shop owners do not need app accounts, submit identification through the app, or make online payments; the development team manages initial listings and updates.
@@ -129,6 +129,7 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Initial product direction | Agreed Android campus-area place finder |
 | Coverage | Agreed initial focus: Malinta near PLV Annex and CPAG |
 | Languages | Agreed: Filipino (Tagalog) and English |
+| Place categories | Confirmed: five categories — tambayan, coffee shop, open space/park, karinderya/affordable eatery, and other place. The catalog is static, so every category stays selectable before listings exist for it |
 | School framework requirement | None identified |
 | Current class-demo MVP framework | Flutter |
 | Production framework and minimum Android version | Open |
@@ -140,8 +141,10 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |
 | Capacity estimate versus spaciousness | Open — follow-up with client: the app currently stores one boolean `capacity` amenity ("Roomy"/"Maluwag"), which covers spaciousness but not an estimated seat count or size bucket. Confirm whether a numeric or bucketed capacity estimate and filter is required |
+| Budget control | Confirmed November 4, 2026: preset chips (₱50, ₱100, ₱150, ₱200, ₱300, ₱500) plus "Any budget", which applies no limit at all |
 | Budget comparison basis | Open — follow-up with client: the app matches a budget against the lowest estimated spend (`priceMin`), so a listing priced ₱80–₱250 appears under a ₱100 limit. Confirm whether the highest estimated spend (`priceMax`) should be used instead |
 | Wi-Fi amenity meaning | Open — follow-up with client: the app labels the `wifi` amenity "Free Wi-Fi" / "Libreng Wi-Fi". Confirm that paid Wi-Fi must be excluded from that value, or whether paid access needs its own value |
+| Introductory guide display | Open — follow-up with client: the app opens the short guide every time it starts, and Help reopens it. Should it appear only on first launch, or is showing it at launch each time acceptable? |
 | Structured operating days | Confirmed November 4, 2026: `hoursByDay` stores per-day opening and closing times, with a null day meaning closed and a missing day meaning unknown. The detail view lists the week and the app derives an "open now" state in Manila time. The concept document requires the days a place is open or closed, so this is a requirement rather than an inference |
 | Closed places on the map | Open — follow-up with client: the map shows every listing, including places that are closed right now. Should a closed place's pin be hidden, or kept visible but marked as closed? Should closed places also be left out of the place list by default, or only when the "Open now" filter is on? |
 | 24-hour places | Open — follow-up with client: the app has no value for a place that stays open around the clock, so identical opening and closing times are read as unknown instead of 24 hours. Should a 24-hour place get its own value, or is an around-the-clock schedule not needed for these listings? |
@@ -149,7 +152,7 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Admin editing workflow | No custom in-app admin screen; authorized team members will edit listing information manually in the Supabase dashboard; who holds access is open |
 | Listing delivery/storage | Confirmed November 2, 2026: shared Supabase Free-plan `places` and `place_photos` tables, with bundled local JSON as seed and offline fallback |
 | Listing photos (class demo) | Confirmed November 3, 2026: hybrid ordered gallery of up to 10 approved images per place; Storage URLs preferred, optional bundled copies as offline fallback, and a placeholder when no usable photo exists |
-| Phase 2 photo presentation | Planned, not implemented: full-image portrait/landscape gallery display, accessible loading skeleton, and full-screen pinch-to-zoom viewer; card covers remain cropped |
+| Phase 2 photo presentation | Implemented November 4, 2026: full-image detail gallery for mixed orientations, accessible loading skeleton for network photos, and a separate full-screen pinch-to-zoom viewer; card covers remain cropped |
 | Student accounts, ratings, comments | No student profile or ratings/comments requested for browsing |
 | Mood check-in | Optional and prioritized for class presentation; nickname may be used, but response must not be linked to a user profile. Persistence, nickname necessity, consent, retention, and access are open |
 | Public landing/information page | Not needed for current class-demo deliverable |

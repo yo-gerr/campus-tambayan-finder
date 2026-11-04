@@ -18,6 +18,7 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 - **Directions:** open Google Maps rather than implementing in-app navigation.
 - **Services and costs:** prefer no-cost/no-card choices where feasible; explain any paid or card-dependent service and obtain approval before enabling it.
 - **Mood privacy:** mood responses must not be linked to a user profile. Persistence and nickname behavior are undecided; do not persist mood or nickname data until clarified.
+- **Web preview:** the same app is built for the browser and published to GitHub Pages so the client can review changes without reinstalling the APK. It rebuilds on every push to `master`, carries no marketing content, and is a review channel rather than an additional deliverable.
 - **Not required:** public landing page and Google Play publication.
 
 ## Provisional visual direction
@@ -45,10 +46,14 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 
 - Android Flutter app shell and shared Material 3 theme.
 - Native Android launch splash using the provisional app-bar emblem and warm app background; revisit the artwork if the team approves final branding.
-- Fictional local JSON records, browsing/search, place details, category/budget/amenity/setting/activity filters.
-- English/Filipino interface toggle, introductory guide, and schematic map.
-- Sample data and map/directions behavior are labeled illustrative.
-- Widget and sample-repository tests.
+- Fictional local JSON records, browsing, place details, and filters for category, budget, amenities, setting, activity, and open-now. Search matches name, area, and the localized category label.
+- The five agreed categories come from one static catalog, so all remain selectable before any listing uses them.
+- Optional price ranges: a missing pair shows a "not listed" label and is excluded while a budget limit is active. The budget control is a preset chip row with a genuine "Any budget" state.
+- Structured per-day hours: the weekly list, the open/closed badge on cards and in details, and the "Open now" filter all read `hoursByDay`; free-text `hours` is a note only.
+- English/Filipino interface toggle, launch guide reopenable from Help, and a MapLibre/OpenFreeMap map with campus anchors, place pins, and a card carousel.
+- Shared Supabase listings with realtime updates, bundled JSON as seed and offline fallback, and clear demo labelling for `sample-` rows.
+- GitHub Pages web preview rebuilt on every push to `master`.
+- Widget, domain, repository, and map tests (69 at the time of writing).
 
 This is a working starting point, not the finished class-demo MVP. Do not treat its fictional locations, coordinates, prices, hours, amenities, or translations as approved content.
 
@@ -56,7 +61,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: first. Depends on the team supplying approved content.**
 
-**Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), but the table still holds the four fictional sample rows. No approved listings, photos, or data template exist yet.
+**Status: not started.** The shared-listing plumbing this phase feeds is built and verified (2026-11-03), including the optional price pair, nullable `hours`, and structured `hoursByDay`, but the table still holds the four fictional sample rows. No approved listings, photos, or data template exist yet.
 
 - Receive the compiled list and available photos for approximately 15–20 establishments.
 - Agree on a simple spreadsheet/data template and required fields, including up to 10 gallery photos per place, one marked cover photo, display order, public Storage URL, optional captions, and bundled fallback path when supplied.
@@ -71,7 +76,9 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: highest; prototype implementation exists and must be completed against approved data.**
 
-- Refine list, search, filters, and details using the confirmed listing fields and content.
+**Status: core implemented against the four fictional sample rows; awaiting approved listings.**
+
+- Refine list, search, filters, and details using the confirmed listing fields and content. **Search and filters are implemented:** search is a substring match on name, area, and localized category label, and filters cover category, budget, amenities, setting, activity, and open-now.
 - Show each place's ordered gallery of up to 10 approved photos, with one cover for list cards; prefer the shared Storage copy and fall back to bundled assets. Anything missing keeps a neutral placeholder.
 - Use a consistent, edge-to-edge crop for photos in the detail gallery and list cards. **Restored 2026-11-04** after emulator screenshots showed portrait images rendered too narrowly in the fixed-height detail area; the full-screen viewer remains available for seeing the complete photo.
 - Show an accessible, static, theme-based skeleton while a network photo loads. **Implemented 2026-11-04.** Loading and error states remain distinct; failed network images keep the existing bundled-photo or neutral-placeholder fallback.
@@ -79,14 +86,14 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - The inline shop-detail gallery uses a 210 dp height for a larger photo preview while retaining edge-to-edge cropping; listing cards remain unchanged.
 - Establish and document image-preparation guidance: preferred JPEG or WebP uploads, a recommended maximum long edge of 2048 px and roughly 2 MB per image, plus review/removal of unnecessary EXIF location metadata when practical. These are guidance, not automatic client-side validation.
 - Preserve category, budget, amenity, setting, and activity filters unless the team reprioritizes them.
-- Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates.
-- Confirm whether place browsing must work offline for the class demo.
+- Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates. **Implemented:** a missing price shows "Price not listed" and is excluded under a budget limit; `hoursByDay` drives the weekly list and the open/closed state, and a listing without it shows no indicator.
+- Confirm whether place browsing must work offline for the class demo. **Resolved:** browsing stays usable on the bundled copy when the shared source fails, but shared listings are not cached across restarts.
 
 **Acceptance:** a reviewer can browse the agreed places, find one with available search/filters, and inspect its approved details without confusing sample content with real listings.
 
 ### Phase 3 — Real map and Google Maps directions
 
-**Priority: second. Map foundation implemented November 4, 2026; live map display and directions depend on eligible service use and approved coordinates.**
+**Priority: second. Status: implemented for the class demo; approved place coordinates and verified flags are still missing.**
 
 - The app integrates MapLibre with OpenFreeMap's public Positron style and OSM-derived data. The fixed PLV Annex and CPAG anchors keep the basemap visible; the initial view uses zoom 16 centered on the midpoint between their owner-supplied coordinates. Their markers and labels are distinct from place pins. Bundled fictional listings have illustrative coordinates for local map previews so the carousel can be exercised without Supabase; these are not real locations and must be replaced with verified coordinates or omitted before use for live listings or directions.
 - The Map tab uses a full-body map layout between the app bar and bottom navigation, with a compact horizontally scrollable carousel overlay 30 dp above the bottom for places with valid coordinates and a floating internet/coordinate note at the top-right. The carousel uses equal left/right insets and sits above the map attribution control; it uses the same place cards and opens place details. Unlocated places are not shown in it. Its height accommodates card content without overflow. The searchable place list remains on Explore, and tapping a map marker/label also opens place details.
@@ -98,12 +105,15 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Do not add an in-app ETA in this phase. The owner selected Google Maps for directions; any future in-app ETA needs a separate decision about source, mode, origin, limitations, and cost.
 - Keep the MVP free of a Google Maps SDK, API key, and billing account; Google Maps URLs can open directions without an API key.
 - Keep any unverified or placeholder map visibly marked and never use prototype coordinates to launch real navigation.
+- Map pins carry no open/closed state yet: a closed place keeps an ordinary pin. Whether to hide it or mark it as closed is an open client question recorded in the brief.
 
 **Acceptance:** the styled map always shows the PLV Annex and CPAG anchors with required attribution; place pins use valid coordinates, with explicitly illustrative coordinates limited to fictional demo listings. Real listings use verified locations. Selecting a mapped live place opens the intended Google Maps destination only when `location_verified` is true, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
 
 ### Phase 4 — Optional mood check-in
 
 **Priority: third, but privacy decisions are a prerequisite to real collection.**
+
+**Status: not started.**
 
 - Confirm whether a nickname is required or optional and entered per check-in.
 - Confirm purpose, consent wording, whether a response is retained, who can access it, retention/deletion, and whether any aggregate analysis is intended.
@@ -117,6 +127,8 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: fourth. Blocked on a product/service decision.**
 
+**Status: deferred; nothing is displayed.**
+
 - Confirm whether the travel estimate should be displayed inside this app or left to Google Maps.
 - Confirm travel mode(s), origin behavior, acceptable estimate wording, and whether a live routing service is permitted.
 - If an in-app ETA requires a paid or card-dependent service, disclose the cost and obtain approval before enabling it.
@@ -128,15 +140,19 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: fifth and sixth. Existing controls need content review.**
 
+**Status: bilingual UI and the guide are implemented; translation and content review are pending.**
+
 - Review translations of app UI and supplied place information with the team or its chosen translator.
-- Ensure language changes cover navigation, filters, errors, empty states, details, directions messaging, and mood UI if included.
-- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable.
+- Ensure language changes cover navigation, filters, errors, empty states, details, directions messaging, and mood UI if included. **Implemented:** all UI copy has English and Filipino entries behind one in-app toggle. The selection is held in memory and resets to English on relaunch.
+- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable. **Implemented:** the guide opens at launch and reopens from Help. Whether it should appear only on first launch is an open client question recorded in the brief.
 
 **Acceptance:** both languages communicate the same approved meaning across in-scope screens; the guide accurately describes implemented behavior.
 
 ### Phase 7 — APK verification and handoff
 
 **Depends on all features selected for the presentation and on receiving final content.**
+
+**Status: not started; depends on approved content and the final feature set.**
 
 - Confirm target Android version/device expectations and whether a debug or signed release APK is required for installation/testing.
 - Test install, launch, core presentation flows, no-network behavior if required, and the final APK on an Android emulator or device.
@@ -151,11 +167,11 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Capacity filter: whether the single "Roomy" amenity is sufficient, or a numeric/bucketed capacity estimate and filter is required.
 - Budget matching: whether a listing qualifies on its lowest estimated spend (current) or highest estimated spend.
 - Wi-Fi meaning: confirm the `wifi` amenity means free access only.
+- Introductory guide: whether it should appear only on first launch, or at every launch as it does now.
 - Closed places on the map: whether a closed place is hidden or kept visible but marked, and whether it is left out of results by default.
 - 24-hour places: whether an around-the-clock schedule needs its own value.
 - Photo permissions, translation responsibility, data verification expectations, and update process.
 - Supabase organization ownership, dashboard edit access, and who exports the table back to the repository before each build.
-- In-app map source/renderer and attribution requirements.
 - Confirmed coordinates and whether Google Maps is installed/available on presentation devices.
 - Whether ETA appears in-app or only in Google Maps, travel modes, and approved source/cost.
 - Mood nickname necessity, consent, storage, access, retention, deletion, and purpose.
