@@ -4,7 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import '../places/place.dart';
-import '../places/place_card.dart';
+import 'campus_map_anchors.dart';
 
 class PlacesMapScreen extends StatelessWidget {
   const PlacesMapScreen({
@@ -24,118 +24,81 @@ class PlacesMapScreen extends StatelessWidget {
         .where((place) => place.coordinates != null)
         .toList();
     final placesWithoutCoordinates = places.length - mappablePlaces.length;
-    final mapHeight = (MediaQuery.sizeOf(context).height * 0.38).clamp(
-      220.0,
-      360.0,
-    );
+    final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-      child: ListView(
-        children: [
-          Text(
-            copy.get('map'),
-            style: Theme.of(context).textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            copy.get('map_online_note'),
-            style: Theme.of(context).textTheme.bodySmall
-                ?.copyWith(color: AppColors.mutedInk),
-          ),
-          if (placesWithoutCoordinates > 0) ...[
-            const SizedBox(height: 4),
-            Text(
-              copy.get('map_unverified_places'),
-              style: Theme.of(context).textTheme.bodySmall
-                  ?.copyWith(color: AppColors.mutedInk),
-            ),
-          ],
-          const SizedBox(height: 12),
-          SizedBox(
-            height: mapHeight,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: mappablePlaces.isEmpty
-                  ? _CoordinatesPending(copy: copy)
-                  : _PlacesMap(
-                      places: mappablePlaces,
-                      onPlaceSelected: onPlaceSelected,
-                    ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        _PlacesMap(places: mappablePlaces, onPlaceSelected: onPlaceSelected),
+        Positioned(
+          top: 12,
+          left: 12,
+          right: 12,
+          child: SafeArea(
+            bottom: false,
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: _MapStatusOverlay(
+                copy: copy,
+                placesWithoutCoordinates: placesWithoutCoordinates,
+                theme: theme,
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            copy.get('list_view'),
-            style: Theme.of(context).textTheme.titleMedium
-                ?.copyWith(fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 176,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: places.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 10),
-              itemBuilder: (context, index) {
-                final place = places[index];
-                return SizedBox(
-                  width: (MediaQuery.sizeOf(context).width - 70).clamp(
-                    0.0,
-                    double.infinity,
-                  ),
-                  child: PlaceCard(
-                    place: place,
-                    copy: copy,
-                    onTap: () => onPlaceSelected(place),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-class _CoordinatesPending extends StatelessWidget {
-  const _CoordinatesPending({required this.copy});
+class _MapStatusOverlay extends StatelessWidget {
+  const _MapStatusOverlay({
+    required this.copy,
+    required this.placesWithoutCoordinates,
+    required this.theme,
+  });
 
   final AppCopy copy;
+  final int placesWithoutCoordinates;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: AppColors.sage,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.location_searching_outlined,
-                size: 42,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 12),
+    final colorScheme = theme.colorScheme;
+    return Material(
+      color: colorScheme.surface.withValues(alpha: 0.94),
+      borderRadius: BorderRadius.circular(14),
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.wifi_outlined, size: 18, color: colorScheme.primary),
+                const SizedBox(width: 7),
+                Text(
+                  copy.get('map_online_note'),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            if (placesWithoutCoordinates > 0) ...[
+              const SizedBox(height: 4),
               Text(
-                copy.get('map_waiting_for_coordinates'),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                copy.get('map_coordinates_note'),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodySmall
-                    ?.copyWith(color: AppColors.mutedInk),
+                copy.get('map_unverified_places'),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
-          ),
+          ],
         ),
       ),
     );
@@ -170,34 +133,22 @@ class _PlacesMapState extends State<_PlacesMap> {
 
   @override
   Widget build(BuildContext context) {
-    final coordinates = widget.places
-        .map((place) => place.coordinates!)
-        .toList();
-    final center = PlaceCoordinates(
-      latitude:
-          coordinates
-              .map((coordinate) => coordinate.latitude)
-              .reduce((first, second) => first + second) /
-          coordinates.length,
-      longitude:
-          coordinates
-              .map((coordinate) => coordinate.longitude)
-              .reduce((first, second) => first + second) /
-          coordinates.length,
-    );
-
     return MapLibreMap(
       key: ValueKey(
-        widget.places
-            .map((place) {
-              final coordinates = place.coordinates!;
-              return '${place.id}:${coordinates.latitude},${coordinates.longitude}';
-            })
-            .join('|'),
+        [
+          ...campusMapAnchors.map(
+            (anchor) =>
+                '${anchor.id}:${anchor.location.latitude},${anchor.location.longitude}',
+          ),
+          ...widget.places.map((place) {
+            final coordinates = place.coordinates!;
+            return '${place.id}:${coordinates.latitude},${coordinates.longitude}';
+          }),
+        ].join('|'),
       ),
       styleString: _styleUrl,
       initialCameraPosition: CameraPosition(
-        target: LatLng(center.latitude, center.longitude),
+        target: initialCampusMapCenter,
         zoom: 15,
       ),
       attributionEnabled: true,
@@ -224,7 +175,7 @@ class _PlacesMapState extends State<_PlacesMap> {
 
     _placeIndexesByCircleId.clear();
     _placeIndexesBySymbolId.clear();
-    final symbols = await controller.addSymbols(
+    final placeSymbols = await controller.addSymbols(
       widget.places.map((place) {
         final coordinates = place.coordinates!;
         return SymbolOptions(
@@ -240,9 +191,29 @@ class _PlacesMapState extends State<_PlacesMap> {
       }).toList(),
     );
     if (!mounted) return;
-    for (final (index, symbol) in symbols.indexed) {
+    for (final (index, symbol) in placeSymbols.indexed) {
       _placeIndexesBySymbolId[symbol.id] = index;
     }
+
+    await controller.addSymbols(
+      campusMapAnchors
+          .map(
+            (anchor) => SymbolOptions(
+              geometry: anchor.location,
+              textField: anchor.label,
+              textSize: 13,
+              textAnchor: 'top',
+              textOffset: const Offset(0, 0.9),
+              textColor: _mapLibreColor(AppColors.terracotta),
+              textHaloColor: _mapLibreColor(
+                Theme.of(context).colorScheme.surface,
+              ),
+              textHaloWidth: 2,
+            ),
+          )
+          .toList(),
+    );
+    if (!mounted) return;
 
     final circles = await controller.addCircles(
       widget.places.map((place) {
@@ -262,6 +233,22 @@ class _PlacesMapState extends State<_PlacesMap> {
     for (final (index, circle) in circles.indexed) {
       _placeIndexesByCircleId[circle.id] = index;
     }
+
+    await controller.addCircles(
+      campusMapAnchors
+          .map(
+            (anchor) => CircleOptions(
+              geometry: anchor.location,
+              circleRadius: 12,
+              circleColor: _mapLibreColor(AppColors.terracotta),
+              circleStrokeColor: _mapLibreColor(
+                Theme.of(context).colorScheme.surface,
+              ),
+              circleStrokeWidth: 3,
+            ),
+          )
+          .toList(),
+    );
   }
 
   void _onCircleTapped(Circle circle) {

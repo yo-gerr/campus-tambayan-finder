@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added fixed campus map anchors
+
+- Added distinct PLV Annex and CPAG map markers/labels at the owner-supplied coordinates and centered the initial camera at their midpoint. The map now renders before place coordinates are available; unlocated places remain omitted and cannot open from the map.
+- Updated map copy, tests, and Phase 3/project/architecture notes. Validation: all 27 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android debug app built and launched, hot restart succeeded, and no Dart runtime errors were reported.
+- Remaining work: visually confirm the supplied campus pin locations; live tile usage remains subject to confirming an eligible integrator and current service terms.
+
+### 2026-11-04 — Made the Map tab full-screen
+
+- Implemented the approved full-body map layout: removed its heading and horizontal place-card carousel, and placed a compact localized internet note over the map. Attribution remains enabled; marker taps still open place details, and the coordinate-pending state remains unchanged. The Explore tab continues to provide the place list.
+- Updated the Phase 3 and architecture notes. Validation: all 25 Flutter tests passed, `dart analyze` passed, `git diff --check` passed, and Android emulator hot restart completed with no runtime errors.
+- Remaining work: visually verify the live map and overlay with demo coordinates; current bundled samples have none, so live tile/pin rendering could not be visually checked.
+
 ### 2026-11-04 — Integrated the map foundation
 
 - Clarified that OpenFreeMap needs no registration or API key; use is still subject to its published terms and integrator eligibility requirements.

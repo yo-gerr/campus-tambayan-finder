@@ -80,17 +80,18 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: second. Map foundation implemented November 4, 2026; live map display and directions depend on eligible service use and approved coordinates.**
 
-- The app now integrates MapLibre with OpenFreeMap's public Positron style and OSM-derived data. The map is loaded lazily when opened and only if at least one place has valid coordinates. Current sample places have no coordinates and show a waiting state; no sample locations are plotted.
+- The app integrates MapLibre with OpenFreeMap's public Positron style and OSM-derived data. The fixed PLV Annex and CPAG anchors keep the basemap visible even when no place has coordinates; the initial view centers on the midpoint between their owner-supplied coordinates. Their markers and labels are distinct from place pins. Only places with complete, valid coordinates are plotted, so no sample locations are fabricated.
+- The Map tab uses a full-body map layout between the app bar and bottom navigation, with a compact floating internet-requirement note and no separate heading or place-card carousel. The searchable place list remains on Explore; tapping a map marker/label opens place details.
 - OpenFreeMap currently has no registration, API key, or fee, but its public instance has no warranty/SLA and may be discontinued. Confirm the integrator meets the current terms (age 18+ and legally able to accept them, or authorized to bind the represented organization) and recheck availability/terms before live use. Include required attribution. Map tiles require internet.
 - The Positron style is a light neutral baseline. Evaluate a warm app-themed style without obscuring map information or attribution. OpenFreeMap's quick start says custom style JSON must be hosted; verify whether an app-bundled style works before introducing separate hosting. Do not add a paid/card-dependent host without approval.
 - Add verified decimal-degree `latitude` and `longitude` pairs to approved place data. The app ignores missing, incomplete, non-numeric, or out-of-range coordinates; legacy schematic `mapX`/`mapY` values are no longer used. Update existing Supabase tables with the nullable coordinate columns and relax legacy schematic fields using the setup guide.
-- Obtain and check coordinates for approved places and the PLV Annex/CPAG origins.
+- Visually confirm the owner-supplied PLV Annex and CPAG anchor coordinates against their intended locations. Obtain and check coordinates for approved places before adding their map pins.
 - Open directions in Google Maps using the selected place's real coordinates or verified address; handle missing Google Maps/app availability with a clear fallback.
 - Do not add an in-app ETA in this phase. The owner selected Google Maps for directions; any future in-app ETA needs a separate decision about source, mode, origin, limitations, and cost.
 - Keep the MVP free of a Google Maps SDK, API key, and billing account; Google Maps URLs can open directions without an API key.
 - Keep any unverified or placeholder map visibly marked and never use prototype coordinates to launch real navigation.
 
-**Acceptance:** the styled map shows markers matching verified listings and campus origins with required attribution; places without verified coordinates are not plotted. Selecting a mapped place opens the intended Google Maps destination, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
+**Acceptance:** the styled map always shows the PLV Annex and CPAG anchors with required attribution, including before place coordinates are available; places without valid coordinates are not plotted. Selecting a mapped place opens the intended Google Maps destination, or clearly explains why directions are unavailable. No unapproved in-app ETA is shown.
 
 ### Phase 4 — Optional mood check-in
 

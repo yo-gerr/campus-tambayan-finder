@@ -75,21 +75,10 @@ class AppCopy {
       'Directions are not connected in this prototype.',
       'Hindi pa gumagana ang direksyon sa prototype na ito.',
     ],
-    'map_online_note': [
-      'Map tiles need internet. Places with coordinates appear on the map.',
-      'Kailangan ng internet sa mapa. Lalabas dito ang mga lugar na may coordinate.',
-    ],
+    'map_online_note': ['Map needs internet', 'Kailangan ng internet ang mapa'],
     'map_unverified_places': [
       'Places without a valid coordinate pair are not shown on the map.',
       'Hindi ipinapakita sa mapa ang mga lugar na walang wastong pares ng coordinate.',
-    ],
-    'map_waiting_for_coordinates': [
-      'Map pins will appear after place coordinates are added.',
-      'Lalabas ang mga pin kapag naidagdag na ang coordinate ng mga lugar.',
-    ],
-    'map_coordinates_note': [
-      'You can still browse all places below. Sample coordinates are never plotted.',
-      'Maaari pa ring tingnan ang mga lugar sa ibaba. Hindi ginagamit ang sample coordinate.',
     ],
     'list_view': ['Places', 'Mga lugar'],
     'empty_title': [
@@ -128,8 +117,8 @@ class AppCopy {
           'Halimbawang datos lamang ang gamit ng prototype na ito.',
     ],
     'guide_map': [
-      'Map pins use verified place coordinates. The app does not access your device location.',
-      'Beripikadong coordinate ng lugar ang gamit ng mga pin. Hindi ina-access ng app ang lokasyon ng iyong device.',
+      'The map marks PLV Annex and CPAG. Place pins appear only for valid coordinates; the app does not access your device location.',
+      'Minamarkahan sa mapa ang PLV Annex at CPAG. Ipinapakita lamang ang pin ng lugar kung may wastong coordinate; hindi ina-access ng app ang lokasyon ng iyong device.',
     ],
     'got_it': ['Start exploring', 'Simulan'],
     'close': ['Close', 'Isara'],

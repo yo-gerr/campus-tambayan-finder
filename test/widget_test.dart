@@ -206,7 +206,7 @@ void main() {
     expect(find.text('Sample Study Corner'), findsOneWidget);
   });
 
-  testWidgets('switches language and keeps unverified places off the map', (
+  testWidgets('shows campus anchors without fictional sample place pins', (
     tester,
   ) async {
     await pumpPrototype(tester);
@@ -217,14 +217,15 @@ void main() {
 
     await tester.tap(find.text('Mapa'));
     await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byType(MapLibreMap), findsOneWidget);
+    expect(find.text('Kailangan ng internet ang mapa'), findsOneWidget);
     expect(
       find.text(
-        'Lalabas ang mga pin kapag naidagdag na ang coordinate ng mga lugar.',
+        'Hindi ipinapakita sa mapa ang mga lugar na walang wastong pares ng coordinate.',
       ),
       findsOneWidget,
     );
-    expect(find.byType(MapLibreMap), findsNothing);
-    expect(find.text('Sample Kape Stop'), findsOneWidget);
+    expect(find.text('Sample Kape Stop'), findsNothing);
   });
 
   testWidgets('onboarding can be dismissed and opened again', (tester) async {
