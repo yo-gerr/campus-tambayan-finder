@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 /// provisional palette be replaced without hunting through widgets.
 ///
 /// Warm Campus palette (see `docs/MVP_PLAN.md`): a warm cream canvas, a deep
-/// teal-green for trust and primary actions, and a single mango accent for
-/// selected states. The accent is a *fill* only — [AppColors.accent] on
-/// [AppColors.background] is about 1.8:1, so text on the accent must use
-/// [AppColors.onAccent].
+/// teal-green for primary actions, and restrained campus-blue selection
+/// states. The mango accent is reserved for small highlights.
 abstract final class AppColors {
   static const primary = Color(0xFF14594A);
   static const onPrimary = Color(0xFFFFFFFF);
@@ -19,6 +17,9 @@ abstract final class AppColors {
   static const surface = Color(0xFFFFFFFF);
   static const sage = Color(0xFFE3EFE8);
   static const terracotta = Color(0xFFA8452C);
+  static const campusBlue = Color(0xFF24558A);
+  static const campusBlueContainer = Color(0xFFE8F0F8);
+  static const onCampusBlueContainer = Color(0xFF173A5B);
   static const ink = Color(0xFF1C2320);
   static const mutedInk = Color(0xFF57675F);
   static const outline = Color(0xFFE7E2D5);
@@ -29,9 +30,8 @@ abstract final class AppColors {
   static const demoContainer = Color(0xFFFFF1E7);
   static const onDemoContainer = terracotta;
 
-  /// Fill-only emphasis for selected states. Never use as a text color.
+  /// Small highlight for the app emblem and campus map marker outlines.
   static const accent = Color(0xFFF2B23E);
-  static const onAccent = Color(0xFF231A00);
 
   static const map = Color(0xFFE8E8D9);
   static const road = Color(0xFFFFFEFA);
@@ -57,6 +57,10 @@ ThemeData buildAppTheme() {
         primary: AppColors.primary,
         onPrimary: AppColors.onPrimary,
         secondary: AppColors.terracotta,
+        tertiary: AppColors.campusBlue,
+        onTertiary: AppColors.onPrimary,
+        tertiaryContainer: AppColors.campusBlueContainer,
+        onTertiaryContainer: AppColors.onCampusBlueContainer,
         onSurface: AppColors.ink,
         outline: AppColors.outline,
         outlineVariant: AppColors.outlineStrong,
@@ -125,7 +129,7 @@ ThemeData buildAppTheme() {
       backgroundColor: scheme.secondaryContainer,
       shape: const StadiumBorder(),
       side: const BorderSide(color: AppColors.outlineStrong),
-      selectedColor: AppColors.accent,
+      selectedColor: AppColors.campusBlueContainer,
       labelStyle: TextStyle(
         color: scheme.onSecondaryContainer,
         fontWeight: FontWeight.w600,
@@ -133,19 +137,19 @@ ThemeData buildAppTheme() {
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.surface,
-      indicatorColor: AppColors.accent,
+      indicatorColor: AppColors.campusBlueContainer,
       surfaceTintColor: Colors.transparent,
       labelTextStyle: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
         return TextStyle(
           fontWeight: FontWeight.w700,
-          color: selected ? AppColors.onAccent : AppColors.mutedInk,
+          color: selected ? AppColors.campusBlue : AppColors.mutedInk,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         final selected = states.contains(WidgetState.selected);
         return IconThemeData(
-          color: selected ? AppColors.onAccent : AppColors.mutedInk,
+          color: selected ? AppColors.campusBlue : AppColors.mutedInk,
         );
       }),
     ),
@@ -153,11 +157,11 @@ ThemeData buildAppTheme() {
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
-          return selected ? AppColors.accent : AppColors.surface;
+          return selected ? AppColors.campusBlue : AppColors.surface;
         }),
         foregroundColor: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
-          return selected ? AppColors.onAccent : AppColors.ink;
+          return selected ? AppColors.onPrimary : AppColors.ink;
         }),
         side: WidgetStateProperty.resolveWith(
           (states) => const BorderSide(color: AppColors.outlineStrong),

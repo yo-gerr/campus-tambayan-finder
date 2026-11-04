@@ -266,7 +266,7 @@ class _PlacesMapState extends State<_PlacesMap> {
               textSize: 13,
               textAnchor: 'top',
               textOffset: const Offset(0, 0.9),
-              textColor: _mapLibreColor(AppColors.terracotta),
+              textColor: _mapLibreColor(AppColors.campusBlue),
               textHaloColor: _mapLibreColor(
                 Theme.of(context).colorScheme.surface,
               ),
@@ -302,10 +302,8 @@ class _PlacesMapState extends State<_PlacesMap> {
             (anchor) => CircleOptions(
               geometry: anchor.location,
               circleRadius: 12,
-              circleColor: _mapLibreColor(AppColors.terracotta),
-              circleStrokeColor: _mapLibreColor(
-                Theme.of(context).colorScheme.surface,
-              ),
+              circleColor: _mapLibreColor(AppColors.campusBlue),
+              circleStrokeColor: _mapLibreColor(AppColors.accent),
               circleStrokeWidth: 3,
             ),
           )

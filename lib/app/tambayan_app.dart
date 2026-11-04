@@ -104,13 +104,13 @@ class _TambayanHomeState extends State<_TambayanHome> {
               width: 36,
               height: 36,
               decoration: const BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.campusBlue,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.spa_outlined,
                 size: 20,
-                color: AppColors.onPrimary,
+                color: AppColors.accent,
               ),
             ),
             const SizedBox(width: 10),

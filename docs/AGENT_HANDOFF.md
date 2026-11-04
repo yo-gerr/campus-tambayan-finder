@@ -4,6 +4,12 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Applied the approved hybrid campus-inspired palette
+
+- Kept the warm canvas and teal primary actions, added a restrained non-official campus blue for selected controls and campus anchors, and confined yellow to the app emblem and campus marker outlines. Updated splash artwork and Android resources to match. Documented that these are inspired tones, not official PLV branding, and do not imply endorsement.
+- Validation: `flutter test` (37 tests passed), `flutter analyze`, `flutter build apk --debug`, and `git diff --check` passed. Hot-restarted the emulator build; no Dart runtime errors were reported.
+- Remaining: none; revisit if the team later provides official brand guidance.
+
 ### 2026-11-04 — Centralized the theme tokens and applied the Warm Campus palette
 
 - Audit found five one-off hex literals and about a dozen `Colors.*` usages outside `lib/app/app_theme.dart`, plus drift between duplicate components: two drag-handle colors, three different no-photo placeholders, and a demo badge duplicated with different letter spacing. `docs/ARCHITECTURE.md` already required screens to consume theme values, so this was a documented-principle violation rather than a new decision.

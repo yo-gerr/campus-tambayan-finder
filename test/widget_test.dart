@@ -189,11 +189,21 @@ void main() {
     );
   });
 
-  test('selected-state text clears AA contrast on the accent fill', () {
-    // The accent is a fill, not a text color; this guards the onAccent pairing.
+  test('campus-blue selected states clear AA contrast', () {
     expect(
-      _contrastRatio(AppColors.onAccent, AppColors.accent),
+      _contrastRatio(
+        AppColors.onCampusBlueContainer,
+        AppColors.campusBlueContainer,
+      ),
       greaterThanOrEqualTo(4.5),
+    );
+    expect(
+      _contrastRatio(AppColors.onPrimary, AppColors.campusBlue),
+      greaterThanOrEqualTo(4.5),
+    );
+    expect(
+      _contrastRatio(AppColors.accent, AppColors.campusBlue),
+      greaterThan(3),
     );
   });
 
@@ -235,8 +245,14 @@ void main() {
     final coffeeChip = tester.widget<ChoiceChip>(
       find.byKey(const Key('category-coffee-filter')),
     );
-    expect(allChip.labelStyle?.color, AppColors.onAccent);
+    expect(allChip.labelStyle?.color, AppColors.onCampusBlueContainer);
     expect(coffeeChip.labelStyle?.color, AppColors.ink);
+    expect(
+      Theme.of(tester.element(find.byKey(const Key('category-any-filter'))))
+          .chipTheme
+          .selectedColor,
+      AppColors.campusBlueContainer,
+    );
 
     await tester.tap(find.byKey(const Key('category-coffee-filter')));
     final applyButton = find.byKey(const Key('apply-filters'));

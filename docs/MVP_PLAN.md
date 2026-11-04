@@ -25,13 +25,13 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 Retain the calm, welcoming student-oriented visual style as a design hypothesis for the class demo, not as approved final branding.
 
 - Use Material 3 patterns, a warm neutral background, a deep teal/green primary for trust and primary actions, light sage surfaces, and restrained terracotta for demo/warning states.
-- The "Warm Campus" palette is the current working choice, still provisional rather than approved final branding. Tokens live in `lib/app/app_theme.dart`; screens must not declare their own color literals.
+- The "Warm Campus" palette is the current working choice, still provisional rather than approved final branding. The owner approved a hybrid direction inspired by the PLV crest; the selected blue and yellow tones are not claimed to be official PLV brand colors, and the app must not imply institutional endorsement. Tokens live in `lib/app/app_theme.dart`; screens must not declare their own color literals.
   - `background #FBF7EE`, `surface #FFFFFF`, `primary #14594A`, `sage #E3EFE8`
+  - `campusBlue #24558A`, `campusBlueContainer #E8F0F8`, `onCampusBlueContainer #173A5B`
   - `ink #1C2320`, `mutedInk #57675F`, `outline #E7E2D5`
   - `demoContainer #FFF1E7` with `onDemoContainer #A8452C`
-  - `accent #F2B23E` with `onAccent #231A00`
-- The mango accent exists to give selected states energy without changing the calm base. It is a **fill only**: `accent` on `background` is about 1.8:1, so text on the accent must use `onAccent`. Use it for the navigation indicator, selected filter chips, the selected campus segment, and small emphasis moments — not for `FilledButton` backgrounds, which stay `primary` so each screen has one action color.
-- Keep the demo/warning hue distinct from the accent so "sample data" and "selected" cannot be confused. Do not replace the accent with coral or lime, which sit too close to the demo red or the primary green.
+- `accent #F2B23E` is reserved for small emblem and campus-marker highlights.
+- Blue selection fills use matching dark-blue foregrounds or white foregrounds, with contrast covered by widget tests. Yellow is limited to emblem and campus-marker details; demo/warning terracotta remains visually distinct. `FilledButton` backgrounds stay `primary` so each screen has one action color.
 - Text contrast is checked in `test/widget_test.dart`. Keep every text/background pair at or above 4.5:1.
 - Prefer Roboto or the Android default sans-serif. Keep translated labels readable and check longer Filipino strings.
 - Use clear listing cards, recognizable icons with labels, understandable filters, and an obvious list/map switch. Do not rely on color alone to communicate status or category.
