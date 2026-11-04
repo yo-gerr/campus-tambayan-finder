@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
-import 'demo_badge.dart';
 import 'open_status_badge.dart';
 import 'place.dart';
 import 'place_photo.dart';
@@ -48,16 +47,13 @@ class PlaceCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        DemoBadge(label: copy.get('demo_badge')),
-                        if (status != null) ...[
-                          const Spacer(),
-                          OpenStatusBadge(open: status, copy: copy),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 4),
+                    // Status sits above the name as a small "eyebrow" pill.
+                    // It is a single short line, so it never wraps or
+                    // overflows in English or Tagalog.
+                    if (status != null) ...[
+                      OpenStatusBadge(open: status, copy: copy),
+                      const SizedBox(height: 6),
+                    ],
                     Text(
                       place.name,
                       maxLines: 1,

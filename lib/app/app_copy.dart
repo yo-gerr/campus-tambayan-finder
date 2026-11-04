@@ -97,7 +97,7 @@ class AppCopy {
       'View photo full screen',
       'Tingnan ang larawan sa buong screen',
     ],
-    'demo_badge': ['DEMO LISTING', 'HALIMBAWANG LISTAHAN'],
+    'demo_badge': ['DEMO', 'HALIMBAWA'],
     'sample_data': [
       'Sample information for prototype review only.',
       'Halimbawang impormasyon para lamang sa prototype.',
