@@ -4,6 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
 import '../places/place.dart';
+import '../places/place_card.dart';
 import 'campus_map_anchors.dart';
 
 class PlacesMapScreen extends StatelessWidget {
@@ -32,12 +33,11 @@ class PlacesMapScreen extends StatelessWidget {
         _PlacesMap(places: mappablePlaces, onPlaceSelected: onPlaceSelected),
         Positioned(
           top: 12,
-          left: 12,
           right: 12,
           child: SafeArea(
             bottom: false,
-            child: Align(
-              alignment: AlignmentDirectional.topStart,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 280),
               child: _MapStatusOverlay(
                 copy: copy,
                 placesWithoutCoordinates: placesWithoutCoordinates,
@@ -46,7 +46,66 @@ class PlacesMapScreen extends StatelessWidget {
             ),
           ),
         ),
+        if (mappablePlaces.isNotEmpty)
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 30,
+            child: SafeArea(
+              top: false,
+              child: _MapPlaceCarousel(
+                places: mappablePlaces,
+                copy: copy,
+                onPlaceSelected: onPlaceSelected,
+              ),
+            ),
+          ),
       ],
+    );
+  }
+}
+
+class _MapPlaceCarousel extends StatelessWidget {
+  const _MapPlaceCarousel({
+    required this.places,
+    required this.copy,
+    required this.onPlaceSelected,
+  });
+
+  final List<Place> places;
+  final AppCopy copy;
+  final ValueChanged<Place> onPlaceSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = constraints.maxWidth >= 360
+            ? 360.0
+            : constraints.maxWidth;
+
+        return SizedBox(
+          key: const Key('map-place-carousel'),
+          height: 168,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            itemCount: places.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final place = places[index];
+              return SizedBox(
+                width: cardWidth,
+                child: PlaceCard(
+                  place: place,
+                  copy: copy,
+                  onTap: () => onPlaceSelected(place),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -66,6 +125,7 @@ class _MapStatusOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = theme.colorScheme;
     return Material(
+      key: const Key('map-status-overlay'),
       color: colorScheme.surface.withValues(alpha: 0.94),
       borderRadius: BorderRadius.circular(14),
       elevation: 3,
@@ -80,11 +140,13 @@ class _MapStatusOverlay extends StatelessWidget {
               children: [
                 Icon(Icons.wifi_outlined, size: 18, color: colorScheme.primary),
                 const SizedBox(width: 7),
-                Text(
-                  copy.get('map_online_note'),
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Text(
+                    copy.get('map_online_note'),
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
@@ -149,7 +211,7 @@ class _PlacesMapState extends State<_PlacesMap> {
       styleString: _styleUrl,
       initialCameraPosition: CameraPosition(
         target: initialCampusMapCenter,
-        zoom: 15,
+        zoom: 16,
       ),
       attributionEnabled: true,
       logoEnabled: false,

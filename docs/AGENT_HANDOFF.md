@@ -4,6 +4,42 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Increased the map's initial zoom
+
+- Raised the initial camera zoom from 15 to 16, retaining the midpoint between the PLV Annex and CPAG anchors. Updated the map test and Phase 3 notes.
+- Validation: focused map tests passed, `flutter analyze` and `git diff --check` passed, hot restart succeeded, and no Dart runtime errors were reported.
+- Remaining work: none specific to the default zoom adjustment.
+
+### 2026-11-04 — Lowered the map carousel
+
+- Reduced the carousel's bottom offset from 48 dp to 30 dp and updated its layout assertion and Phase 3 note.
+- Validation: focused map tests passed, `flutter analyze` and `git diff --check` passed, hot restart succeeded, and no Dart runtime errors were reported.
+- Remaining work: none specific to this spacing adjustment.
+
+### 2026-11-04 — Aligned carousel insets above map attribution
+
+- Set equal left/right carousel insets and lifted it above the bottom-right attribution control so source information remains visible and tappable.
+- Added positional layout assertions and updated the Phase 3 and architecture notes. Validation: all 27 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android debug app built and hot-restarted, and no Dart runtime errors were reported.
+- Remaining work: visually confirm the carousel and attribution separation with coordinate-valid listings; bundled samples currently have no coordinates.
+
+### 2026-11-04 — Reduced the map carousel's right-side gap
+
+- Widened the carousel cards on portrait layouts and reduced the reserved space beside them while keeping the bottom-right map attribution unobstructed.
+- Added a carousel-width assertion. Validation: all 27 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android debug app built and hot-restarted, and no Dart runtime errors were reported.
+- Remaining work: visually verify the expanded card alongside attribution with coordinate-valid listings; bundled samples currently have no coordinates.
+
+### 2026-11-04 — Moved map carousel below the map
+
+- Moved the place carousel to the bottom-left of the map, moved the internet/coordinate notice to the top-right, increased card viewport height to prevent content overflow, and reserved space beside the carousel for map attribution.
+- Added layout/overflow assertions and updated the Phase 3 and architecture notes. Validation: all 27 Flutter tests passed, including a mapped card with multiple amenities; `flutter analyze` and `git diff --check` passed; hot restart succeeded with no runtime errors. Emulator review confirmed the bounded note at the top-right. The bundled samples have no valid place coordinates, so the carousel could only be visually exercised through widget tests.
+- Remaining work: review the carousel with real mapped listings when their verified coordinates are available.
+
+### 2026-11-04 — Restored the map place carousel
+
+- Added a compact horizontal carousel overlay at the top of the map for coordinate-valid places only. Cards reuse the Explore styling and open the same place details; the internet/coordinate note sits beneath the carousel. Places without coordinates remain off-map and out of the carousel.
+- Updated the Phase 3 and architecture notes and added widget coverage for visibility, selection, and coordinate filtering. Validation: all 27 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android debug app built and launched, hot restart succeeded, and no Dart runtime errors were reported.
+- Remaining work: visually review the carousel with several real mapped listings; bundled samples currently have no coordinates. The Flutter driver extension is not enabled, so on-device interaction automation was unavailable.
+
 ### 2026-11-04 — Added fixed campus map anchors
 
 - Added distinct PLV Annex and CPAG map markers/labels at the owner-supplied coordinates and centered the initial camera at their midpoint. The map now renders before place coordinates are available; unlocated places remain omitted and cannot open from the map.

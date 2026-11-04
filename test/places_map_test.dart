@@ -46,21 +46,36 @@ void main() {
       priceMin: 50,
       priceMax: 100,
       hours: 'Test hours',
-      amenities: [],
+      amenities: ['wifi', 'outlets'],
       setting: 'indoor',
       activities: ['study'],
       latitude: 14.7,
       longitude: 120.9,
     );
+    const unmappedPlace = Place(
+      id: 'unmapped-place',
+      name: 'Unmapped Place',
+      category: 'coffee',
+      area: 'Test area',
+      descriptionEn: 'Test description.',
+      descriptionTl: 'Pagsubok.',
+      priceMin: 50,
+      priceMax: 100,
+      hours: 'Test hours',
+      amenities: [],
+      setting: 'indoor',
+      activities: ['study'],
+    );
 
+    Place? selectedPlace;
     await tester.pumpWidget(
       MaterialApp(
         theme: buildAppTheme(),
         home: Scaffold(
           body: PlacesMapScreen(
-            places: const [place],
+            places: const [place, unmappedPlace],
             copy: const AppCopy(AppLanguage.english),
-            onPlaceSelected: (_) {},
+            onPlaceSelected: (selected) => selectedPlace = selected,
           ),
         ),
       ),
@@ -80,10 +95,42 @@ void main() {
       map.initialCameraPosition?.target.longitude,
       closeTo(initialCampusMapCenter.longitude, 1e-12),
     );
+    expect(map.initialCameraPosition?.zoom, 16);
     expect(find.text('Map needs internet'), findsOneWidget);
     expect(find.text('Map'), findsNothing);
     expect(find.text('Places'), findsNothing);
-    expect(find.byType(ListView), findsNothing);
+    expect(find.byKey(const Key('map-place-carousel')), findsOneWidget);
+    expect(find.byKey(const Key('place-card-mapped-place')), findsOneWidget);
+    expect(find.byKey(const Key('place-card-unmapped-place')), findsNothing);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('map-place-carousel')),
+        matching: find.byType(ListView),
+      ),
+      findsOneWidget,
+    );
+    final carouselRect = tester.getRect(
+      find.byKey(const Key('map-place-carousel')),
+    );
+    final cardRect = tester.getRect(
+      find.byKey(const Key('place-card-mapped-place')),
+    );
+    final statusRect = tester.getRect(
+      find.byKey(const Key('map-status-overlay')),
+    );
+    final screenSize = tester.getSize(find.byType(Scaffold));
+    expect(carouselRect.top, greaterThan(statusRect.bottom));
+    expect(carouselRect.bottom, lessThanOrEqualTo(screenSize.height - 30));
+    expect(carouselRect.left, 12);
+    expect(carouselRect.right, screenSize.width - 12);
+    expect(cardRect.width, 360);
+    expect(cardRect.right, lessThan(carouselRect.right));
+    expect(statusRect.width, lessThanOrEqualTo(280));
+    expect(statusRect.right, lessThan(screenSize.width));
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.byKey(const Key('place-card-mapped-place')));
+    expect(selectedPlace, place);
   });
 
   testWidgets('renders campus map when no place has coordinates', (
@@ -134,6 +181,7 @@ void main() {
       ),
       findsOneWidget,
     );
+    expect(find.byKey(const Key('map-place-carousel')), findsNothing);
     expect(find.text('Unmapped Place'), findsNothing);
   });
 }

@@ -225,6 +225,7 @@ void main() {
       ),
       findsOneWidget,
     );
+    expect(find.byKey(const Key('map-place-carousel')), findsNothing);
     expect(find.text('Sample Kape Stop'), findsNothing);
   });
 
