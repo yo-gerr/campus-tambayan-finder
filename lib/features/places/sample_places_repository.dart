@@ -8,8 +8,8 @@ import 'places_repository.dart';
 /// Reads the fictional listings bundled with the APK.
 ///
 /// These stay in the build as the seed and offline fallback even when the
-/// shared source is configured, and they are the canonical source the shared
-/// table is imported from.
+/// shared source is configured. Their sample map coordinates are illustrative
+/// and must not be copied as verified locations for live listings.
 class SamplePlacesRepository implements PlacesRepository {
   @override
   Stream<PlacesSnapshot> watchPlaces() async* {

@@ -12,8 +12,8 @@
     "amenities": ["wifi", "outlets"],
     "setting": "indoor",
     "activities": ["study", "relax"],
-    "latitude": null,
-    "longitude": null,
+    "latitude": 14.69635,
+    "longitude": 120.9674,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -31,8 +31,8 @@
     "amenities": ["wifi", "aircon", "outlets"],
     "setting": "indoor",
     "activities": ["study", "eat", "socialize"],
-    "latitude": null,
-    "longitude": null,
+    "latitude": 14.6945,
+    "longitude": 120.97035,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -50,8 +50,8 @@
     "amenities": [],
     "setting": "outdoor",
     "activities": ["relax", "socialize"],
-    "latitude": null,
-    "longitude": null,
+    "latitude": 14.6952,
+    "longitude": 120.9696,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []
@@ -69,8 +69,8 @@
     "amenities": ["outlets"],
     "setting": "indoor",
     "activities": ["eat", "socialize"],
-    "latitude": null,
-    "longitude": null,
+    "latitude": 14.69545,
+    "longitude": 120.96795,
     "photoUrl": null,
     "photoAsset": null,
     "photos": []

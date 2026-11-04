@@ -12,6 +12,15 @@ void main() {
     expect(places, hasLength(4));
     expect(places.first.name, 'Sample Study Corner');
     expect(places.every((place) => place.id.startsWith('sample-')), isTrue);
+    expect(places.every((place) => place.coordinates != null), isTrue);
+    expect(
+      places.every(
+        (place) =>
+            place.area.startsWith('Demo') ||
+            place.descriptionEn.contains('fictional'),
+      ),
+      isTrue,
+    );
   });
 
   test('serves the bundled listings as the seed snapshot', () async {

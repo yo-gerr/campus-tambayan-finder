@@ -4,6 +4,12 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added illustrative coordinates to bundled demo listings
+
+- Added map-preview coordinates around the fixed campus anchors so locally bundled fictional places appear in the map carousel without Supabase. These values are explicitly illustrative and are not verified listing locations.
+- Updated the sample repository test and clarified the Supabase import warning, project brief, architecture, and Phase 3 guidance. Validation: all 27 Flutter tests passed, `flutter analyze` and `git diff --check` passed, the Android app built and launched, hot restart succeeded with no runtime errors, and emulator review confirmed the local map shows the four demo pins and carousel.
+- Remaining work: replace demo coordinates with verified locations or omit them before using these rows as live listings or destinations.
+
 ### 2026-11-04 — Increased the map's initial zoom
 
 - Raised the initial camera zoom from 15 to 16, retaining the midpoint between the PLV Annex and CPAG anchors. Updated the map test and Phase 3 notes.
