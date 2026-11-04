@@ -6,7 +6,7 @@ This repository README is for project contributors and agents; it is not a publi
 
 ## Project status
 
-The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings can load from a shared Supabase Free-plan table, with the bundled JSON kept as seed and offline fallback. The shipped baseline covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings load from a shared Supabase Free-plan table; the app caches the latest successful non-empty listing snapshot for offline browsing and uses bundled JSON before its first sync. Remote photos and map tiles may still need internet. The shipped baseline covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
 
 ## Start here
 
@@ -39,7 +39,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Price display | Optional `priceMin`/`priceMax` pair; an unknown price shows "Price not listed" and is excluded while a budget limit is active |
 | Budget filter | Preset chips from ₱50 to ₱500 plus "Any budget"; "Any budget" applies no limit |
 | Operating hours | Structured `hoursByDay` drives the weekly list, the open/closed badge, and the "Open now" filter in Manila time; free-text `hours` is a note only |
-| Listing storage for class demo | Confirmed: shared Supabase Free-plan table with bundled JSON as seed and offline fallback |
+| Listing storage for class demo | Confirmed: shared Supabase Free-plan table; latest successful non-empty snapshot cached on-device for offline browsing; bundled JSON is the first-sync seed/fallback |
 | Directions | Open Google Maps, only for listings with verified coordinates; in-app ETA is deferred. Map renderer confirmed: MapLibre with OpenFreeMap tiles/styles |
 | Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
 | Listing edits | Authorized team members edit rows in the Supabase dashboard; no in-app admin screen |

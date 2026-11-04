@@ -5,11 +5,17 @@ enum PlacesDataSource {
   /// The shared online listing source answered and returned data.
   live,
 
+  /// A saved listing snapshot shown while checking for a fresh online copy.
+  cached,
+
   /// Bundled local listings. This build has no shared source configured.
   bundledSeed,
 
   /// Bundled local listings shown because the shared source was unreachable.
   offlineFallback,
+
+  /// The last saved shared listing snapshot shown because the source is offline.
+  offlineCache,
 }
 
 /// A set of listings plus where they came from, so the interface can be honest
@@ -20,7 +26,11 @@ class PlacesSnapshot {
   final List<Place> places;
   final PlacesDataSource source;
 
-  bool get isOfflineFallback => source == PlacesDataSource.offlineFallback;
+  bool get isOfflineFallback =>
+      source == PlacesDataSource.offlineFallback ||
+      source == PlacesDataSource.offlineCache;
+
+  bool get isSavedOfflineCopy => source == PlacesDataSource.offlineCache;
 }
 
 /// Read-only listing source for the app.

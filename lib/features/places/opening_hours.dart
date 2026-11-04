@@ -19,8 +19,7 @@ const manilaUtcOffset = Duration(hours: 8);
 ///
 /// The device timezone is deliberately ignored: an "open now" badge has to
 /// describe the shop, not the viewer's travel plans.
-DateTime manilaTimeOf(DateTime instant) =>
-    instant.toUtc().add(manilaUtcOffset);
+DateTime manilaTimeOf(DateTime instant) => instant.toUtc().add(manilaUtcOffset);
 
 /// One day's opening window, held as minutes from midnight so comparisons stay
 /// integer-exact.
@@ -102,6 +101,21 @@ class OpeningHours {
 
   DayHours? hoursFor(int weekday) => _byWeekday[weekday];
 
+  Map<String, Object?> toJson() {
+    final result = <String, Object?>{};
+    for (final entry in weekdayKeys.entries) {
+      if (!_byWeekday.containsKey(entry.value)) continue;
+      final hours = _byWeekday[entry.value];
+      result[entry.key] = hours == null
+          ? null
+          : {
+              'open': _time(hours.openMinutes),
+              'close': _time(hours.closeMinutes),
+            };
+    }
+    return result;
+  }
+
   /// Whether the place is open at [instant], evaluated in Manila time.
   ///
   /// Null means the day's hours are unknown, so callers must show nothing
@@ -142,4 +156,10 @@ int? _minutes(Object? value) {
   if (hour == null || minute == null) return null;
   if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
   return hour * 60 + minute;
+}
+
+String _time(int minutes) {
+  final hour = (minutes ~/ 60).toString().padLeft(2, '0');
+  final minute = (minutes % 60).toString().padLeft(2, '0');
+  return '$hour:$minute';
 }

@@ -14,7 +14,7 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 - **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide. In-app ETA is deferred from the current map phase; directions open in Google Maps.
 - **Initial listings:** approximately 15–20. The team will provide a compiled list, names, locations, descriptions, hours, prices, and up to 10 approved ordered photos per place.
 - **Listing edits:** authorized team members edit listing information manually in the Supabase dashboard; no custom in-app admin screen.
-- **Listing source:** shared Supabase Free-plan table, with the bundled JSON listings kept as seed and offline fallback. See [Shared Listings Setup](SUPABASE_SETUP.md).
+- **Listing source:** shared Supabase Free-plan table; the latest successful non-empty snapshot is cached on-device for offline browsing, with bundled JSON kept as the first-sync seed/fallback. Remote photos and map tiles are not included in this listing cache. See [Shared Listings Setup](SUPABASE_SETUP.md).
 - **Directions:** open Google Maps rather than implementing in-app navigation.
 - **Services and costs:** prefer no-cost/no-card choices where feasible; explain any paid or card-dependent service and obtain approval before enabling it.
 - **Mood privacy:** mood responses must not be linked to a user profile. Persistence and nickname behavior are undecided; do not persist mood or nickname data until clarified.
@@ -51,7 +51,7 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - Optional price ranges: a missing pair shows a "not listed" label and is excluded while a budget limit is active. The budget control is a preset chip row with a genuine "Any budget" state.
 - Structured per-day hours: the weekly list, the open/closed badge on cards and in details, and the "Open now" filter all read `hoursByDay`; free-text `hours` is a note only.
 - English/Filipino interface toggle, launch guide reopenable from Help, and a MapLibre/OpenFreeMap map with campus anchors, place pins, and a card carousel.
-- Shared Supabase listings with realtime updates, bundled JSON as seed and offline fallback, and clear demo labelling for `sample-` rows.
+- Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
 - Widget, domain, repository, and map tests (69 at the time of writing).
 
@@ -87,7 +87,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Establish and document image-preparation guidance: preferred JPEG or WebP uploads, a recommended maximum long edge of 2048 px and roughly 2 MB per image, plus review/removal of unnecessary EXIF location metadata when practical. These are guidance, not automatic client-side validation.
 - Preserve category, budget, amenity, setting, and activity filters unless the team reprioritizes them.
 - Show operating days/hours and prices only from supplied or checked information, with suitable qualification for estimates. **Implemented:** a missing price shows "Price not listed" and is excluded under a budget limit; `hoursByDay` drives the weekly list and the open/closed state, and a listing without it shows no indicator.
-- Confirm whether place browsing must work offline for the class demo. **Resolved:** browsing stays usable on the bundled copy when the shared source fails, but shared listings are not cached across restarts.
+- Confirm whether place browsing must work offline for the class demo. **Resolved November 5, 2026:** cache the latest successful non-empty shared listing snapshot on-device. Use bundled JSON before the first successful sync; remote photo files and map tiles are not included.
 
 **Acceptance:** a reviewer can browse the agreed places, find one with available search/filters, and inspect its approved details without confusing sample content with real listings.
 

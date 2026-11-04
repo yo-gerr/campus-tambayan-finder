@@ -336,7 +336,7 @@ The publishable key is compiled into the APK, which is expected. Row-level secur
 
 ### Checking which copy is on screen
 
-The interface shows the bundled-copy notice only when the shared source fails, so a populated table and the bundled fallback can look identical. During a rehearsal, read the device log instead:
+The app shows a localized notice when it falls back to saved or bundled listings. The saved copy contains listing data and photo URLs/references, not downloaded remote images or map tiles. During a rehearsal, read the device log to distinguish live listings from fallback:
 
 ```powershell
 adb logcat -s flutter:V | Select-String 'Shared listings'
@@ -346,8 +346,8 @@ adb logcat -s flutter:V | Select-String 'Shared listings'
 |---|---|
 | `Shared listings loaded: N places` | First shared read succeeded. |
 | `Shared listings updated: N places` | A realtime change arrived. Several rows inserted at once appear as several lines. |
-| `Shared listings table is empty; keeping the bundled copy` | The connection works but the table has no rows. |
-| `Shared listings unavailable, using bundled copy` | The shared source failed; the notice is showing. |
+| `Shared listings table is empty; keeping the local copy` | The connection works but the table has no rows; cached data is kept when available, otherwise bundled data remains. |
+| `Shared listings unavailable; keeping local copy` | The shared source failed; the app is keeping saved listings when available, otherwise bundled data. |
 
 ## 7. Free plan limits (verified 2026-11-02)
 

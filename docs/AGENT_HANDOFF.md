@@ -4,6 +4,19 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-05 — Replaced the default Android launcher icon
+
+- Used the existing blue-and-gold app mark to generate Android adaptive foreground and density-specific fallback icons. The icon is explicitly temporary until the team supplies the official logo/icon; splash artwork remains unchanged.
+- Validation: `flutter build apk --debug` succeeded; `aapt dump badging` confirmed the APK references `mipmap-anydpi-v26/ic_launcher.xml`; installed the APK on the connected emulator; `git diff --check` passed.
+- Remaining: replace this provisional icon when approved official branding is supplied.
+
+### 2026-11-05 — Cache shared listings for offline browsing
+
+- Added versioned on-device persistence for the latest non-empty shared listing snapshot, including schedules, coordinates, and photo references. The saved copy appears before the shared request; on failure or an empty table it remains available with a localized offline notice. Bundled JSON stays the first-sync fallback. Remote image files and map tiles are not included.
+- Changed the synced repository to consume one remote stream so the initial snapshot is not fetched twice; cache read/write failures are logged without blocking listings. Updated the related project, architecture, MVP, README, and Supabase setup docs.
+- Validation: focused cache/repository/model tests and full `flutter test` passed; `flutter analyze` passed; `git diff --check` passed; Android app hot restart succeeded with no runtime errors.
+- Remaining: offline browsing of cached listing text/data is supported after one successful sync; remote photos and map tiles may still require internet.
+
 ### 2026-11-04 — Added optional Google Maps location to the intake sheet
 
 - Added a plain-language, optional "Google Maps link or coordinates" field so the team can paste a shared map link without needing to extract coordinates. Updated the spreadsheet header.

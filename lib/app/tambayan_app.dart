@@ -169,6 +169,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                 filters: _filters,
                 campus: _campus,
                 usingOfflineCopy: snapshot.data!.isOfflineFallback,
+                usingSavedCopy: snapshot.data!.isSavedOfflineCopy,
                 onCampusChanged: (campus) => setState(() => _campus = campus),
                 onFiltersPressed: _openFilters,
                 onClearFilters: () =>

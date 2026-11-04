@@ -16,6 +16,7 @@ class PlacesExploreScreen extends StatefulWidget {
     required this.filters,
     required this.campus,
     required this.usingOfflineCopy,
+    required this.usingSavedCopy,
     required this.onCampusChanged,
     required this.onFiltersPressed,
     required this.onClearFilters,
@@ -29,6 +30,7 @@ class PlacesExploreScreen extends StatefulWidget {
   final PlaceFilters filters;
   final String campus;
   final bool usingOfflineCopy;
+  final bool usingSavedCopy;
   final ValueChanged<String> onCampusChanged;
   final VoidCallback onFiltersPressed;
   final VoidCallback onClearFilters;
@@ -134,7 +136,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
         ),
         if (widget.usingOfflineCopy) ...[
           const SizedBox(height: 10),
-          _OfflineNotice(copy: copy),
+          _OfflineNotice(copy: copy, usingSavedCopy: widget.usingSavedCopy),
         ],
         const SizedBox(height: 15),
         TextField(
@@ -300,9 +302,10 @@ class _EmptyResults extends StatelessWidget {
 }
 
 class _OfflineNotice extends StatelessWidget {
-  const _OfflineNotice({required this.copy});
+  const _OfflineNotice({required this.copy, required this.usingSavedCopy});
 
   final AppCopy copy;
+  final bool usingSavedCopy;
 
   @override
   Widget build(BuildContext context) {
@@ -323,7 +326,9 @@ class _OfflineNotice extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              copy.get('offline_notice'),
+              copy.get(
+                usingSavedCopy ? 'offline_saved_notice' : 'offline_notice',
+              ),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: AppColors.primary,
                 fontWeight: FontWeight.w800,

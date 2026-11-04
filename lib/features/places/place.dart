@@ -125,6 +125,29 @@ class Place implements PlaceLike {
     );
   }
 
+  Map<String, Object?> toJson() => {
+    'id': id,
+    'name': name,
+    'category': category,
+    'area': area,
+    'address': address,
+    'descriptionEn': descriptionEn,
+    'descriptionTl': descriptionTl,
+    'priceMin': priceMin,
+    'priceMax': priceMax,
+    'hours': hours,
+    'hoursByDay': openingHours?.toJson(),
+    'amenities': amenities,
+    'setting': setting,
+    'activities': activities,
+    'latitude': latitude,
+    'longitude': longitude,
+    'locationVerified': locationVerified,
+    'photoUrl': photoUrl,
+    'photoAsset': photoAsset,
+    'photos': photos.map((photo) => photo.toJson()).toList(growable: false),
+  };
+
   factory Place.fromJson(Map<String, dynamic> json) {
     // A price range only counts when both bounds are present. Storing one
     // bound alone would let the budget filter match on a guess.
@@ -192,6 +215,15 @@ class PlaceGalleryPhoto {
       captionTl: _optionalText(json['captionTl']),
     );
   }
+
+  Map<String, Object?> toJson() => {
+    'photoUrl': photoUrl,
+    'photoAsset': photoAsset,
+    'sortOrder': sortOrder,
+    'isCover': isCover,
+    'captionEn': captionEn,
+    'captionTl': captionTl,
+  };
 }
 
 List<PlaceGalleryPhoto> _photos(Object? value) {

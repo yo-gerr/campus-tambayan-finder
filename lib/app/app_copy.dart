@@ -88,8 +88,12 @@ class AppCopy {
       'DEMO CONTENT · HINDI BERIPIKADO',
     ],
     'offline_notice': [
-      'Showing the bundled copy · live updates unavailable',
-      'Naka-bundle na kopya · walang live updates',
+      'Showing the bundled sample copy · live updates unavailable',
+      'Ipinapakita ang naka-bundle na halimbawa · walang live updates',
+    ],
+    'offline_saved_notice': [
+      'Showing the last saved listings · updates unavailable',
+      'Ipinapakita ang huling na-save na listahan · walang update',
     ],
     'no_photo': ['No photo yet', 'Wala pang larawan'],
     'loading_photo': ['Loading photo', 'Naglo-load ang larawan'],

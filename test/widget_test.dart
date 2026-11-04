@@ -490,7 +490,7 @@ void main() {
 
     expect(find.byKey(const Key('offline-notice')), findsOneWidget);
     expect(
-      find.text('Showing the bundled copy · live updates unavailable'),
+      find.text('Showing the bundled sample copy · live updates unavailable'),
       findsOneWidget,
     );
   });
