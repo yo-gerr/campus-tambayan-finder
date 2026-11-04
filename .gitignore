@@ -45,5 +45,27 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Gradle may write here when the build directory is redirected.
+# The root-anchored /build/ above does not cover these paths.
+android/build/
+android/app/build/
+
+# Local environment and secrets. These are repeated at the repository root
+# because android/.gitignore only covers files under android/.
+.env
+*.env
+key.properties
+*.jks
+*.keystore
+
+# Build outputs that may be copied outside /build/, such as a distributed APK.
+*.apk
+*.aab
+*.ipa
+
+# Windows metadata
+Thumbs.db
+desktop.ini
+
 # Widget Preview related
 .widget_preview/
