@@ -4,6 +4,29 @@ import 'package:flutter/services.dart';
 import '../../app/app_theme.dart';
 import 'place.dart';
 
+/// Caps the pixels the app decodes for display. Uploads can be several
+/// thousand pixels wide; decoding them at full size exhausts the image cache
+/// and forces fresh network loads whenever the gallery rebuilds a page.
+const _maxGalleryDecodeWidth = 1440;
+const _maxViewerDecodeWidth = 2400;
+
+int? _decodeWidth(
+  BuildContext context, {
+  double? logicalWidth,
+  double scale = 1,
+  required int max,
+}) {
+  final media = MediaQuery.maybeOf(context);
+  if (media == null) return null;
+  final width =
+      logicalWidth != null && logicalWidth.isFinite && logicalWidth > 0
+      ? logicalWidth
+      : media.size.width;
+  final pixels = (width * media.devicePixelRatio * scale).round();
+  if (pixels < 1) return 1;
+  return pixels > max ? max : pixels;
+}
+
 /// Which photo the interface should try first.
 enum PlacePhotoSource { network, asset, none }
 
@@ -47,6 +70,11 @@ class PlacePhoto extends StatelessWidget {
       photo: place.coverPhoto,
       fallback: fallback,
       loadingLabel: loadingLabel,
+      cacheWidth: _decodeWidth(
+        context,
+        logicalWidth: width,
+        max: _maxGalleryDecodeWidth,
+      ),
     );
 
     return ClipRRect(
@@ -96,6 +124,11 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
     final photos = widget.place.photos.isNotEmpty
         ? widget.place.photos
         : [?widget.place.coverPhoto];
+    final cacheWidth = _decodeWidth(
+      context,
+      logicalWidth: widget.width,
+      max: _maxGalleryDecodeWidth,
+    );
     if (photos.length < 2) {
       if (photos.isNotEmpty) {
         return ClipRRect(
@@ -106,7 +139,12 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _galleryPhoto(context, photos.single, 0),
+                _galleryPhoto(
+                  context,
+                  photos.single,
+                  0,
+                  cacheWidth: cacheWidth,
+                ),
                 _caption(photos.single, hasPositionIndicator: false),
               ],
             ),
@@ -136,8 +174,14 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
               key: Key('place-photo-gallery-${widget.place.id}'),
               itemCount: photos.length,
               onPageChanged: (index) => setState(() => _currentPage = index),
-              itemBuilder: (context, index) =>
-                  _galleryPhoto(context, photos[index], index),
+              itemBuilder: (context, index) => _GalleryPage(
+                child: _galleryPhoto(
+                  context,
+                  photos[index],
+                  index,
+                  cacheWidth: cacheWidth,
+                ),
+              ),
             ),
             Positioned(
               right: 10,
@@ -179,8 +223,9 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
   Widget _galleryPhoto(
     BuildContext context,
     PlaceGalleryPhoto photo,
-    int index,
-  ) {
+    int index, {
+    required int? cacheWidth,
+  }) {
     return Semantics(
       button: true,
       label: widget.viewPhotoLabel,
@@ -199,6 +244,7 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
           photo: photo,
           fallback: widget.placeholder,
           loadingLabel: widget.loadingLabel,
+          cacheWidth: cacheWidth,
         ),
       ),
     );
@@ -238,17 +284,42 @@ class _PlacePhotoGalleryState extends State<PlacePhotoGallery> {
   }
 }
 
+/// Keeps a visited gallery page mounted so swiping back does not rebuild its
+/// image and show the loading skeleton again.
+class _GalleryPage extends StatefulWidget {
+  const _GalleryPage({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_GalleryPage> createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<_GalleryPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+}
+
 class _PhotoImage extends StatelessWidget {
   const _PhotoImage({
     required this.photo,
     required this.fallback,
     required this.loadingLabel,
+    this.cacheWidth,
     this.fit = BoxFit.cover,
   });
 
   final PlaceGalleryPhoto? photo;
   final Widget fallback;
   final String loadingLabel;
+  final int? cacheWidth;
   final BoxFit fit;
 
   @override
@@ -257,12 +328,13 @@ class _PhotoImage extends StatelessWidget {
       return Image.network(
         photo!.photoUrl!,
         fit: fit,
+        cacheWidth: cacheWidth,
         frameBuilder: (context, image, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded || frame != null) return image;
           return PlacePhotoLoadingSkeleton(label: loadingLabel);
         },
         errorBuilder: (context, error, stackTrace) =>
-            _assetOrFallback(photo!.photoAsset, fallback),
+            _assetOrFallback(photo!.photoAsset, fallback, cacheWidth),
       );
     }
     final asset = photo?.photoAsset;
@@ -270,6 +342,7 @@ class _PhotoImage extends StatelessWidget {
     return Image.asset(
       asset,
       fit: fit,
+      cacheWidth: cacheWidth,
       errorBuilder: (context, error, stackTrace) => fallback,
     );
   }
@@ -361,6 +434,11 @@ class _PhotoViewerScreen extends StatelessWidget {
                 photo: photo,
                 fallback: fallback,
                 loadingLabel: loadingLabel,
+                cacheWidth: _decodeWidth(
+                  context,
+                  scale: 2,
+                  max: _maxViewerDecodeWidth,
+                ),
                 fit: BoxFit.contain,
               ),
             ),
@@ -423,11 +501,12 @@ class PlacePhotoLoadingSkeleton extends StatelessWidget {
   }
 }
 
-Widget _assetOrFallback(String? asset, Widget fallback) {
+Widget _assetOrFallback(String? asset, Widget fallback, int? cacheWidth) {
   if (asset == null) return fallback;
   return Image.asset(
     asset,
     fit: BoxFit.cover,
+    cacheWidth: cacheWidth,
     errorBuilder: (context, error, stackTrace) => fallback,
   );
 }

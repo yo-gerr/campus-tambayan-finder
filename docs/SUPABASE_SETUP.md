@@ -248,7 +248,7 @@ A place with no usable photo shows a neutral placeholder, which is expected unti
 Mixed portrait and landscape photos are supported as uploaded. Prepare images before upload to keep the gallery responsive on student devices and within the Free-plan storage allowance:
 
 - Prefer JPEG or WebP; retain enough quality for a phone screen rather than uploading camera originals.
-- Recommended maximum: 2048 px on the longest edge and roughly 2 MB per file.
+- Recommended maximum: 2048 px on the longest edge and roughly 2 MB per file. The app decodes images at display size, but the full uploaded file is still downloaded on first view, so oversized files slow down slow connections and consume the Free-plan transfer allowance.
 - Use a meaningful filename and the place-id folder structure above.
 - Review whether an image contains people, copyrighted material, or unnecessary EXIF location metadata before publishing. Supabase Storage and the current app do not automatically remove metadata or verify photo permissions.
 

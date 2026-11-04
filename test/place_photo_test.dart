@@ -68,6 +68,18 @@ void main() {
     expect(find.byKey(const Key('place-photo-fallback')), findsOneWidget);
   });
 
+  testWidgets('decodes card photos at the rendered size', (tester) async {
+    await tester.pumpWidget(
+      _wrap(_place(photoUrl: 'https://example.test/a.jpg')),
+    );
+
+    final image = tester.widget<Image>(find.byType(Image).first);
+    final provider = image.image;
+    expect(provider, isA<ResizeImage>());
+    expect((provider as ResizeImage).width, isNotNull);
+    expect(provider.width, lessThanOrEqualTo(1440));
+  });
+
   testWidgets('shows an accessible theme-based photo loading skeleton', (
     tester,
   ) async {
@@ -151,7 +163,9 @@ void main() {
       );
       expect(find.text('1 / 2'), findsOneWidget);
       expect(find.text('Sample cover caption'), findsOneWidget);
-      expect(tester.widget<Image>(find.byType(Image).first).fit, BoxFit.cover);
+      final galleryImage = tester.widget<Image>(find.byType(Image).first);
+      expect(galleryImage.fit, BoxFit.cover);
+      expect(galleryImage.image, isA<ResizeImage>());
 
       await tester.tap(
         find.byKey(const Key('photo-gallery-open-photo-place-0')),
@@ -159,7 +173,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(InteractiveViewer), findsOneWidget);
       expect(find.text('Photo Place'), findsOneWidget);
-      expect(tester.widget<Image>(find.byType(Image).last).fit, BoxFit.contain);
+      final viewerImage = tester.widget<Image>(find.byType(Image).last);
+      expect(viewerImage.fit, BoxFit.contain);
+      expect(viewerImage.image, isA<ResizeImage>());
+      expect((viewerImage.image as ResizeImage).width, lessThanOrEqualTo(2400));
       final viewerAppBar = tester.widget<AppBar>(
         find.byKey(const Key('photo-viewer-app-bar')),
       );
@@ -176,6 +193,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('2 / 2'), findsOneWidget);
+      // Visited pages stay mounted, so swiping back does not reload the photo.
+      expect(
+        find.byKey(
+          const Key('photo-gallery-open-photo-place-0'),
+          skipOffstage: false,
+        ),
+        findsOneWidget,
+      );
     },
   );
 }

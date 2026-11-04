@@ -4,6 +4,18 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Fixed gallery photos reloading to the skeleton
+
+- Symptom: swiping the detail gallery away from a photo and back showed the loading skeleton again even though the photo had already been displayed.
+- Root cause: the gallery had no keep-alive, so `PageView` disposed off-screen pages and rebuilt their `Image` on return; and photos were decoded at full upload resolution. Measured bucket files: `interior.jpg` 4160×6240 (9.4 MB, ~99 MB decoded), `menu.jpg` 5737×3825 (3.6 MB, ~84 MB decoded). Two photos alone exceed Flutter's default 100 MB `ImageCache`, so every return evicted and re-fetched.
+- Change: `lib/features/places/place_photo.dart` now bounds decode size with `cacheWidth` (`_maxGalleryDecodeWidth = 1440`, `_maxViewerDecodeWidth = 2400`) for cards, gallery pages, asset fallbacks, and the full-screen viewer, and wraps each gallery page in `_GalleryPage` (`AutomaticKeepAliveClientMixin`) so visited pages stay mounted.
+- Docs: `docs/ARCHITECTURE.md` records the bounded decode and keep-alive behavior; `docs/SUPABASE_SETUP.md` clarifies that decoding at display size does not shrink the download, so uploads should still be re-exported.
+- Tests: `test/place_photo_test.dart` asserts `ResizeImage` bounds for card, gallery, and viewer images and that a visited gallery page stays mounted (found with `skipOffstage: false`).
+- Validation: `flutter analyze` clean, all 34 tests passed, `git diff --check` clean, and a debug APK built with the Supabase defines installed on the emulator. With shared data (`Shared listings loaded: 4 places`), opening `Sample Kape Stop` and swiping 1→2→3→1→2→3 showed the skeleton only on each photo's first load; every repeat visit rendered instantly. Screenshots: `%LOCALAPPDATA%\Temp\opencode\gallery-fix-*.png` (not committed).
+- Remaining:
+  - The uploaded `interior.jpg` and `menu.jpg` are still far above the documented limit; re-export to ~2048 px longest edge and ≤2 MB to make first loads fast and stay within the Free-plan transfer allowance.
+  - The `location_verified` reset for the `sample-*` rows has still not been run.
+
 ### 2026-11-04 — Added the optional listing address
 
 - Added nullable `places.address` (single, untranslated text) plus `Place.address` parsing; the detail sheet shows an “Address” row only when the field is non-empty, after Setting and before the location-status row. New copy key: `address` (Address / Adres). `area` remains the short neighborhood label on cards.
