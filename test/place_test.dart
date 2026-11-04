@@ -12,6 +12,7 @@ Map<String, dynamic> _row({
   Object? address,
   Object? priceMin = 50,
   Object? priceMax = 120,
+  Object? hoursByDay,
 }) => {
   'id': 'live-place',
   'name': 'Live Place',
@@ -23,6 +24,7 @@ Map<String, dynamic> _row({
   'priceMin': priceMin,
   'priceMax': priceMax,
   'hours': '8:00 AM–5:00 PM',
+  'hoursByDay': hoursByDay,
   'amenities': <dynamic>['wifi', 'outlets'],
   'setting': 'indoor',
   'activities': <dynamic>['study', 'eat'],
@@ -69,6 +71,43 @@ void main() {
     final unpriced = Place.fromJson(withoutKeys);
     expect(unpriced.priceMin, isNull);
     expect(unpriced.priceMax, isNull);
+  });
+
+  test('maps structured hours and keeps unknown days distinct from closed', () {
+    final place = Place.fromJson(
+      _row(
+        hoursByDay: {
+          'mon': {'open': '08:00', 'close': '20:00'},
+          'sun': null,
+          'tue': {'open': '08:00'}, // malformed: no close
+        },
+      ),
+    );
+    final hours = place.openingHours;
+
+    expect(hours, isNotNull);
+    expect(hours!.isKnownOn(DateTime.monday), isTrue);
+    expect(hours.isClosedOn(DateTime.sunday), isTrue);
+    // A malformed day is unknown, not closed.
+    expect(hours.isKnownOn(DateTime.tuesday), isFalse);
+    expect(hours.isKnownOn(DateTime.wednesday), isFalse);
+  });
+
+  test('treats missing or unusable hours as unknown', () {
+    expect(Place.fromJson(_row()).openingHours, isNull);
+    expect(Place.fromJson(_row(hoursByDay: 'daily')).openingHours, isNull);
+    expect(Place.fromJson(_row(hoursByDay: {})).openingHours, isNull);
+    expect(
+      Place.fromJson(_row(hoursByDay: {'mon': {'open': '25:00'}})).openingHours,
+      isNull,
+    );
+  });
+
+  test('treats missing or blank hours text as absent', () {
+    final withoutKeys = _row()..remove('hours');
+    expect(Place.fromJson(withoutKeys).hours, isNull);
+    expect(Place.fromJson(_row()..['hours'] = '   ').hours, isNull);
+    expect(Place.fromJson(_row()).hours, '8:00 AM–5:00 PM');
   });
 
   test('defaults locations to unverified and maps the verification field', () {

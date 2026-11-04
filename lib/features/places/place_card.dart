@@ -11,6 +11,7 @@ class PlaceCard extends StatelessWidget {
     required this.place,
     required this.copy,
     required this.onTap,
+    this.now,
     super.key,
   });
 
@@ -18,8 +19,12 @@ class PlaceCard extends StatelessWidget {
   final AppCopy copy;
   final VoidCallback onTap;
 
+  /// Injectable clock so callers can keep every card in a list consistent.
+  final DateTime? now;
+
   @override
   Widget build(BuildContext context) {
+    final status = place.openingHours?.isOpenAt(now ?? DateTime.now());
     return Card(
       key: Key('place-card-${place.id}'),
       clipBehavior: Clip.antiAlias,
@@ -64,6 +69,16 @@ class PlaceCard extends StatelessWidget {
                       spacing: 6,
                       runSpacing: 4,
                       children: [
+                        if (status != null)
+                          _TinyLabel(
+                            icon: Icons.circle,
+                            color: status
+                                ? AppColors.primary
+                                : AppColors.terracotta,
+                            text: copy.get(
+                              status ? 'open_now' : 'closed_now',
+                            ),
+                          ),
                         _TinyLabel(
                           icon: Icons.payments_outlined,
                           text: copy.priceRange(place.priceMin, place.priceMax),
@@ -92,19 +107,26 @@ class PlaceCard extends StatelessWidget {
 }
 
 class _TinyLabel extends StatelessWidget {
-  const _TinyLabel({required this.icon, required this.text});
+  const _TinyLabel({required this.icon, required this.text, this.color});
 
   final IconData icon;
   final String text;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
+    final tint = color ?? AppColors.mutedInk;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 13, color: AppColors.mutedInk),
+        Icon(icon, size: 13, color: tint),
         const SizedBox(width: 3),
-        Text(text, style: Theme.of(context).textTheme.labelSmall),
+        Text(
+          text,
+          style: Theme.of(
+            context,
+          ).textTheme.labelSmall?.copyWith(color: color),
+        ),
       ],
     );
   }

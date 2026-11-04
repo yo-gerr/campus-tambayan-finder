@@ -1,3 +1,4 @@
+import 'opening_hours.dart';
 import 'place_filters.dart';
 
 class Place implements PlaceLike {
@@ -11,7 +12,8 @@ class Place implements PlaceLike {
     required this.descriptionTl,
     this.priceMin,
     this.priceMax,
-    required this.hours,
+    this.hours,
+    this.openingHours,
     required this.amenities,
     required this.setting,
     required this.activities,
@@ -45,7 +47,20 @@ class Place implements PlaceLike {
 
   @override
   final int? priceMax;
-  final String hours;
+
+  /// Human-readable summary or note ("Closed on holidays").
+  ///
+  /// Kept separate from [openingHours] because a free-text line can carry
+  /// exceptions a weekly schedule cannot. Null when the team supplied nothing.
+  final String? hours;
+
+  /// Structured per-day hours, or null when the team has not supplied them.
+  ///
+  /// Only this field may drive an open/closed badge or the "Open now" filter.
+  /// The free-text [hours] is never parsed for that, so a guess cannot leak in.
+  @override
+  final OpeningHours? openingHours;
+
   @override
   final List<String> amenities;
   @override
@@ -127,7 +142,8 @@ class Place implements PlaceLike {
       descriptionTl: json['descriptionTl'] as String,
       priceMin: hasPrice ? priceMin : null,
       priceMax: hasPrice ? priceMax : null,
-      hours: json['hours'] as String,
+      hours: _optionalText(json['hours']),
+      openingHours: OpeningHours.tryParse(json['hoursByDay']),
       amenities: List<String>.from(json['amenities'] as List<dynamic>),
       setting: json['setting'] as String,
       activities: List<String>.from(json['activities'] as List<dynamic>),

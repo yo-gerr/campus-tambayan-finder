@@ -7,6 +7,7 @@ import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
 import 'demo_badge.dart';
 import 'google_maps_directions.dart';
+import 'opening_hours.dart';
 import 'place.dart';
 import 'place_photo.dart';
 
@@ -17,6 +18,7 @@ Future<void> showPlaceDetails({
   required Place place,
   required AppCopy copy,
   DirectionsUrlLauncher? launchDirections,
+  DateTime? now,
 }) {
   return showModalBottomSheet<void>(
     context: context,
@@ -27,6 +29,7 @@ Future<void> showPlaceDetails({
       place: place,
       copy: copy,
       launchDirections: launchDirections ?? _launchExternalUrl,
+      now: now,
     ),
   );
 }
@@ -36,11 +39,13 @@ class _PlaceDetailSheet extends StatelessWidget {
     required this.place,
     required this.copy,
     required this.launchDirections,
+    this.now,
   });
 
   final Place place;
   final AppCopy copy;
   final DirectionsUrlLauncher launchDirections;
+  final DateTime? now;
 
   Future<void> _openDirections(BuildContext context) async {
     if (!place.locationVerified) {
@@ -101,6 +106,7 @@ class _PlaceDetailSheet extends StatelessWidget {
         ? place.descriptionTl
         : place.descriptionEn;
     final address = place.address;
+    final openingHours = place.openingHours;
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.85,
       child: ListView(
@@ -181,11 +187,19 @@ class _PlaceDetailSheet extends StatelessWidget {
             title: copy.get('price'),
             value: copy.priceRange(place.priceMin, place.priceMax),
           ),
-          _DetailRow(
-            icon: Icons.schedule_outlined,
-            title: copy.get('hours'),
-            value: place.hours,
-          ),
+          if (openingHours != null)
+            _WeeklyHours(
+              hours: openingHours,
+              copy: copy,
+              now: now ?? DateTime.now(),
+              note: place.hours,
+            )
+          else
+            _DetailRow(
+              icon: Icons.schedule_outlined,
+              title: copy.get('hours'),
+              value: place.hours ?? copy.get('hours_not_listed'),
+            ),
           _DetailRow(
             icon: Icons.place_outlined,
             title: copy.get('setting'),
@@ -258,6 +272,130 @@ class _PlaceDetailSheet extends StatelessWidget {
 
 Future<bool> _launchExternalUrl(Uri url) {
   return launchUrl(url, mode: LaunchMode.externalApplication);
+}
+
+/// Weekly schedule block.
+///
+/// Only days with data are listed: an unknown day is omitted rather than shown
+/// as "Closed", so a half-filled schedule never reads as a closed shop.
+class _WeeklyHours extends StatelessWidget {
+  const _WeeklyHours({
+    required this.hours,
+    required this.copy,
+    required this.now,
+    this.note,
+  });
+
+  final OpeningHours hours;
+  final AppCopy copy;
+  final DateTime now;
+
+  /// Free-text summary or exception note kept from the original field.
+  final String? note;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = hours.isOpenAt(now);
+    final days = [
+      for (final weekday in OpeningHours.weekdayKeys.values)
+        if (hours.isKnownOn(weekday)) weekday,
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 9),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.schedule_outlined,
+                size: 20,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                copy.get('hours'),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: AppColors.mutedInk),
+              ),
+              if (status != null) ...[
+                const SizedBox(width: 10),
+                _OpenStatusPill(open: status, copy: copy),
+              ],
+            ],
+          ),
+          for (final weekday in days)
+            Padding(
+              padding: const EdgeInsets.only(left: 32, top: 4),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 112,
+                    child: Text(
+                      copy.weekday(weekday),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.mutedInk,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      _dayLabel(hours, weekday),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (note != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 32, top: 6),
+              child: Text(
+                note!,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.mutedInk),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  String _dayLabel(OpeningHours hours, int weekday) {
+    final day = hours.hoursFor(weekday);
+    if (day == null) return copy.get('closed');
+    return '${copy.timeOfDay(day.openMinutes)}–'
+        '${copy.timeOfDay(day.closeMinutes)}';
+  }
+}
+
+class _OpenStatusPill extends StatelessWidget {
+  const _OpenStatusPill({required this.open, required this.copy});
+
+  final bool open;
+  final AppCopy copy;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = open ? AppColors.primary : AppColors.terracotta;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        copy.get(open ? 'open_now' : 'closed_now'),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+          color: color,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
 }
 
 class _DetailRow extends StatelessWidget {

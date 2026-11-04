@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
@@ -37,14 +39,44 @@ class PlacesExploreScreen extends StatefulWidget {
   State<PlacesExploreScreen> createState() => _PlacesExploreScreenState();
 }
 
-class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
+class _PlacesExploreScreenState extends State<PlacesExploreScreen>
+    with WidgetsBindingObserver {
   String _query = '';
+
+  /// One clock reading shared by every card and by the filter, so a list never
+  /// shows two different "now" values in one frame.
+  DateTime _now = DateTime.now();
+  Timer? _clock;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // "Open now" goes stale while the app sits open, so refresh it quietly.
+    _clock = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() => _now = DateTime.now());
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      setState(() => _now = DateTime.now());
+    }
+  }
+
+  @override
+  void dispose() {
+    _clock?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final copy = widget.copy;
     final results = widget.places.where((place) {
-      if (!widget.filters.matches(place)) return false;
+      if (!widget.filters.matches(place, now: _now)) return false;
       final query = _query.trim().toLowerCase();
       return query.isEmpty ||
           place.name.toLowerCase().contains(query) ||
@@ -176,6 +208,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen> {
               child: PlaceCard(
                 place: place,
                 copy: copy,
+                now: _now,
                 onTap: () => widget.onPlaceSelected(place),
               ),
             ),

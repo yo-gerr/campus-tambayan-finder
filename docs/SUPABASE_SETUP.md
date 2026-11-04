@@ -32,7 +32,8 @@ create table if not exists public.places (
   "descriptionTl" text not null,
   "priceMin" integer,
   "priceMax" integer,
-  hours text not null,
+  hours text,
+  "hoursByDay" jsonb,
   amenities text[] not null default '{}',
   setting text not null,
   activities text[] not null default '{}',
@@ -80,6 +81,55 @@ No insert, update, or delete policy is created for `anon`, so the shipped key ca
 
 The budget filter compares the lowest estimated spend (`priceMin`) with the selected limit. Whether it should use the highest (`priceMax`) instead is an open product question recorded in the project brief, so do not treat the current behavior as final.
 
+### Operating hours values
+
+Two fields describe hours, and they answer different questions.
+
+`hours` is a free-text summary or note, such as `8:00 AM–8:00 PM` or `Closed on holidays`. It is what the detail view shows when no weekly schedule exists. It is optional and is never parsed to decide whether a place is open.
+
+`"hoursByDay"` is the structured weekly schedule. It is the only field that powers the "Open now" badge and filter. Leave it `NULL` when the team has no reliable schedule; the app then shows nothing rather than guessing. Write the object keyed by three-letter weekday:
+
+```json
+{
+  "mon": { "open": "08:00", "close": "20:00" },
+  "tue": { "open": "08:00", "close": "20:00" },
+  "fri": { "open": "08:00", "close": "21:00" },
+  "sat": { "open": "09:00", "close": "17:00" },
+  "sun": null
+}
+```
+
+Three states must stay distinct:
+
+- **missing key** — the day's hours are unknown; the app stays silent for that day;
+- **`null`** — the place is **closed** that day;
+- **an object** — that day's window.
+
+Rules the app applies:
+
+- Times are `HH:MM` on a 24-hour clock and are read as **Asia/Manila (UTC+8)**, not the viewer's device timezone. Philippines has no daylight saving time, so the fixed offset is exact.
+- Opening time is inclusive, closing time exclusive, so a place that closes at `20:00` reads as closed at `20:00`.
+- A window whose `close` is earlier than its `open` crosses midnight, such as `20:00`–`02:00`.
+- An entry with an unreadable time is treated as unknown for that day, not as closed.
+- Identical `open` and `close` values are treated as **unknown**, because "00:00–00:00" could mean 24 hours or a typo. Whether to support a 24-hour marker is an open question in the project brief. For a place open around the clock today, write `00:00`–`23:59`.
+
+Reject typo'd weekday keys without blocking normal edits:
+
+```sql
+alter table public.places
+  drop constraint if exists places_hours_by_day_shape;
+
+alter table public.places
+  add constraint places_hours_by_day_shape check (
+    "hoursByDay" is null
+    or (
+      jsonb_typeof("hoursByDay") = 'object'
+      and ("hoursByDay" - 'mon' - 'tue' - 'wed' - 'thu' - 'fri' - 'sat' - 'sun')
+          = '{}'::jsonb
+    )
+  );
+```
+
 If the table already exists from an earlier setup, add the newer fields and
 relax the columns that are now optional instead of recreating it:
 
@@ -91,6 +141,8 @@ alter table public.places
   add column if not exists location_verified boolean not null default false;
 alter table public.places alter column "priceMin" drop not null;
 alter table public.places alter column "priceMax" drop not null;
+alter table public.places add column if not exists "hoursByDay" jsonb;
+alter table public.places alter column hours drop not null;
 alter table public.places alter column "mapX" drop not null;
 alter table public.places alter column "mapY" drop not null;
 alter table public.places add column if not exists "photoUrl" text;

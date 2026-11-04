@@ -4,6 +4,20 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-04 — Added structured per-day hours, an open/closed indicator, and an "Open now" filter
+
+- **Why now.** The concept document requires each listing to display "the days when it is open or closed", so per-day hours are an agreed requirement, not an inference. The "Open now" badge and filter are our own addition built on the same data.
+- **Schema (docs only, not yet applied).** `public.places` gains `"hoursByDay" jsonb`; `hours` becomes nullable. The shape is `{"mon":{"open":"HH:MM","close":"HH:MM"}, "sun":null}`. Three states stay distinct: a missing key means unknown, a `null` day means closed, an object means that window. A `CHECK` constraint rejects typo'd weekday keys using `jsonb - key` subtraction, which avoids a subquery that `CHECK` cannot contain. `docs/SUPABASE_SETUP.md` has the create-table change, the migration lines, the constraint, and the value rules.
+- **New domain model.** `lib/features/places/opening_hours.dart` provides `DayHours` and `OpeningHours`. `OpeningHours.isOpenAt(DateTime)` evaluates Asia/Manila time via a fixed UTC+8 offset, so a device in another timezone cannot flip the badge. Opening is inclusive and closing exclusive; a window whose close is earlier than its open crosses midnight. Malformed entries drop to unknown rather than closed.
+- **Equal bounds are deliberately unknown.** `00:00`–`00:00` could mean 24 hours or a typo, so the parser refuses to guess and the day reads as unknown. Recorded as a client follow-up instead of deciding for them.
+- **Wiring.** `Place.hours` is now `String?` and `Place.openingHours` is parsed from `hoursByDay`. `PlaceFilters` gained `openNow` plus an injectable `now` for tests; listings without structured hours are excluded while it is active, matching the budget filter's behavior. The filter sheet has an Availability chip using the same `ChoiceChip` component. Cards show a small open/closed label only when the state is known. The detail sheet renders a per-day block and keeps the free-text line as a note. The explore screen shares one timestamp across every card and refreshes it every minute and on resume.
+- **Sample data.** All four `assets/data/sample_places.json` rows now carry `hoursByDay`, including a closed Sunday, so the feature is visible in the demo and offline fallback.
+- **Docs.** `PROJECT_BRIEF.md` flips "Structured operating days" to confirmed and adds the closed-place map-visibility and 24-hour-representation follow-ups. `MVP_PLAN.md` replaces the answered open-days input with those two questions. `ARCHITECTURE.md` records the dual-field split, timezone, and refresh behavior.
+- **Validation.** `flutter analyze` clean; `flutter test` 67 passed, up from 51. New coverage: parsing and unknown-versus-closed, inclusive/exclusive boundaries, Manila-vs-UTC evaluation, overnight windows, unusable shapes, identical bounds, nullable hours text, the open-now filter, and the chip flow.
+- Remaining:
+  - The live Supabase table still lacks `"hoursByDay"` and still has `NOT NULL` on `hours`. Run the migration block in `docs/SUPABASE_SETUP.md` before entering per-day hours, or the column will not exist.
+  - Closed-place map visibility and 24-hour representation are documented but unanswered.
+
 ### 2026-11-04 — Added an annotated local concept checklist and a structured open-days follow-up
 
 - **Local tracking copy.** `docs/CONCEPT_AND_FOLLOW_UP_ANSWERS.md` now carries a status legend and inline HTML spans so implemented items read green (`#1a7f37`), partial items amber (`#9a6700`), and open items stay plain with `⬜`. Each item also gets a ✅/🟡/⬜ marker so the status survives viewers that strip inline styles. Open and partial items link to their follow-up in `PROJECT_BRIEF.md` and, where one exists, the matching `MVP_PLAN.md` phase or the "Decisions and inputs still needed" list.

@@ -45,6 +45,7 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
   late Set<String> _amenities = {...widget.initialFilters.amenities};
   late String? _setting = widget.initialFilters.setting;
   late String? _activity = widget.initialFilters.activity;
+  late bool _openNow = widget.initialFilters.openNow;
 
   AppCopy get copy => widget.copy;
 
@@ -55,6 +56,7 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
       _amenities = {};
       _setting = null;
       _activity = null;
+      _openNow = false;
     });
   }
 
@@ -131,6 +133,19 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
                         selected: _maxBudget == budget,
                         onSelected: () => setState(() => _maxBudget = budget),
                       ),
+                  ],
+                ),
+                _sectionTitle(copy.get('availability')),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    _choice(
+                      key: const Key('open-now-filter'),
+                      label: copy.get('open_now'),
+                      selected: _openNow,
+                      onSelected: () => setState(() => _openNow = !_openNow),
+                    ),
                   ],
                 ),
                 _sectionTitle(copy.get('amenities')),
@@ -216,6 +231,7 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
                         amenities: _amenities,
                         setting: _setting,
                         activity: _activity,
+                        openNow: _openNow,
                       ),
                     ),
                     child: Text(copy.get('apply')),

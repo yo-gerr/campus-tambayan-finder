@@ -39,6 +39,26 @@ class AppCopy {
     return min == max ? '₱$min' : '₱$min–₱$max';
   }
 
+  /// Twelve-hour clock label for a minute offset from midnight.
+  String timeOfDay(int minutes) {
+    final hour24 = (minutes ~/ 60) % 24;
+    final rest = minutes % 60;
+    final hour = hour24 % 12 == 0 ? 12 : hour24 % 12;
+    final suffix = hour24 < 12 ? 'AM' : 'PM';
+    return '$hour:${rest.toString().padLeft(2, '0')} $suffix';
+  }
+
+  /// Weekday name for a [DateTime.weekday] value (1 = Monday).
+  String weekday(int weekday) => switch (weekday) {
+    DateTime.monday => get('monday'),
+    DateTime.tuesday => get('tuesday'),
+    DateTime.wednesday => get('wednesday'),
+    DateTime.thursday => get('thursday'),
+    DateTime.friday => get('friday'),
+    DateTime.saturday => get('saturday'),
+    _ => get('sunday'),
+  };
+
   /// The language a tap will switch to, kept compact for the app bar.
   String get languageToggleTarget => isTagalog ? 'Eng' : 'Tag';
 
@@ -83,6 +103,18 @@ class AppCopy {
       'Halimbawang impormasyon para lamang sa prototype.',
     ],
     'hours': ['Hours', 'Oras'],
+    'availability': ['Availability', 'Kung bukas'],
+    'open_now': ['Open now', 'Bukas ngayon'],
+    'closed_now': ['Closed now', 'Sarado ngayon'],
+    'closed': ['Closed', 'Sarado'],
+    'hours_not_listed': ['Hours not listed', 'Hindi nakalista ang oras'],
+    'monday': ['Monday', 'Lunes'],
+    'tuesday': ['Tuesday', 'Martes'],
+    'wednesday': ['Wednesday', 'Miyerkules'],
+    'thursday': ['Thursday', 'Huwebes'],
+    'friday': ['Friday', 'Biyernes'],
+    'saturday': ['Saturday', 'Sabado'],
+    'sunday': ['Sunday', 'Linggo'],
     'price': ['Estimated\nspend', 'Tinatayang gastos'],
     'price_not_listed': ['Price not listed', 'Hindi nakalista ang presyo'],
     'amenities': ['Amenities', 'Mga amenity'],

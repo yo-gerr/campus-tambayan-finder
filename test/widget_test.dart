@@ -4,6 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 import 'package:campus_tambayan_finder/app/app_theme.dart';
 import 'package:campus_tambayan_finder/app/tambayan_app.dart';
+import 'package:campus_tambayan_finder/features/places/opening_hours.dart';
 import 'package:campus_tambayan_finder/features/places/place.dart';
 import 'package:campus_tambayan_finder/features/places/place_categories.dart';
 import 'package:campus_tambayan_finder/features/places/place_photo.dart';
@@ -32,6 +33,10 @@ class _TestPlacesRepository implements PlacesRepository {
       priceMin: 0,
       priceMax: 120,
       hours: 'Sample hours · 8:00 AM–8:00 PM',
+      openingHours: OpeningHours({
+        DateTime.monday: DayHours(openMinutes: 480, closeMinutes: 1200),
+        DateTime.sunday: null,
+      }),
       amenities: ['wifi', 'outlets'],
       setting: 'indoor',
       activities: ['study', 'relax'],
@@ -172,6 +177,9 @@ void main() {
       const Offset(0, -150),
     );
     expect(find.text('Sample hours · 8:00 AM–8:00 PM'), findsOneWidget);
+    // Structured days render as a weekly block, with a closed day named.
+    expect(find.text('Monday'), findsOneWidget);
+    expect(find.text('Closed'), findsOneWidget);
     // Scroll back so the header's close button is reachable again.
     await tester.scrollUntilVisible(
       find.byTooltip('Close'),
@@ -298,6 +306,31 @@ void main() {
 
     // Study Corner starts at ₱0; Kape Stop starts at ₱80.
     expect(find.text('Sample Study Corner'), findsOneWidget);
+    expect(find.text('Sample Kape Stop'), findsNothing);
+  });
+
+  testWidgets('open-now filter excludes listings without structured hours', (
+    tester,
+  ) async {
+    await pumpPrototype(tester);
+
+    await tester.tap(find.byKey(const Key('open-filters')));
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('open-now-filter')),
+      100,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('filter-options')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.tap(find.byKey(const Key('open-now-filter')));
+    await tester.tap(find.byKey(const Key('apply-filters')));
+    await tester.pumpAndSettle();
+
+    // Kape Stop has no structured hours, so it cannot be proven open.
+    expect(find.text('No places match those filters'), findsOneWidget);
     expect(find.text('Sample Kape Stop'), findsNothing);
   });
 

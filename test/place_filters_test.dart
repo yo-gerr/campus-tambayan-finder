@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:campus_tambayan_finder/app/app_copy.dart';
+import 'package:campus_tambayan_finder/features/places/opening_hours.dart';
 import 'package:campus_tambayan_finder/features/places/place_filters.dart';
 
 /// Minimal [PlaceLike] so filter rules can be tested without building a full
@@ -10,6 +11,7 @@ class _FakePlace implements PlaceLike {
     required this.category,
     this.priceMin,
     this.priceMax,
+    this.openingHours,
     this.amenities = const [],
     this.setting = 'indoor',
     this.activities = const [],
@@ -23,6 +25,9 @@ class _FakePlace implements PlaceLike {
 
   @override
   final int? priceMax;
+
+  @override
+  final OpeningHours? openingHours;
 
   @override
   final List<String> amenities;
@@ -107,6 +112,47 @@ void main() {
       expect(const PlaceFilters(setting: 'outdoor').matches(cheap), isFalse);
       expect(const PlaceFilters(activity: 'study').matches(cheap), isTrue);
       expect(const PlaceFilters(activity: 'socialize').matches(cheap), isFalse);
+    });
+  });
+
+  group('open-now filter', () {
+    // Monday 08:00-20:00 only.
+    const openPlace = _FakePlace(
+      category: 'park',
+      openingHours: OpeningHours({
+        DateTime.monday: DayHours(openMinutes: 480, closeMinutes: 1200),
+      }),
+    );
+    const closedPlace = _FakePlace(
+      category: 'park',
+      openingHours: OpeningHours({DateTime.monday: null}),
+    );
+    const noHours = _FakePlace(category: 'park');
+
+    // Manila 10:00 Monday is UTC 02:00; Manila 21:00 is UTC 13:00.
+    final mondayMorning = DateTime.utc(2026, 11, 2, 2);
+    final mondayNight = DateTime.utc(2026, 11, 2, 13);
+
+    test('keeps only listings confirmed open at the supplied time', () {
+      const filters = PlaceFilters(openNow: true);
+
+      expect(filters.matches(openPlace, now: mondayMorning), isTrue);
+      expect(filters.matches(openPlace, now: mondayNight), isFalse);
+      expect(filters.matches(closedPlace, now: mondayMorning), isFalse);
+    });
+
+    test('excludes listings without structured hours while active', () {
+      expect(
+        const PlaceFilters(openNow: true).matches(noHours, now: mondayMorning),
+        isFalse,
+      );
+      // Off, it must not filter anything out.
+      expect(const PlaceFilters().matches(noHours), isTrue);
+    });
+
+    test('counts as an active filter', () {
+      expect(const PlaceFilters(openNow: true).activeCount, 1);
+      expect(const PlaceFilters().activeCount, 0);
     });
   });
 

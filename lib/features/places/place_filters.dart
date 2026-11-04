@@ -1,3 +1,5 @@
+import 'opening_hours.dart';
+
 class PlaceFilters {
   const PlaceFilters({
     this.category,
@@ -5,6 +7,7 @@ class PlaceFilters {
     this.amenities = const {},
     this.setting,
     this.activity,
+    this.openNow = false,
   });
 
   final String? category;
@@ -18,6 +21,9 @@ class PlaceFilters {
   final String? setting;
   final String? activity;
 
+  /// Keeps only listings confirmed open at the moment of evaluation.
+  final bool openNow;
+
   int get activeCount {
     var count = 0;
     if (category != null) count++;
@@ -25,10 +31,12 @@ class PlaceFilters {
     count += amenities.length;
     if (setting != null) count++;
     if (activity != null) count++;
+    if (openNow) count++;
     return count;
   }
 
-  bool matches(PlaceLike place) {
+  /// [now] is injectable so tests never depend on the wall clock.
+  bool matches(PlaceLike place, {DateTime? now}) {
     final budget = maxBudget;
     final priceMin = place.priceMin;
     final priceMax = place.priceMax;
@@ -39,6 +47,12 @@ class PlaceFilters {
       if (priceMin == null || priceMax == null || priceMin > budget) {
         return false;
       }
+    }
+    if (openNow) {
+      // Unknown hours cannot prove the place is open, so they are excluded
+      // while this filter is on, matching the budget filter's behavior.
+      final state = place.openingHours?.isOpenAt(now ?? DateTime.now());
+      if (state != true) return false;
     }
     return (category == null || place.category == category) &&
         amenities.every(place.amenities.contains) &&
@@ -55,6 +69,9 @@ abstract interface class PlaceLike {
 
   /// Highest estimated spend, or null when no reliable price is known.
   int? get priceMax;
+
+  /// Structured per-day hours, or null when none were supplied.
+  OpeningHours? get openingHours;
 
   List<String> get amenities;
   String get setting;

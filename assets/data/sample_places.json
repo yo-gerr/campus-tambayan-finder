@@ -10,6 +10,15 @@
     "priceMin": 0,
     "priceMax": 120,
     "hours": "Sample hours · 8:00 AM–8:00 PM",
+    "hoursByDay": {
+      "mon": { "open": "08:00", "close": "20:00" },
+      "tue": { "open": "08:00", "close": "20:00" },
+      "wed": { "open": "08:00", "close": "20:00" },
+      "thu": { "open": "08:00", "close": "20:00" },
+      "fri": { "open": "08:00", "close": "20:00" },
+      "sat": { "open": "09:00", "close": "17:00" },
+      "sun": null
+    },
     "amenities": ["wifi", "outlets"],
     "setting": "indoor",
     "activities": ["study", "relax"],
@@ -31,6 +40,15 @@
     "priceMin": 80,
     "priceMax": 250,
     "hours": "Sample hours · 9:00 AM–9:00 PM",
+    "hoursByDay": {
+      "mon": { "open": "09:00", "close": "21:00" },
+      "tue": { "open": "09:00", "close": "21:00" },
+      "wed": { "open": "09:00", "close": "21:00" },
+      "thu": { "open": "09:00", "close": "21:00" },
+      "fri": { "open": "09:00", "close": "22:00" },
+      "sat": { "open": "09:00", "close": "22:00" },
+      "sun": { "open": "10:00", "close": "20:00" }
+    },
     "amenities": ["wifi", "aircon", "outlets"],
     "setting": "indoor",
     "activities": ["study", "eat", "socialize"],
@@ -52,6 +70,15 @@
     "priceMin": 0,
     "priceMax": 50,
     "hours": "Sample hours · 6:00 AM–6:00 PM",
+    "hoursByDay": {
+      "mon": { "open": "06:00", "close": "18:00" },
+      "tue": { "open": "06:00", "close": "18:00" },
+      "wed": { "open": "06:00", "close": "18:00" },
+      "thu": { "open": "06:00", "close": "18:00" },
+      "fri": { "open": "06:00", "close": "18:00" },
+      "sat": { "open": "06:00", "close": "18:00" },
+      "sun": { "open": "06:00", "close": "18:00" }
+    },
     "amenities": [],
     "setting": "outdoor",
     "activities": ["relax", "socialize"],
@@ -73,6 +100,15 @@
     "priceMin": 60,
     "priceMax": 180,
     "hours": "Sample hours · 10:00 AM–7:00 PM",
+    "hoursByDay": {
+      "mon": { "open": "10:00", "close": "19:00" },
+      "tue": { "open": "10:00", "close": "19:00" },
+      "wed": { "open": "10:00", "close": "19:00" },
+      "thu": { "open": "10:00", "close": "19:00" },
+      "fri": { "open": "10:00", "close": "19:00" },
+      "sat": { "open": "10:00", "close": "19:00" },
+      "sun": null
+    },
     "amenities": ["outlets"],
     "setting": "indoor",
     "activities": ["eat", "socialize"],
