@@ -4,6 +4,34 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-05 — Enhanced full-screen photo viewer loading UX
+
+- Evaluated place photo caching, full-screen decoding, and loading UI.
+- Confirmed Flutter's memory `ImageCache` reuses downloaded network bytes when opening full-screen view (no re-download over network).
+- Updated full-screen viewer (`_PhotoViewerScreen`) to use a sleek dark loading surface with a centered light indicator instead of the light theme skeleton to eliminate bright visual flashing.
+- Validation: `flutter analyze` clean, all 80 Flutter tests passed, and `git diff --check` passed.
+- Remaining: await client feedback on open questions.
+
+### 2026-11-05 — Added new translation keys for shop details and directions
+
+- Added requested translation keys to `lib/app/app_copy.dart`: `opens` ("Opens" / "Bubukas"), `closes` ("Closes" / "Magsasara"), `see_full_week` ("See full week" / "Tingnan ang buong linggo"), `hide_full_week` ("Hide" / "Itago"), `opens_google_maps` ("Opens in Google Maps" / "Magbubukas sa Google Maps"), `address_copied` ("Address copied" / "Nakopya ang address"), and `got_it` ("Got it" / "Naintindihan").
+- Synchronized `test/widget_test.dart` with the detail sheet changes (missing-photo height, offstage scrolling, directions bar, and collapsible hours card).
+- Validation: `flutter analyze` clean, all 80 Flutter tests passed, and `git diff --check` passed.
+- Remaining: await client review on open questions.
+
+### 2026-11-05 — Refined client progress update message
+
+- Refined the client update message to incorporate the revamped Kamus Tambay home screen hub, 3-page visual onboarding, interactive map with PLV Annex/CPAG anchors, external Google Maps directions, and on-device offline caching alongside the existing feature summary.
+- Validation: documentation review against `lib/` and `docs/`; `git diff --check` passed.
+- Remaining: await client review and feedback on the updated progress message and open questions.
+
+### 2026-11-05 — Conducted Phase 1–4 implementation audit and compiled client follow-up questions
+
+- Audited Phase 1–4 implementation status against project brief, architecture, MVP plan, and client meeting notes.
+- Compiled an organized list of client follow-up questions covering Home Screen & Navigation, Sidebar destinations (Vision & Mission, Privacy, Terms & Conditions copy supply), Shop Details, Mood Check-in & Nickname DB storage handling, Map & Directions, and Administration & Listing updates.
+- Validation: documentation audit against `lib/`, `assets/`, `test/`, and `docs/`; `git diff --check` passed.
+- Remaining: await client feedback and approval on open questions before implementing any backend mood storage, final copy, or data updates.
+
 ### 2026-11-05 — Fixed mood preview illustration spacing
 
 - Reduced the mood illustration size, clipped it to the rounded panel, added bottom padding, and increased the gap before the following heading so the compact phone layout does not overlap.

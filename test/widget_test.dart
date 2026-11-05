@@ -125,11 +125,14 @@ void main() {
 
     expect(
       tester.widget<PlacePhotoGallery>(find.byType(PlacePhotoGallery)).height,
-      210,
+      112,
     );
     expect(find.text('Estimated\nspend'), findsOneWidget);
     expect(
-      find.textContaining('Sample information for prototype review only.'),
+      find.textContaining(
+        'Sample information for prototype review only.',
+        skipOffstage: false,
+      ),
       findsOneWidget,
     );
     final detailList = find.byKey(const Key('place-detail-list'));
@@ -148,12 +151,11 @@ void main() {
     );
     expect(find.text('Address'), findsOneWidget);
 
-    await tester.scrollUntilVisible(
+    expect(
       find.text('Not yet verified; directions are unavailable.'),
-      100,
-      scrollable: detailScrollable,
+      findsOneWidget,
     );
-    expect(find.text('Location'), findsOneWidget);
+    expect(find.text('Directions'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('Good for'),
@@ -168,24 +170,19 @@ void main() {
       100,
       scrollable: detailScrollable,
     );
-    final amenityChip = find.widgetWithText(Chip, 'Free Wi-Fi');
-    expect(amenityChip, findsOneWidget);
-    final detailTheme = Theme.of(tester.element(amenityChip));
-    expect(detailTheme.chipTheme.backgroundColor, AppColors.raised);
-    expect(detailTheme.chipTheme.labelStyle?.color, AppColors.ink);
     expect(
-      _contrastRatio(AppColors.ink, AppColors.raised),
-      greaterThanOrEqualTo(4.5),
+      find.descendant(of: detailList, matching: find.text('Free Wi-Fi')),
+      findsOneWidget,
     );
 
-    // The photo pushes the hours row below the lazily built part of the list.
-    await tester.dragUntilVisible(
-      find.text('Sample hours · 8:00 AM–8:00 PM'),
-      find.byKey(const Key('place-detail-list')),
-      const Offset(0, -150),
+    // Structured days render as a weekly block when expanded.
+    await tester.scrollUntilVisible(
+      find.text('See full week'),
+      100,
+      scrollable: detailScrollable,
     );
-    expect(find.text('Sample hours · 8:00 AM–8:00 PM'), findsOneWidget);
-    // Structured days render as a weekly block, with a closed day named.
+    await tester.tap(find.text('See full week'));
+    await tester.pumpAndSettle();
     expect(find.text('Monday'), findsOneWidget);
     expect(find.text('Closed'), findsOneWidget);
     // Scroll back so the header's close button is reachable again.

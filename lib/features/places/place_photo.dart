@@ -318,6 +318,7 @@ class _PhotoImage extends StatelessWidget {
     required this.photo,
     required this.fallback,
     required this.loadingLabel,
+    this.loadingWidget,
     this.cacheWidth,
     this.fit = BoxFit.cover,
   });
@@ -325,6 +326,7 @@ class _PhotoImage extends StatelessWidget {
   final PlaceGalleryPhoto? photo;
   final Widget fallback;
   final String loadingLabel;
+  final Widget? loadingWidget;
   final int? cacheWidth;
   final BoxFit fit;
 
@@ -337,7 +339,8 @@ class _PhotoImage extends StatelessWidget {
         cacheWidth: cacheWidth,
         frameBuilder: (context, image, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded || frame != null) return image;
-          return PlacePhotoLoadingSkeleton(label: loadingLabel);
+          return loadingWidget ??
+              PlacePhotoLoadingSkeleton(label: loadingLabel);
         },
         errorBuilder: (context, error, stackTrace) =>
             _assetOrFallback(photo!.photoAsset, fallback, cacheWidth),
@@ -440,6 +443,16 @@ class _PhotoViewerScreen extends StatelessWidget {
                 photo: photo,
                 fallback: fallback,
                 loadingLabel: loadingLabel,
+                loadingWidget: const Center(
+                  child: SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: CircularProgressIndicator(
+                      color: AppColors.onScrim,
+                      strokeWidth: 2.5,
+                    ),
+                  ),
+                ),
                 cacheWidth: _decodeWidth(
                   context,
                   scale: 2,
