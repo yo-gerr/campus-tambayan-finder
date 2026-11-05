@@ -4,6 +4,40 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-05 — Fixed mood preview illustration spacing
+
+- Reduced the mood illustration size, clipped it to the rounded panel, added bottom padding, and increased the gap before the following heading so the compact phone layout does not overlap.
+- Validation: `dart format`, `flutter analyze`, the focused `test/widget_test.dart` suite (18 tests), and `git diff --check` passed.
+- Remaining: visually confirm the layout with a connected Flutter emulator when available.
+
+### 2026-11-05 — Added UI-only mood check-in workflow
+
+- Replaced the mood information-only page with a local interactive prototype covering the planned explanation, consent acknowledgement, Happy/Relaxed/Stressed/Sad selection, optional nickname, review, and not-submitted confirmation states.
+- No database, network request, GPS, account, analytics, or persistent mood storage was added. The UI explicitly identifies the flow as a preview.
+- Documented the remaining client/privacy blockers: retention, access, deletion/withdrawal, consent wording, nickname handling, selected-place linkage, and qualified review.
+- Validation: `dart format`, `flutter analyze`, and the full Flutter test suite passed.
+
+### 2026-11-05 — Defined consent-first mood analysis direction
+
+- Recorded the owner's selected direction: optional mood responses may support anonymous aggregate analysis linked to the selected place; nicknames are optional per check-in and retention is not decided.
+- Documented that Terms and Privacy pages support but do not replace separate explicit consent before the first submission.
+- Added the proposed consent, review, submission, and withdrawal workflow to the MVP plan. No mood collection or storage was implemented.
+- Remaining blockers: retention period, access controls, deletion/withdrawal process, consent copy, and qualified privacy/legal review.
+
+### 2026-11-05 — Added visual first-launch onboarding
+
+- Added a concise bilingual three-page visual first-launch onboarding flow based on the root design references, with Skip/Back/Next/Get started controls and persisted completion. Kept the detailed section-navigable Instructions guide for the sidebar.
+- Updated the guide copy and widget coverage; no product behavior beyond explaining existing features was added.
+- Validation: `dart format`, `flutter analyze`, and the widget test suite passed. A Dart-tooling hot restart still requires a running Flutter app connected to VS Code.
+- Remaining: review the guide copy and visuals with the client.
+
+### 2026-11-05 — Deferred routing-service ETA planning
+
+- Removed the OSRM/FOSSGIS-specific ETA proposal, references, and research handoff so routing can return to scratch planning.
+- Kept the generic ETA phase deferred: no in-app estimate is displayed, and any future implementation still requires a separate product and service decision.
+- Validation: documentation diff review and `git diff --check`; no app tests were needed.
+- Remaining: decide later whether an in-app ETA is wanted, then evaluate an appropriate routing approach and its service terms.
+
 ### 2026-11-05 — Rebalanced the home header and confirmed Kamus Tambay branding
 
 - Enlarged the home wordmark’s usable space, reduced the emblem, grouped it closer to the wordmark, and kept a wider gap before the separate 48 dp hamburger target. Lowered the sky scene, bubble column, and student figure slightly to give the branding clear breathing room without changing action order or targets.
@@ -28,14 +62,6 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 - Updated `docs/PROJECT_BRIEF.md`, `docs/MVP_PLAN.md`, `docs/ARCHITECTURE.md`, `README.md`, and this handoff. No new dependencies beyond the bundled font files.
 - Validation: `flutter pub get`, `flutter analyze`, and all 78 tests passed. `flutter build web --base-href /campus-tambayan-finder/` succeeded. Reviewed headless browser screenshots at 390×844 for the intro, home, Explore, More, and mood preview; the 320×640 Filipino hub is covered by a widget test. `dart run flutter_native_splash:create` completed.
 - Remaining: confirm the official product name/spelling and logo, supply vision/mission copy, and re-export the oversized `interior.jpg`/`menu.jpg` assets. Mood persistence, consent, nickname, access, retention, and deletion remain open. Work is uncommitted.
-
-### 2026-11-05 — Researched no-account routing for a possible ETA
-
-- Reviewed official OSRM API/demo and FOSSGIS server-policy pages. Documented OSRM/FOSSGIS as a candidate for low-volume estimates across car, bicycle, and foot profiles; recorded the no-sign-up/no-key/no-card request path alongside the one-request-per-second limit, request logging, attribution, lack of SLA, and non-commercial constraint. Since this is a commission, the operator must confirm eligibility before any app requests.
-- Added a proposed Phase 5 flow using only verified destination coordinates and fixed PLV Annex/CPAG origins. Current-location routing remains excluded pending a separate permission/privacy decision. Added Valhalla as an unverified alternative and linked primary references.
-- Updated `docs/REFERENCES.md`, `docs/MVP_PLAN.md`, and `docs/PROJECT_BRIEF.md`. No app behavior changed; this research does not approve implementing an in-app ETA or relying on a public endpoint for production.
-- Validation: reviewed the cited official documentation as of 2026-11-05 and ran `git diff --check`. No app tests run because this was documentation-only.
-- Remaining: owner/team decision on whether the in-app ETA is still wanted, operator confirmation that this commissioned use is allowed, and acceptance of the OSRM public-demo constraints; real listing coordinates are still needed before route testing.
 
 ### 2026-11-05 — Replaced the default Android launcher icon
 

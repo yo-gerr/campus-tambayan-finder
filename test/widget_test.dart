@@ -101,9 +101,10 @@ void main() {
         placesRepository: _TestPlacesRepository(),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 500));
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
 
     if (showIntroOnStart) return;
     if (openExplore) {
@@ -467,10 +468,14 @@ void main() {
 
     await tester.tap(find.byKey(const Key('home-mood')));
     await tester.pumpAndSettle();
-    expect(find.text('Coming soon'), findsOneWidget);
+    expect(find.text('A private check-in preview'), findsOneWidget);
     expect(find.textContaining('Nothing is saved here'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('mood-start-checkin')));
+    await tester.pumpAndSettle();
+    expect(find.text('Before you continue'), findsOneWidget);
+    expect(find.byKey(const Key('mood-consent')), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('mood-back-home')));
+    await tester.tap(find.byKey(const Key('home-button')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
   });
@@ -515,18 +520,37 @@ void main() {
     expect(find.text('Try changing or clearing your filters.'), findsOneWidget);
   });
 
-  testWidgets('onboarding can be dismissed and opened again', (tester) async {
+  testWidgets('visual onboarding can be skipped and instructions reopened', (
+    tester,
+  ) async {
     await pumpPrototype(tester, showIntroOnStart: true);
 
     expect(find.text('Find your next tambayan'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('dismiss-intro')));
-    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byKey(const Key('visual-onboarding-skip')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('visual-onboarding-skip')));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const Key('open-menu')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('drawer-instructions')));
-    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
     expect(find.text('Find your next tambayan'), findsOneWidget);
+    expect(find.byKey(const Key('onboarding-contents')), findsOneWidget);
+  });
+
+  testWidgets('visual onboarding moves through pages', (tester) async {
+    await pumpPrototype(tester, showIntroOnStart: true);
+
+    expect(find.text('Find your next tambayan'), findsOneWidget);
+    expect(find.byKey(const Key('visual-onboarding-skip')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('visual-onboarding-next')));
+    await tester.pumpAndSettle();
+    expect(find.text('Pick what fits you'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('visual-onboarding-next')));
+    await tester.pumpAndSettle();
+    expect(find.text('Check it, then go'), findsOneWidget);
+    expect(find.byKey(const Key('visual-onboarding-start')), findsOneWidget);
   });
 
   testWidgets(

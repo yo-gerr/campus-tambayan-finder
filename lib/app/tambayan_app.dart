@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/home/app_drawer.dart';
 import '../features/home/home_screen.dart';
 import '../features/info/info_placeholder_screen.dart';
 import '../features/map/places_map_screen.dart';
 import '../features/mood/mood_info_screen.dart';
-import '../features/onboarding/intro_dialog.dart';
+import '../features/onboarding/onboarding_screen.dart';
+import '../features/onboarding/visual_onboarding_screen.dart';
 import '../features/places/place.dart';
 import '../features/places/place_detail_sheet.dart';
 import '../features/places/place_filter_sheet.dart';
@@ -24,13 +26,9 @@ import 'app_theme.dart';
 /// both return to the same place. Information pages are placeholders until
 /// the client supplies approved copy.
 class TambayanApp extends StatelessWidget {
-  const TambayanApp({
-    this.showIntroOnStart = true,
-    this.placesRepository,
-    super.key,
-  });
+  const TambayanApp({this.showIntroOnStart, this.placesRepository, super.key});
 
-  final bool showIntroOnStart;
+  final bool? showIntroOnStart;
   final PlacesRepository? placesRepository;
 
   @override
@@ -53,7 +51,7 @@ class _TambayanHome extends StatefulWidget {
     required this.placesRepository,
   });
 
-  final bool showIntroOnStart;
+  final bool? showIntroOnStart;
   final PlacesRepository placesRepository;
 
   @override
@@ -76,15 +74,43 @@ class _TambayanHomeState extends State<_TambayanHome> {
   void initState() {
     super.initState();
     _placesStream = widget.placesRepository.watchPlaces();
-    if (widget.showIntroOnStart) {
+    if (widget.showIntroOnStart == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _showGuide();
+        if (mounted) _showVisualOnboarding(force: true);
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _showVisualOnboarding();
       });
     }
   }
 
+  Future<void> _showVisualOnboarding({bool force = false}) async {
+    final preferencesFuture = SharedPreferences.getInstance();
+    if (!force) {
+      final preferences = await preferencesFuture;
+      if (preferences.getBool('onboarding.completed.v1') == true) {
+        return;
+      }
+    }
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => VisualOnboardingScreen(
+          copy: _copy,
+          onCompleted: () async {
+            final preferences = await preferencesFuture;
+            await preferences.setBool('onboarding.completed.v1', true);
+          },
+        ),
+      ),
+    );
+  }
+
   Future<void> _showGuide() async {
-    await showIntroDialog(context, _copy);
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(builder: (_) => OnboardingScreen(copy: _copy)),
+    );
   }
 
   Future<void> _openFilters() async {

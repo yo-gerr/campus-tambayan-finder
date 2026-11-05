@@ -99,14 +99,68 @@ class AppCopy {
     'mood_title': ['Mood check-in', 'Mood check-in'],
     'mood_soon': ['Coming soon', 'Paparating na'],
     'mood_body': [
-      'The mood check-in is planned, not built yet. This page is a preview so the home screen has somewhere to lead.',
-      'Pinaplano pa lang ang mood check-in. Preview pa lang ang pahinang ito para may patutunguhan ang home screen.',
+      'Share how you feel after visiting a place. This interactive preview shows the planned flow; nothing is collected or submitted yet.',
+      'Ibahagi ang iyong pakiramdam pagkatapos bumisita sa isang lugar. Ipinapakita ng interactive preview na ito ang planong daloy; walang kinokolekta o ipinapasa.',
     ],
     'mood_privacy': [
       'Nothing is saved here: no mood, no nickname, and no profile.',
       'Walang nai-save dito: walang mood, walang palayaw, at walang profile.',
     ],
     'mood_cta': ['Back to home', 'Bumalik sa home'],
+    'mood_preview_title': [
+      'A private check-in preview',
+      'Pribadong preview ng check-in',
+    ],
+    'mood_start': ['See the check-in flow', 'Tingnan ang daloy ng check-in'],
+    'mood_consent_title': ['Before you continue', 'Bago magpatuloy'],
+    'mood_consent_body': [
+      'A future version may use voluntary responses for anonymous aggregate analysis. This prototype does not collect or save anything.',
+      'Maaaring gamitin ng future version ang boluntaryong sagot para sa anonymous aggregate analysis. Walang kinokolekta o sine-save ang prototype na ito.',
+    ],
+    'mood_consent_data': [
+      'The planned check-in may connect a mood to the place you choose. It will not use GPS, accounts, or a persistent profile. Retention, access, and deletion rules still need client approval.',
+      'Maaaring iugnay ng planong check-in ang mood sa lugar na pipiliin mo. Hindi ito gagamit ng GPS, account, o persistent profile. Kailangan pa ng approval para sa retention, access, at deletion rules.',
+    ],
+    'mood_consent_agree': [
+      'I understand this is a preview and not a real submission.',
+      'Naiintindihan kong preview ito at hindi totoong submission.',
+    ],
+    'mood_select_title': ['How do you feel?', 'Ano ang iyong nararamdaman?'],
+    'mood_select_body': [
+      'Choose one response. Your selection stays on this screen only.',
+      'Pumili ng isang sagot. Mananatili lamang ang pinili sa screen na ito.',
+    ],
+    'mood_happy': ['Happy', 'Masaya'],
+    'mood_relaxed': ['Relaxed', 'Relaxado'],
+    'mood_stressed': ['Stressed', 'Stress'],
+    'mood_sad': ['Sad', 'Malungkot'],
+    'mood_nickname': [
+      'Optional nickname (preview only)',
+      'Opsyonal na palayaw (preview lang)',
+    ],
+    'mood_nickname_help': [
+      'A nickname may still identify you. You can leave this blank.',
+      'Maaaring makilala ka pa rin gamit ang palayaw. Maaari itong iwanang blangko.',
+    ],
+    'mood_continue': ['Continue', 'Magpatuloy'],
+    'mood_review_title': ['Review your response', 'Suriin ang iyong sagot'],
+    'mood_review_mood': ['Mood', 'Mood'],
+    'mood_review_nickname': ['Nickname', 'Palayaw'],
+    'mood_not_provided': ['Not provided', 'Walang inilagay'],
+    'mood_demo_notice': [
+      'Preview only: this response will not be sent, saved, or used for analysis.',
+      'Preview lang: hindi ipapadala, ise-save, o gagamitin sa analysis ang sagot na ito.',
+    ],
+    'mood_preview_submit': [
+      'Preview confirmation',
+      'I-preview ang confirmation',
+    ],
+    'mood_complete_title': ['Nothing was submitted', 'Walang ipinasa'],
+    'mood_complete_body': [
+      'This prototype recorded nothing. Real collection will require approved consent, retention, access, and deletion rules.',
+      'Walang naitala ang prototype na ito. Kailangan muna ng approved consent, retention, access, at deletion rules bago ang totoong collection.',
+    ],
+    'mood_restart': ['Try the preview again', 'Ulitin ang preview'],
     'explore': ['Explore', 'Mag-explore'],
     'map': ['Map', 'Mapa'],
     'welcome': [
@@ -234,7 +288,67 @@ class AppCopy {
       'The map marks PLV Annex and CPAG. Place pins appear only for valid coordinates; the app does not access your device location.',
       'Minamarkahan sa mapa ang PLV Annex at CPAG. Ipinapakita lamang ang pin ng lugar kung may wastong coordinate; hindi ina-access ng app ang lokasyon ng iyong device.',
     ],
-    'got_it': ['Start exploring', 'Simulan'],
+    'skip': ['Skip', 'Laktawan'],
+    'next': ['Next', 'Susunod'],
+    'get_started': ['Get started', 'Magsimula'],
+    'visual_find_title': [
+      'Find your next tambayan',
+      'Hanapin ang susunod mong tambayan',
+    ],
+    'visual_find_body': [
+      'See student-friendly places near PLV Annex and CPAG on the map, or browse them as a list.',
+      'Tingnan ang mga lugar malapit sa PLV Annex at CPAG sa mapa o bilang listahan.',
+    ],
+    'visual_filter_title': ['Pick what fits you', 'Piliin ang bagay sa iyo'],
+    'visual_filter_body': [
+      'Filter by budget, Wi-Fi, outlets, aircon, and open status before you go.',
+      'Mag-filter ayon sa budget, Wi-Fi, saksakan, aircon, at bukas na lugar bago pumunta.',
+    ],
+    'visual_go_title': ['Check it, then go', 'Tingnan, saka pumunta'],
+    'visual_go_body': [
+      'Open a place for hours, prices, and photos, then get directions in Google Maps. Mood check-in is only a preview for now.',
+      'Buksan ang lugar para sa oras, presyo, at larawan, saka kumuha ng directions sa Google Maps. Preview pa lamang ang mood check-in.',
+    ],
+    'guide_intro': [
+      'Learn the main features before you start exploring. Tap a topic below to jump straight to it.',
+      'Alamin ang mga pangunahing feature bago magsimula. Pumili ng paksa sa ibaba para direktang pumunta roon.',
+    ],
+    'guide_contents': ['Guide contents', 'Mga bahagi ng gabay'],
+    'guide_find_title': ['Find a tambayan', 'Maghanap ng tambayan'],
+    'guide_find_body': [
+      'Open Find a tambayan from Home to browse places near PLV Annex and CPAG. Scroll through the cards to compare places.',
+      'Buksan ang Maghanap ng tambayan mula sa Home para makita ang mga lugar malapit sa PLV Annex at CPAG. I-scroll ang mga card para maghambing.',
+    ],
+    'guide_filter_title': ['Use filters', 'Gumamit ng mga filter'],
+    'guide_filter_body': [
+      'Use category, activity, budget, setting, and amenity filters to narrow the list. Clear filters when you want to see every place again.',
+      'Gamitin ang category, aktibidad, budget, setting, at amenity filters para lumiit ang listahan. Burahin ang mga filter para makita ulit lahat ng lugar.',
+    ],
+    'guide_details_title': [
+      'Open place details',
+      'Buksan ang detalye ng lugar',
+    ],
+    'guide_details_body': [
+      'Tap a place card to see its description, photos, amenities, prices, and opening hours. Check the date or source of supplied information when shown.',
+      'I-tap ang card ng lugar para makita ang paglalarawan, larawan, amenities, presyo, at oras. Tingnan ang petsa o pinagmulan ng impormasyon kung ipinapakita.',
+    ],
+    'guide_map_title': [
+      'View the map and directions',
+      'Tingnan ang mapa at directions',
+    ],
+    'guide_map_body': [
+      'View the map to compare verified place pins with PLV Annex and CPAG. Directions open in Google Maps only when a listing has a verified location.',
+      'Tingnan ang mapa para ihambing ang mga verified na pin sa PLV Annex at CPAG. Bubukas ang directions sa Google Maps kapag verified ang lokasyon ng lugar.',
+    ],
+    'guide_info_title': [
+      'Understand the information',
+      'Unawain ang impormasyon',
+    ],
+    'guide_info_body': [
+      'Listings, hours, prices, photos, and locations may need updates. Some features require internet access, and this demo does not access your device location.',
+      'Maaaring kailangang i-update ang listings, oras, presyo, larawan, at lokasyon. Nangangailangan ng internet ang ilang feature, at hindi ina-access ng demo ang lokasyon ng iyong device.',
+    ],
+    'guide_start': ['Start exploring', 'Simulan ang pag-explore'],
     'close': ['Close', 'Isara'],
     'choose_origin': ['Choose starting point', 'Piliin ang pinagmulan'],
     'place_count': ['places to explore', 'lugar na matutuklasan'],

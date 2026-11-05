@@ -119,45 +119,51 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: third, but privacy decisions are a prerequisite to real collection.**
 
-**Status: not started for data collection.** The home mood bubble now opens an informational preview that explains the plan and states that nothing is saved; it asks for no mood, nickname, or profile. Real collection remains blocked on the decisions below.
+**Status: UI prototype only; no data collection.** The home mood bubble now opens a local interactive preview of the planned consent, mood selection, optional nickname, review, and confirmation flow. Every step states that nothing is submitted or saved. The approved direction is anonymous aggregate analysis linked to the selected place, with an optional per-check-in nickname. Retention and qualified privacy/legal review remain blockers.
 
-- Confirm whether a nickname is required or optional and entered per check-in.
-- Confirm purpose, consent wording, whether a response is retained, who can access it, retention/deletion, and whether any aggregate analysis is intended.
+- Define the consent text and require a separate explicit opt-in immediately before the first submission; the Terms and Privacy pages are supporting explanations, not the sole consent mechanism.
+- Confirm the retention period, who can access the aggregate data, how a participant can withdraw or request deletion where applicable, and whether a nickname is stored or discarded after display.
 - Never link mood responses to a persistent user profile. Do not add account/profile tracking for this feature.
-- Until storage decisions and appropriate review are complete, limit implementation to an optional, non-persistent interaction with no actual response history or analytics.
-- Do not represent mood selections as diagnoses or evidence that a place caused a particular mood.
+- Do not request device location or infer that the user visited a place; the user must voluntarily identify the selected place/check-in context.
+- Until storage decisions and appropriate review are complete, limit implementation to the informational preview with no actual response history or analytics.
+- Do not represent mood selections as diagnoses, psychological assessments, or evidence that a place caused a particular mood.
+- The current UI preview uses no database, network request, account, GPS, or persistent mood storage. It must not be presented as a working collection system.
+
+**Proposed consent-first workflow (pending retention and review):**
+
+1. The user opens a place detail and chooses **Share how you feel**; the feature remains optional.
+2. The app shows a plain-language explanation and links to the full Terms and Privacy pages.
+3. Before the first submission, a separate consent screen explains the purpose, selected-place linkage, mood choices, optional nickname, retention, access, deletion/withdrawal process, and aggregate-only reporting. The user can accept or decline.
+4. The user selects Happy, Relaxed, Stressed, or Sad. The app must not describe the result as a diagnosis.
+5. The user may enter an optional nickname. The UI warns that a nickname is not necessarily anonymous and can be omitted.
+6. A review step shows exactly what will be submitted, including the selected place and nickname if entered. The user confirms or cancels.
+7. The app submits only after consent and confirmation. It does not send device coordinates, account identifiers, or background location.
+8. The app shows a confirmation and provides the approved withdrawal/deletion route. Aggregate views are shown only under the approved access and minimum-group rules.
 
 **Acceptance:** the check-in is optional, follows the team's confirmed privacy behavior, and does not create profile linkage or unsupported psychological claims.
 
 ### Phase 5 — Estimated travel time
 
-**Client presentation priority: fourth. Proposed implementation order: after real listings and verified map coordinates, and before mood check-in if the owner/team approves this in-app feature.**
+**Priority: fourth. Blocked on a product/service decision.**
 
-**Status: research complete; no ETA is implemented or approved for display. OSRM's public FOSSGIS demo is a candidate for a low-volume, non-commercial class demo only.**
+**Status: deferred; nothing is displayed.**
 
-- **Research result (checked 2026-11-05):** the current OSRM/FOSSGIS public demo exposes car, bicycle, and foot profiles. Its public API examples do not require a sign-up, API key, or payment card. The service is best-effort, has no uptime/latency/data-update guarantee, allows at most one request per second, logs route requests, and is documented for reasonable non-commercial use. Because this is a commission, ask the operator whether this use qualifies before making app requests; do not assume that “class demo” makes it eligible. This is not a production or commercial-service commitment. See [OSRM public routing server](REFERENCES.md#osrm-public-routing-server).
-- **Recommended first version (proposal, pending owner/team approval):** show an optional estimate in a place's detail view for a verified destination only. Let the student choose a fixed origin—PLV Annex or CPAG—and one available mode (walking, cycling, or driving). Keep the existing Google Maps directions action as the navigation handoff. Use the OSRM-reported duration and distance, clearly labeled as an approximate route estimate with no live traffic and no guarantee of actual travel time.
-- Request a route only after the student opens a place and chooses an origin/mode; never request routes for every card or refresh automatically. Allow one outstanding request at a time, enforce the public service's one-request-per-second limit, and reuse results in memory during the session where practical.
-- Do not add a sign-up, API key, payment card, paid plan, billing project, or self-hosted server for this proposal. If the public service later requires any of these, stop and request a new decision rather than silently switching providers or enabling billing. Public access can still be changed or withdrawn by its operator.
-- Identify the app with an appropriate User-Agent; show required OpenStreetMap and OSRM attribution; do not disguise the app or send bulk route requests. The routing provider logs requests, so disclose network use. A failed, unavailable, or unreachable route service should show a clear unavailable state while leaving the Google Maps directions action available.
-- Use only verified live destination coordinates. Never request an ETA for the fictional bundled sample coordinates. Check real walking/cycling/driving routes in Malinta against the map and Google Maps before presentation; OSM route coverage and profile speeds can be incomplete or differ from actual conditions.
-- **Origins and location privacy:** begin with the fixed campus origins only; this does not need device-location permission. A “use my current location” origin is not part of this proposal. If later requested, ask for foreground permission only after an explicit action, send a one-time coordinate to the routing server, do not store or track it, disclose that the provider logs requests, and provide campus-origin alternatives. Obtain a separate product/privacy decision before adding it.
-- OSRM's supported public demo profiles cover car, bicycle, and foot, not public-transit timetables or live traffic. Valhalla is a possible open-source alternative, but its public demo's app-API access, no-sign-up/no-card terms, and usage allowance were not verified; self-hosting would add hosting and operations costs. Do not switch to it without rechecking those constraints.
-- Until the in-app ETA behavior and public-server limitations are accepted by the owner/team, continue showing no ETA. Do not use fabricated or fixed-time examples.
+- Confirm whether the travel estimate should be displayed inside this app or left to Google Maps.
+- Confirm travel mode(s), origin behavior, acceptable estimate wording, and whether a live routing service is permitted.
+- If an in-app ETA requires a paid or card-dependent service, disclose the cost and obtain approval before enabling it.
+- Until resolved, show no fabricated ETA; a clearly labeled non-live example may be used only for presentation if the team approves.
 
-**Dependencies:** Phase 1 real listing data and verified destinations, visually checked campus anchors, confirmation that in-app estimates are still wanted, and the routing-service operator's confirmation that this commissioned use is allowed under its non-commercial policy. Keep mood check-in blocked separately on its unresolved privacy decisions.
-
-**Acceptance:** the student can request one estimate for a verified place from either fixed campus anchor in a supported mode; the UI states that the result is approximate, not live-traffic-aware, and may differ from actual travel; OSM/OSRM attribution is visible; rate and request constraints are observed; network failure gives no fabricated result; Google Maps directions remain available. No account, API key, payment card, billing setup, or paid service is introduced.
+**Acceptance:** any displayed estimate has a defined source, origin, mode, limitations, and clear non-guaranteed wording; otherwise the app does not claim to provide an ETA.
 
 ### Phase 6 — Filipino/English and introductory guide
 
 **Priority: fifth and sixth. Existing controls need content review.**
 
-**Status: bilingual UI and the guide are implemented; translation and content review are pending.**
+**Status: bilingual UI, a three-page visual first-launch onboarding flow, and a section-navigable Instructions guide are implemented; translation and content review are pending.**
 
 - Review translations of app UI and supplied place information with the team or its chosen translator.
 - Ensure language changes cover navigation, filters, errors, empty states, details, directions messaging, and mood UI if included. **Implemented:** all UI copy has English and Filipino entries behind one in-app toggle. The selection is held in memory and resets to English on relaunch.
-- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable. **Implemented:** the guide opens at launch and reopens from More → How to use. Whether it should appear only on first launch is an open client question recorded in the brief.
+- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable. **Implemented:** a three-page visual guide opens on first launch and can be skipped, while the detailed guide with section navigation reopens from the sidebar → Instructions.
 
 **Acceptance:** both languages communicate the same approved meaning across in-scope screens; the guide accurately describes implemented behavior.
 
@@ -186,9 +192,8 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Photo permissions, translation responsibility, data verification expectations, and update process.
 - Supabase organization ownership, dashboard edit access, and who exports the table back to the repository before each build.
 - Confirmed coordinates and whether Google Maps is installed/available on presentation devices.
-- Whether to approve an in-app ETA using the proposed OSRM/FOSSGIS public class-demo service, and acceptance of its non-commercial, best-effort, logged-request, and rate-limit constraints.
-- Ask the OSRM/FOSSGIS service operator whether this commissioned class-demo app is eligible under the public server's non-commercial-use policy before integrating or sending requests.
-- ETA origin and modes: the proposal uses fixed PLV Annex/CPAG origins and walking, cycling, or driving; current-location origin is excluded unless separately approved.
+- Whether to approve an in-app ETA and select an appropriate routing service.
+- ETA origin, travel modes, estimate wording, caching, and location-permission behavior if an in-app ETA is later approved.
 - Mood nickname necessity, consent, storage, access, retention, deletion, and purpose.
 - Final app name/logo/assets, presentation deadline, target Android/device, and APK signing expectations.
 

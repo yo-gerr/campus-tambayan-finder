@@ -87,21 +87,22 @@ Confirmed November 4, 2026: the budget filter is a preset chip row (₱50, ₱10
 - The current Positron style is a light, neutral baseline. A custom warm, student-centered style remains a visual improvement to evaluate; OpenFreeMap's guide says a customized style JSON must be hosted, so check whether an app-bundled style is supported before choosing separate hosting. Preserve required attribution.
 - The owner supplied fixed coordinates for the PLV Annex and CPAG anchors; visually confirm that each pin matches its intended location before presenting them as verified. Obtain and check coordinates for approved places before showing their markers or launching directions. Place latitude/longitude fields are optional decimal-degree pairs; do not use old prototype normalized coordinates as geographic locations.
 - The bundled fictional sample listings use illustrative coordinates only to preview local map behavior. They are not verified locations and must be replaced with verified coordinates or left blank before importing or using listings as real destinations.
-- Confirmed November 4, 2026: directions should open in Google Maps; no in-app ETA is included in the current Phase 3 scope. Google Maps URLs do not require a Google Maps API key. Any later in-app ETA requires a separate product and service decision. Research checked November 5, 2026 identifies the public OSRM/FOSSGIS routing demo as a possible no-sign-up/no-key/no-card option for car, bicycle, and foot routes, subject to strict best-effort, non-commercial, logging, attribution, and rate-limit conditions. Since this app is a commission, operator confirmation that the use qualifies as non-commercial is required before app requests; this research is not approval to implement or rely on the service.
+- Confirmed November 4, 2026: directions should open in Google Maps; no in-app ETA is included in the current Phase 3 scope. Google Maps URLs do not require a Google Maps API key. Any later in-app ETA requires a separate product and service decision.
 - Directions are enabled only when a listing has a valid coordinate pair explicitly marked as verified. Missing verification defaults to false; sample locations remain ineligible, with a clear explanation shown instead of opening a route.
 - Request device location permission only when needed for a location-based feature.
 - No device-location permission is needed for fixed campus/place markers or Google Maps directions to verified destinations. Add location access only if a later approved feature needs the user's current position.
-- Proposed in-app ETA origin behavior, pending approval: begin with the fixed PLV Annex and CPAG anchors, without requesting device location. A current-location origin would send a one-time precise coordinate to an external routing service whose operator logs requests; it requires a separate privacy decision, foreground permission, clear disclosure, and no background tracking or local persistence.
 - Live maps and directions may require an internet connection. Provide clear unavailable states; do not show fabricated coordinates or travel estimates.
 
 ### Guidance and participation
 
-- Provide an in-app guide to the main features. The current build opens the guide at launch and keeps it reopenable from More → How to use; whether it should appear only on first launch is an open question in the table below.
+- Provide an in-app guide to the main features. The current build opens a concise three-page visual onboarding flow on first launch, with Skip/Back/Next controls, and keeps a detailed section-navigable guide reopenable from the sidebar → Instructions.
 - Students primarily browse listings; no ratings or comments are requested.
 - An optional mood check-in with a nickname is requested, but responses must not be linked to a user profile.
 - Shop owners do not need app accounts, submit identification through the app, or make online payments; the development team manages initial listings and updates.
 
 There will be no persistent student profile for the requested mood check-in. Clarify whether the nickname is optional and supplied per check-in, whether it is stored with the mood response, and whether responses are retained or only shown transiently. Until purpose, consent, storage, access, retention, and deletion are decided, do not persist mood/nickname records or use them for analysis. No ratings, comments, or other student-generated content are requested.
+
+The current build includes a UI-only mood workflow preview: consent explanation, four mood choices, optional nickname field, review, and a final not-submitted state. It uses no database, network request, GPS, account, or persistent mood storage.
 
 ### Listing maintenance and service costs
 
@@ -117,7 +118,9 @@ There will be no persistent student profile for the requested mood check-in. Cla
 
 The app may include an optional mood check-in after a user visits a listed place. The proposed responses are happy, relaxed, stressed, and sad. The team intends this to explore how environments and experiences may relate to student mood and well-being.
 
-This feature is optional and ranked third for the class presentation. Before implementation, clarify whether mood responses are stored, how nickname entry works, whether responses are used only on-device or for aggregate research, who can access them, how long they are retained, and what consent and deletion controls are needed. Responses must not be linked to a user profile. Avoid presenting mood data as a psychological diagnosis or proven causal finding.
+This feature is optional and ranked third for the class presentation. Confirmed November 5, 2026: the intended direction is anonymous aggregate analysis, with a response associated with the selected place but not with a student account or persistent profile. A nickname may be entered optionally per check-in, but the app must explain that a nickname can still identify someone; do not make it required by default. The retention period remains undecided and blocks real collection until the client and qualified reviewer approve it.
+
+Terms and Privacy content may explain the broader rules, but they do not replace a separate, clear consent step immediately before the first mood submission. The consent flow must state the purpose, data fields, place linkage, optional nickname, access, retention, deletion/withdrawal process, and that results are aggregate indicators rather than psychological diagnoses or proof that a place caused a mood. Do not request device location or create a student account for this feature.
 
 ## Privacy, accuracy, and legal considerations
 
@@ -155,8 +158,7 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Sidebar content | Confirmed November 5, 2026: Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, language switching, and a version note. Vision/Mission, Privacy, and Terms are clearly labelled placeholders until reviewed client copy is supplied; About is removed |
 | Mood preview | The home mood bubble opens an informational page that stores no mood, nickname, or profile. The full check-in remains blocked on the privacy decisions below |
 | Map renderer/data provider | Confirmed November 4, 2026: MapLibre Flutter with OpenFreeMap public tiles/styles and OSM-derived data, subject to eligible representative accepting terms and current service review |
-| Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps; no in-app ETA is approved yet. Research checked November 5, 2026: OSRM/FOSSGIS public demo is a candidate for a no-account/no-key/no-card ETA, with non-commercial and best-effort limits; operator confirmation that this commissioned use is allowed, and product/provider acceptance, remain open |
-| ETA origin and location permission | Proposal only: fixed PLV Annex or CPAG origins first; current-device origin is excluded unless separately approved with foreground permission and privacy disclosure |
+| Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps; no in-app ETA is approved yet. Any future ETA requires a separate product and service decision |
 | Meaning of "available time" | Confirmed to mean shop operating hours; estimated travel time to the place is a separate desired detail |
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |
