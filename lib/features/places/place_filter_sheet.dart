@@ -22,7 +22,7 @@ Future<PlaceFilters?> showPlaceFilterSheet({
     useSafeArea: true,
     backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
     ),
     builder: (_) =>
         _PlaceFilterSheet(copy: copy, initialFilters: initialFilters),
@@ -261,8 +261,8 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
       label: Text(label),
       selected: selected,
       labelStyle: TextStyle(
-        color: selected ? AppColors.onCampusBlueContainer : AppColors.ink,
-        fontWeight: FontWeight.w600,
+        color: selected ? AppColors.inkStrong : AppColors.ink,
+        fontWeight: FontWeight.w700,
       ),
       onSelected: (_) => onSelected(),
     );

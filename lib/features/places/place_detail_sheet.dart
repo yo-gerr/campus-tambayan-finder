@@ -146,7 +146,7 @@ class _PlaceDetailSheet extends StatelessWidget {
             place: place,
             width: double.infinity,
             height: 210,
-            borderRadius: 18,
+            borderRadius: 22,
             loadingLabel: copy.get('loading_photo'),
             placeholder: PlacePhotoPlaceholder(
               category: place.category,
@@ -163,13 +163,16 @@ class _PlaceDetailSheet extends StatelessWidget {
           const SizedBox(height: 18),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.sage,
-              borderRadius: BorderRadius.circular(18),
+            decoration: const BoxDecoration(
+              color: AppColors.bubble,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline, color: AppColors.primary),
+                const Icon(
+                  Icons.info_outline,
+                  color: AppColors.inkStrong,
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(

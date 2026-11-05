@@ -19,7 +19,7 @@ enum PlaceCategory {
     labelEn: 'Tambayan',
     labelTl: 'Tambayan',
     icon: Icons.menu_book_outlined,
-    tint: AppColors.sage,
+    tint: AppColors.tambayanTint,
   ),
   coffee(
     key: 'coffee',

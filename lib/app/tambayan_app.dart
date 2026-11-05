@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../features/home/app_drawer.dart';
+import '../features/home/home_screen.dart';
+import '../features/info/info_placeholder_screen.dart';
 import '../features/map/places_map_screen.dart';
+import '../features/mood/mood_info_screen.dart';
 import '../features/onboarding/intro_dialog.dart';
 import '../features/places/place.dart';
 import '../features/places/place_detail_sheet.dart';
@@ -10,8 +14,15 @@ import '../features/places/places_explore_screen.dart';
 import '../features/places/places_repository.dart';
 import '../features/places/sample_places_repository.dart';
 import 'app_copy.dart';
+import 'app_section.dart';
 import 'app_theme.dart';
 
+/// Where the hub currently points.
+///
+/// The app no longer has a bottom bar: home is the hub and each spoke is a
+/// section of this one shell, so the Back control and the visible Home control
+/// both return to the same place. Information pages are placeholders until
+/// the client supplies approved copy.
 class TambayanApp extends StatelessWidget {
   const TambayanApp({
     this.showIntroOnStart = true,
@@ -25,7 +36,7 @@ class TambayanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tambayan',
+      title: 'Kamus Tambay',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       home: _TambayanHome(
@@ -50,11 +61,13 @@ class _TambayanHome extends StatefulWidget {
 }
 
 class _TambayanHomeState extends State<_TambayanHome> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   late Stream<PlacesSnapshot> _placesStream;
   AppLanguage _language = AppLanguage.english;
   PlaceFilters _filters = const PlaceFilters();
   String _campus = 'plv';
-  int _tabIndex = 0;
+  AppSection _section = AppSection.home;
   bool _mapOpened = false;
 
   AppCopy get _copy => AppCopy(_language);
@@ -85,133 +98,144 @@ class _TambayanHomeState extends State<_TambayanHome> {
     }
   }
 
-  void _toggleLanguage() {
+  void _setLanguage(AppLanguage language) {
+    if (language != _language) {
+      setState(() => _language = language);
+    }
+  }
+
+  void _goHome() {
+    setState(() => _section = AppSection.home);
+  }
+
+  void _openSection(AppSection section) {
     setState(() {
-      _language = _language == AppLanguage.english
-          ? AppLanguage.tagalog
-          : AppLanguage.english;
+      if (section == AppSection.map) _mapOpened = true;
+      _section = section;
     });
+  }
+
+  void _openMenu() {
+    _scaffoldKey.currentState?.openDrawer();
+  }
+
+  void _closeMenu() {
+    _scaffoldKey.currentState?.closeDrawer();
+  }
+
+  void _goHomeFromMenu() {
+    _closeMenu();
+    _goHome();
+  }
+
+  void _openSectionFromMenu(AppSection section) {
+    _closeMenu();
+    _openSection(section);
+  }
+
+  Future<void> _showGuideFromMenu() async {
+    _closeMenu();
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    if (mounted) await _showGuide();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 20,
-        title: Row(
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: const BoxDecoration(
-                color: AppColors.campusBlue,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.spa_outlined,
-                size: 20,
-                color: AppColors.accent,
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'tambayan',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.5,
-              ),
-            ),
-          ],
+    return PopScope(
+      canPop: _section == AppSection.home,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && _section != AppSection.home) {
+          _goHome();
+        }
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawerScrimColor: AppColors.scrim,
+        drawer: AppDrawer(
+          copy: _copy,
+          section: _section,
+          onClose: _closeMenu,
+          onHome: _goHomeFromMenu,
+          onSectionSelected: _openSectionFromMenu,
+          onShowInstructions: _showGuideFromMenu,
+          onLanguageChanged: _setLanguage,
         ),
-        actions: [
-          Tooltip(
-            message: _copy.languageToggleTooltip,
-            child: Semantics(
-              button: true,
-              label: _copy.languageToggleTooltip,
-              child: TextButton(
-                key: const Key('language-toggle'),
-                onPressed: _toggleLanguage,
-                child: Text(_copy.languageToggleTarget),
-              ),
-            ),
-          ),
-          IconButton(
-            key: const Key('open-guide'),
-            tooltip: _copy.get('help'),
-            onPressed: _showGuide,
-            icon: const Icon(Icons.help_outline),
-          ),
-          const SizedBox(width: 4),
-        ],
-      ),
-      body: StreamBuilder<PlacesSnapshot>(
-        stream: _placesStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return _LoadError(
-              onRetry: () => setState(
-                () => _placesStream = widget.placesRepository.watchPlaces(),
-              ),
-            );
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final places = snapshot.data!.places;
-          final visiblePlaces = places.where(_filters.matches).toList();
-          return IndexedStack(
-            index: _tabIndex,
-            children: [
-              PlacesExploreScreen(
-                places: places,
+        body: StreamBuilder<PlacesSnapshot>(
+          stream: _placesStream,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return _LoadError(
                 copy: _copy,
-                filters: _filters,
-                campus: _campus,
-                usingOfflineCopy: snapshot.data!.isOfflineFallback,
-                usingSavedCopy: snapshot.data!.isSavedOfflineCopy,
-                onCampusChanged: (campus) => setState(() => _campus = campus),
-                onFiltersPressed: _openFilters,
-                onClearFilters: () =>
-                    setState(() => _filters = const PlaceFilters()),
-                onPlaceSelected: _openPlace,
-                onMapPressed: () => setState(() {
-                  _mapOpened = true;
-                  _tabIndex = 1;
-                }),
-              ),
-              if (_mapOpened)
-                PlacesMapScreen(
-                  places: visiblePlaces,
+                onRetry: () => setState(
+                  () => _placesStream = widget.placesRepository.watchPlaces(),
+                ),
+              );
+            }
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            final places = snapshot.data!.places;
+            final visiblePlaces = places.where(_filters.matches).toList();
+
+            return IndexedStack(
+              index: _section.index,
+              children: [
+                HomeScreen(
                   copy: _copy,
+                  onFindTambayan: () => _openSection(AppSection.explore),
+                  onMood: () => _openSection(AppSection.mood),
+                  onMenu: _openMenu,
+                ),
+                PlacesExploreScreen(
+                  places: places,
+                  copy: _copy,
+                  filters: _filters,
+                  campus: _campus,
+                  usingOfflineCopy: snapshot.data!.isOfflineFallback,
+                  usingSavedCopy: snapshot.data!.isSavedOfflineCopy,
+                  onHome: _goHome,
+                  onCampusChanged: (campus) => setState(() => _campus = campus),
+                  onFiltersPressed: _openFilters,
+                  onClearFilters: () =>
+                      setState(() => _filters = const PlaceFilters()),
                   onPlaceSelected: _openPlace,
-                )
-              else
-                const SizedBox.shrink(),
-            ],
-          );
-        },
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _tabIndex,
-        onDestinationSelected: (index) => setState(() {
-          if (index == 1) _mapOpened = true;
-          _tabIndex = index;
-        }),
-        destinations: [
-          NavigationDestination(
-            key: const Key('nav-explore'),
-            icon: const Icon(Icons.explore_outlined),
-            selectedIcon: const Icon(Icons.explore),
-            label: _copy.get('explore'),
-          ),
-          NavigationDestination(
-            key: const Key('nav-map'),
-            icon: const Icon(Icons.map_outlined),
-            selectedIcon: const Icon(Icons.map),
-            label: _copy.get('map'),
-          ),
-        ],
+                  onMapPressed: () => _openSection(AppSection.map),
+                ),
+                if (_mapOpened)
+                  PlacesMapScreen(
+                    places: visiblePlaces,
+                    copy: _copy,
+                    onHome: _goHome,
+                    onPlaceSelected: _openPlace,
+                  )
+                else
+                  const SizedBox.shrink(),
+                MoodInfoScreen(copy: _copy, onHome: _goHome),
+                InfoPlaceholderScreen(
+                  title: _copy.get('vision_mission'),
+                  message: _copy.get('vision_pending'),
+                  icon: Icons.flag_outlined,
+                  copy: _copy,
+                  onHome: _goHome,
+                ),
+                InfoPlaceholderScreen(
+                  title: _copy.get('privacy'),
+                  message: _copy.get('privacy_pending'),
+                  icon: Icons.lock_outline,
+                  copy: _copy,
+                  onHome: _goHome,
+                ),
+                InfoPlaceholderScreen(
+                  title: _copy.get('terms'),
+                  message: _copy.get('terms_pending'),
+                  icon: Icons.description_outlined,
+                  copy: _copy,
+                  onHome: _goHome,
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -222,8 +246,9 @@ class _TambayanHomeState extends State<_TambayanHome> {
 }
 
 class _LoadError extends StatelessWidget {
-  const _LoadError({required this.onRetry});
+  const _LoadError({required this.copy, required this.onRetry});
 
+  final AppCopy copy;
   final VoidCallback onRetry;
 
   @override
@@ -234,11 +259,11 @@ class _LoadError extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 40),
+            const Icon(Icons.error_outline, size: 40, color: AppColors.error),
             const SizedBox(height: 12),
             const Text('Could not load places.'),
-            const SizedBox(height: 12),
-            FilledButton(onPressed: onRetry, child: const Text('Try again')),
+            const SizedBox(height: 16),
+            FilledButton(onPressed: onRetry, child: Text(copy.get('apply'))),
           ],
         ),
       ),

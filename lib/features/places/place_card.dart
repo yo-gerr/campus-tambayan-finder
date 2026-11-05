@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import 'demo_badge.dart';
 import 'open_status_badge.dart';
 import 'place.dart';
 import 'place_photo.dart';
@@ -25,75 +26,102 @@ class PlaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = place.openingHours?.isOpenAt(now ?? DateTime.now());
-    return Card(
+    return Container(
       key: Key('place-card-${place.id}'),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              PlacePhoto(
-                place: place,
-                width: 68,
-                height: 74,
-                borderRadius: 15,
-                loadingLabel: copy.get('loading_photo'),
-                placeholder: PlacePhotoPlaceholder(category: place.category),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Status sits above the name as a small "eyebrow" pill.
-                    // It is a single short line, so it never wraps or
-                    // overflows in English or Tagalog.
-                    if (status != null) ...[
-                      OpenStatusBadge(open: status, copy: copy),
-                      const SizedBox(height: 6),
-                    ],
-                    Text(
-                      place.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${copy.category(place.category)} · ${place.area}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall
-                          ?.copyWith(color: AppColors.mutedInk),
-                    ),
-                    const SizedBox(height: 9),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 4,
-                      children: [
-                        _TinyLabel(
-                          icon: Icons.payments_outlined,
-                          text: copy.priceRange(place.priceMin, place.priceMax),
-                        ),
-                        ...place.amenities
-                            .take(2)
-                            .map(
-                              (amenity) => _TinyLabel(
-                                icon: _amenityIcon(amenity),
-                                text: copy.get(amenity),
-                              ),
-                            ),
-                      ],
-                    ),
-                  ],
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.all(Radius.circular(26)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.surfaceUnder,
+            offset: Offset(0, kCardUnderOffset),
+            blurRadius: 0,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(26),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                PlacePhoto(
+                  place: place,
+                  width: 68,
+                  height: 76,
+                  borderRadius: 16,
+                  loadingLabel: copy.get('loading_photo'),
+                  placeholder: PlacePhotoPlaceholder(
+                    category: place.category,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              const Icon(Icons.chevron_right, color: AppColors.mutedInk),
-            ],
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Status and the demo marker share one wrapping row at
+                      // the top of the card, so neither can push the other out
+                      // when the interface is in Filipino or text is enlarged.
+                      if (status != null || place.isDemo) ...[
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 4,
+                          children: [
+                            if (status != null)
+                              OpenStatusBadge(open: status, copy: copy),
+                            if (place.isDemo)
+                              DemoBadge(label: copy.get('demo_badge')),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                      ],
+                      Text(
+                        place.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        '${copy.category(place.category)} · ${place.area}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 9),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: [
+                          _TinyLabel(
+                            icon: Icons.payments_outlined,
+                            text: copy.priceRange(
+                              place.priceMin,
+                              place.priceMax,
+                            ),
+                          ),
+                          ...place.amenities
+                              .take(2)
+                              .map(
+                                (amenity) => _TinyLabel(
+                                  icon: _amenityIcon(amenity),
+                                  text: copy.get(amenity),
+                                ),
+                              ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(Icons.chevron_right, color: AppColors.mutedInk),
+              ],
+            ),
           ),
         ),
       ),
@@ -114,7 +142,14 @@ class _TinyLabel extends StatelessWidget {
       children: [
         Icon(icon, size: 13, color: AppColors.mutedInk),
         const SizedBox(width: 3),
-        Text(text, style: Theme.of(context).textTheme.labelSmall),
+        Flexible(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
+        ),
       ],
     );
   }

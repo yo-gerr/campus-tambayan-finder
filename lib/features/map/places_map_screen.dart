@@ -3,6 +3,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import '../home/app_chrome.dart';
 import '../places/place.dart';
 import '../places/place_card.dart';
 import 'campus_map_anchors.dart';
@@ -11,12 +12,14 @@ class PlacesMapScreen extends StatelessWidget {
   const PlacesMapScreen({
     required this.places,
     required this.copy,
+    required this.onHome,
     required this.onPlaceSelected,
     super.key,
   });
 
   final List<Place> places;
   final AppCopy copy;
+  final VoidCallback onHome;
   final ValueChanged<Place> onPlaceSelected;
 
   @override
@@ -33,11 +36,23 @@ class PlacesMapScreen extends StatelessWidget {
         _PlacesMap(places: mappablePlaces, onPlaceSelected: onPlaceSelected),
         Positioned(
           top: 12,
+          left: 12,
+          child: SafeArea(
+            bottom: false,
+            child: HomeButton(
+              key: const Key('map-home'),
+              copy: copy,
+              onPressed: onHome,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 12,
           right: 12,
           child: SafeArea(
             bottom: false,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 280),
+              constraints: const BoxConstraints(maxWidth: 240),
               child: _MapStatusOverlay(
                 copy: copy,
                 placesWithoutCoordinates: placesWithoutCoordinates,
@@ -123,45 +138,53 @@ class _MapStatusOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = theme.colorScheme;
-    return Material(
+    return Container(
       key: const Key('map-status-overlay'),
-      color: colorScheme.surface.withValues(alpha: 0.94),
-      borderRadius: BorderRadius.circular(14),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.wifi_outlined, size: 18, color: colorScheme.primary),
-                const SizedBox(width: 7),
-                Flexible(
-                  child: Text(
-                    copy.get('map_online_note'),
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: const BoxDecoration(
+        color: AppColors.raised,
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.surfaceUnder,
+            offset: Offset(0, 4),
+            blurRadius: 0,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.wifi_outlined,
+                size: 18,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 7),
+              Flexible(
+                child: Text(
+                  copy.get('map_online_note'),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: AppColors.ink,
                   ),
-                ),
-              ],
-            ),
-            if (placesWithoutCoordinates > 0) ...[
-              const SizedBox(height: 4),
-              Text(
-                copy.get('map_unverified_places'),
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
+          ),
+          if (placesWithoutCoordinates > 0) ...[
+            const SizedBox(height: 4),
+            Text(
+              copy.get('map_unverified_places'),
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: AppColors.mutedInk,
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -266,7 +289,7 @@ class _PlacesMapState extends State<_PlacesMap> {
               textSize: 13,
               textAnchor: 'top',
               textOffset: const Offset(0, 0.9),
-              textColor: _mapLibreColor(AppColors.campusBlue),
+              textColor: _mapLibreColor(AppColors.inkStrong),
               textHaloColor: _mapLibreColor(
                 Theme.of(context).colorScheme.surface,
               ),
@@ -302,7 +325,7 @@ class _PlacesMapState extends State<_PlacesMap> {
             (anchor) => CircleOptions(
               geometry: anchor.location,
               circleRadius: 12,
-              circleColor: _mapLibreColor(AppColors.campusBlue),
+              circleColor: _mapLibreColor(AppColors.inkStrong),
               circleStrokeColor: _mapLibreColor(AppColors.accent),
               circleStrokeWidth: 3,
             ),

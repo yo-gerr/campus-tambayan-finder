@@ -66,6 +66,47 @@ class AppCopy {
       isTagalog ? 'Lumipat sa English' : 'Switch to Filipino';
 
   static const _translations = <String, List<String>>{
+    'home': ['Home', 'Home'],
+    'home_find': ['Find a tambayan', 'Humanap ng tambayan'],
+    'home_mood': ['Mood check-in', 'Mood check-in'],
+    'home_more': ['More', 'Higit pa'],
+    'menu': ['Menu', 'Menu'],
+    'close_menu': ['Close menu', 'Isara ang menu'],
+    'instructions': ['Instructions', 'Mga tagubilin'],
+    'vision_mission': ['Vision & Mission', 'Bisyon at Misyon'],
+    'privacy': ['Privacy', 'Privacy'],
+    'terms': ['Terms & Conditions', 'Mga Tuntunin at Kundisyon'],
+    'pending_review': ['Pending review', 'Naghihintay ng pagsusuri'],
+    'vision_pending': [
+      'The client has not supplied approved vision and mission copy yet. This page is a placeholder.',
+      'Wala pang aprubadong bisyon at misyon mula sa client. Placeholder pa lang ang pahinang ito.',
+    ],
+    'privacy_pending': [
+      'A reviewed privacy notice is not available yet. This page is a placeholder, not a privacy policy.',
+      'Wala pang nasuring privacy notice. Placeholder pa lang ang pahinang ito, hindi ito privacy policy.',
+    ],
+    'terms_pending': [
+      'Reviewed terms and conditions are not available yet. This page is a placeholder, not a legal agreement.',
+      'Wala pang nasuring tuntunin at kundisyon. Placeholder pa lang ang pahinang ito, hindi ito legal na kasunduan.',
+    ],
+    'app_version': [
+      'Kamus Tambay · Version 1.0.0 (demo)',
+      'Kamus Tambay · Bersyon 1.0.0 (demo)',
+    ],
+    'language': ['Language', 'Wika'],
+    'language_english': ['English', 'English'],
+    'language_filipino': ['Filipino', 'Filipino'],
+    'mood_title': ['Mood check-in', 'Mood check-in'],
+    'mood_soon': ['Coming soon', 'Paparating na'],
+    'mood_body': [
+      'The mood check-in is planned, not built yet. This page is a preview so the home screen has somewhere to lead.',
+      'Pinaplano pa lang ang mood check-in. Preview pa lang ang pahinang ito para may patutunguhan ang home screen.',
+    ],
+    'mood_privacy': [
+      'Nothing is saved here: no mood, no nickname, and no profile.',
+      'Walang nai-save dito: walang mood, walang palayaw, at walang profile.',
+    ],
+    'mood_cta': ['Back to home', 'Bumalik sa home'],
     'explore': ['Explore', 'Mag-explore'],
     'map': ['Map', 'Mapa'],
     'welcome': [

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
+import '../home/app_chrome.dart';
 import 'place.dart';
 import 'place_card.dart';
 import 'place_categories.dart';
@@ -17,6 +18,7 @@ class PlacesExploreScreen extends StatefulWidget {
     required this.campus,
     required this.usingOfflineCopy,
     required this.usingSavedCopy,
+    required this.onHome,
     required this.onCampusChanged,
     required this.onFiltersPressed,
     required this.onClearFilters,
@@ -31,6 +33,7 @@ class PlacesExploreScreen extends StatefulWidget {
   final String campus;
   final bool usingOfflineCopy;
   final bool usingSavedCopy;
+  final VoidCallback onHome;
   final ValueChanged<String> onCampusChanged;
   final VoidCallback onFiltersPressed;
   final VoidCallback onClearFilters;
@@ -98,124 +101,127 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
           selectedCategory;
     }
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-      children: [
-        Text(
-          copy.get('welcome'),
-          style: Theme.of(context).textTheme.headlineSmall
-              ?.copyWith(fontWeight: FontWeight.w800, height: 1.15),
-        ),
-        const SizedBox(height: 17),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.demoContainer,
-            borderRadius: BorderRadius.circular(14),
+    return BandScaffold(
+      header: SectionHeader(
+        title: copy.get('explore'),
+        copy: copy,
+        onHome: widget.onHome,
+      ),
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+        children: [
+          Text(
+            copy.get('welcome'),
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.science_outlined,
-                size: 19,
-                color: AppColors.onDemoContainer,
+          const SizedBox(height: 18),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: const BoxDecoration(
+              color: AppColors.demoContainer,
+              borderRadius: BorderRadius.all(Radius.circular(18)),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.science_outlined,
+                  size: 19,
+                  color: AppColors.onDemoContainer,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    copy.get('demo_banner'),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AppColors.onDemoContainer,
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (widget.usingOfflineCopy) ...[
+            const SizedBox(height: 10),
+            _OfflineNotice(copy: copy, usingSavedCopy: widget.usingSavedCopy),
+          ],
+          const SizedBox(height: 16),
+          TextField(
+            key: const Key('place-search'),
+            onChanged: (value) => setState(() => _query = value),
+            decoration: InputDecoration(
+              hintText: copy.get('search_hint'),
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                key: const Key('open-filters'),
+                tooltip: copy.get('filters'),
+                onPressed: widget.onFiltersPressed,
+                icon: Badge(
+                  isLabelVisible: widget.filters.activeCount > 0,
+                  label: Text('${widget.filters.activeCount}'),
+                  child: const Icon(Icons.tune),
+                ),
               ),
-              const SizedBox(width: 8),
+            ),
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
               Expanded(
                 child: Text(
-                  copy.get('demo_banner'),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppColors.onDemoContainer,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.3,
+                  copy.get('starting_near'),
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: AppColors.mutedInk,
                   ),
                 ),
               ),
+              _CampusSelector(
+                campus: widget.campus,
+                copy: copy,
+                onChanged: widget.onCampusChanged,
+              ),
             ],
           ),
-        ),
-        if (widget.usingOfflineCopy) ...[
-          const SizedBox(height: 10),
-          _OfflineNotice(copy: copy, usingSavedCopy: widget.usingSavedCopy),
-        ],
-        const SizedBox(height: 15),
-        TextField(
-          key: const Key('place-search'),
-          onChanged: (value) => setState(() => _query = value),
-          decoration: InputDecoration(
-            hintText: copy.get('search_hint'),
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: IconButton(
-              key: const Key('open-filters'),
-              tooltip: copy.get('filters'),
-              onPressed: widget.onFiltersPressed,
-              icon: Badge(
-                isLabelVisible: widget.filters.activeCount > 0,
-                label: Text('${widget.filters.activeCount}'),
-                child: const Icon(Icons.tune),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${results.length} ${copy.get('place_count')}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
-            ),
+              TextButton.icon(
+                onPressed: widget.onMapPressed,
+                icon: const Icon(Icons.map_outlined, size: 18),
+                label: Text(copy.get('show_map')),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: 17),
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                copy.get('starting_near'),
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: AppColors.mutedInk,
-                  fontWeight: FontWeight.w600,
+          const SizedBox(height: 10),
+          if (results.isEmpty)
+            _EmptyResults(
+              copy: copy,
+              missingCategory: missingCategory,
+              onClear: () {
+                setState(() => _query = '');
+                widget.onClearFilters();
+              },
+            )
+          else
+            ...results.map(
+              (place) => Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: PlaceCard(
+                  place: place,
+                  copy: copy,
+                  now: _now,
+                  onTap: () => widget.onPlaceSelected(place),
                 ),
               ),
             ),
-            _CampusSelector(
-              campus: widget.campus,
-              copy: copy,
-              onChanged: widget.onCampusChanged,
-            ),
-          ],
-        ),
-        const SizedBox(height: 17),
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                '${results.length} ${copy.get('place_count')}',
-                style: Theme.of(context).textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w800),
-              ),
-            ),
-            TextButton.icon(
-              onPressed: widget.onMapPressed,
-              icon: const Icon(Icons.map_outlined, size: 18),
-              label: Text(copy.get('show_map')),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        if (results.isEmpty)
-          _EmptyResults(
-            copy: copy,
-            missingCategory: missingCategory,
-            onClear: () {
-              setState(() => _query = '');
-              widget.onClearFilters();
-            },
-          )
-        else
-          ...results.map(
-            (place) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: PlaceCard(
-                place: place,
-                copy: copy,
-                now: _now,
-                onTap: () => widget.onPlaceSelected(place),
-              ),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -311,27 +317,26 @@ class _OfflineNotice extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('offline-notice'),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.sage,
-        borderRadius: BorderRadius.circular(14),
+      padding: const EdgeInsets.all(14),
+      decoration: const BoxDecoration(
+        color: AppColors.bubble,
+        borderRadius: BorderRadius.all(Radius.circular(18)),
       ),
       child: Row(
         children: [
           const Icon(
             Icons.cloud_off_outlined,
             size: 19,
-            color: AppColors.primary,
+            color: AppColors.inkStrong,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               copy.get(
                 usingSavedCopy ? 'offline_saved_notice' : 'offline_notice',
               ),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w800,
+                color: AppColors.inkStrong,
                 letterSpacing: 0.3,
               ),
             ),

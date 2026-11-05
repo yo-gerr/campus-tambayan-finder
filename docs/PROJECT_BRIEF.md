@@ -35,6 +35,18 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide. The original ranking is retained, but in-app travel-time estimates are deferred from the current map phase.
 - Filters remain part of the concept and MVP scope; the team did not rank them in this priority list.
 
+### Navigation and visual direction
+
+Confirmed November 5, 2026 as the current class-demo direction, based on the client's exported home-screen mockup:
+
+- **Navigation:** the home screen is the hub. It offers three speech bubbles: Find a tambayan (the explore list), Mood check-in (an informational preview for now), and More, which opens the sidebar. There is no bottom navigation bar. Every other screen carries a visible Home control, and the Android/system Back action returns to the hub.
+- **Map access:** the first bubble opens the searchable list, and the list keeps the map one tap away through its "View map" action.
+- **Sidebar:** the home hamburger and More bubble open one sidebar with Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, English/Filipino switching, and a subtle version note. Instructions reopens the intro guide. Vision/Mission, Privacy, and Terms remain explicitly labelled placeholders until reviewed client copy is supplied; no About dialog is shown.
+- **Palette:** cream `#FBF8F4`, sky `#DFEDFB`, navy ink `#1F2A5C`, deep navy `#0B1F4B`, primary/interactive blue `#1F6FD1`, hero blue `#3490F5`, light bubble blue `#BBDDFF`, pale surface `#E9F2F9`, undersides `#8EC4FA` and `#C3D8E8`, and a gold accent `#E2A92B`. White text on `#1F6FD1` is used for normal-size primary controls; `#3490F5` is limited to large bold text or deep-navy text. Green and red are reserved for status.
+- **Typography:** Fredoka for the brand and headings, Nunito for body and interface text. Both are bundled with their OFL licences.
+- **Shapes and spacing:** flat speech-bubble and card shapes with a hard darker underside, 24–30 px corner radii, 24 px side margins, an 8 px spacing grid, and touch targets of at least 48 dp. The home wordmark receives the largest header share; its emblem sits close to it, with a wider gap before the 48 dp hamburger utility. The curved sky scene, bubbles, and student figure sit slightly lower to give the header breathing room. Cards put their status pills at the top. Material icons are used only for interface utilities, not as decorative placeholders.
+- **Branding status:** confirmed November 5, 2026: the displayed app name and supplied wordmark are "Kamus Tambay". The internal package/application ID and GitHub repository name remain unchanged. Final logo treatment is still open. Vision and mission copy will be supplied by the client and must not be invented.
+
 ### Places and listings
 
 Initial categories include tambayan spots, coffee shops, open spaces and parks, karinderyas and affordable eateries, and other suitable study, eating, relaxation, and socializing locations.
@@ -84,7 +96,7 @@ Confirmed November 4, 2026: the budget filter is a preset chip row (₱50, ₱10
 
 ### Guidance and participation
 
-- Provide an in-app guide to the main features. The current build opens the guide at launch and keeps it reopenable from Help; whether it should appear only on first launch is an open question in the table below.
+- Provide an in-app guide to the main features. The current build opens the guide at launch and keeps it reopenable from More → How to use; whether it should appear only on first launch is an open question in the table below.
 - Students primarily browse listings; no ratings or comments are requested.
 - An optional mood check-in with a nickname is requested, but responses must not be linked to a user profile.
 - Shop owners do not need app accounts, submit identification through the app, or make online payments; the development team manages initial listings and updates.
@@ -137,6 +149,11 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Current delivery | Confirmed installable APK for class presentation and testing; Google Play publication not required |
 | Android launcher icon | Temporary icon uses the existing blue-and-gold app mark; replace it when the team supplies the official logo/icon |
 | Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide; in-app ETA deferred from current map phase |
+| Navigation | Confirmed November 5, 2026: home hub with three speech bubbles; More and the home hamburger open one sidebar; no bottom navigation bar; every spoke screen has a Home control and system Back returns to the hub |
+| Visual direction | Confirmed November 5, 2026 as the provisional class-demo direction: cream/sky/navy/blue palette, Fredoka headings with Nunito body text, flat speech-bubble shapes with hard undersides, 24 px margins, 8 px grid, and 48 dp targets |
+| Product name and wordmark | Confirmed November 5, 2026: displayed app name and supplied wordmark are "Kamus Tambay". Keep the internal package/application ID and GitHub repository name unchanged; final logo treatment remains open |
+| Sidebar content | Confirmed November 5, 2026: Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, language switching, and a version note. Vision/Mission, Privacy, and Terms are clearly labelled placeholders until reviewed client copy is supplied; About is removed |
+| Mood preview | The home mood bubble opens an informational page that stores no mood, nickname, or profile. The full check-in remains blocked on the privacy decisions below |
 | Map renderer/data provider | Confirmed November 4, 2026: MapLibre Flutter with OpenFreeMap public tiles/styles and OSM-derived data, subject to eligible representative accepting terms and current service review |
 | Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps; no in-app ETA is approved yet. Research checked November 5, 2026: OSRM/FOSSGIS public demo is a candidate for a no-account/no-key/no-card ETA, with non-commercial and best-effort limits; operator confirmation that this commissioned use is allowed, and product/provider acceptance, remain open |
 | ETA origin and location permission | Proposal only: fixed PLV Annex or CPAG origins first; current-device origin is excluded unless separately approved with foreground permission and privacy disclosure |
@@ -147,7 +164,7 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Budget control | Confirmed November 4, 2026: preset chips (₱50, ₱100, ₱150, ₱200, ₱300, ₱500) plus "Any budget", which applies no limit at all |
 | Budget comparison basis | Open — follow-up with client: the app matches a budget against the lowest estimated spend (`priceMin`), so a listing priced ₱80–₱250 appears under a ₱100 limit. Confirm whether the highest estimated spend (`priceMax`) should be used instead |
 | Wi-Fi amenity meaning | Open — follow-up with client: the app labels the `wifi` amenity "Free Wi-Fi" / "Libreng Wi-Fi". Confirm that paid Wi-Fi must be excluded from that value, or whether paid access needs its own value |
-| Introductory guide display | Open — follow-up with client: the app opens the short guide every time it starts, and Help reopens it. Should it appear only on first launch, or is showing it at launch each time acceptable? |
+| Introductory guide display | Open — follow-up with client: the app opens the short guide every time it starts, and Sidebar → Instructions reopens it. Should it appear only on first launch, or is showing it at launch each time acceptable? |
 | Structured operating days | Confirmed November 4, 2026: `hoursByDay` stores per-day opening and closing times, with a null day meaning closed and a missing day meaning unknown. The detail view lists the week and the app derives an "open now" state in Manila time. The concept document requires the days a place is open or closed, so this is a requirement rather than an inference |
 | Closed places on the map | Open — follow-up with client: the map shows every listing, including places that are closed right now. Should a closed place's pin be hidden, or kept visible but marked as closed? Should closed places also be left out of the place list by default, or only when the "Open now" filter is on? |
 | 24-hour places | Open — follow-up with client: the app has no value for a place that stays open around the clock, so identical opening and closing times are read as unknown instead of 24 hours. Should a 24-hour place get its own value, or is an around-the-clock schedule not needed for these listings? |

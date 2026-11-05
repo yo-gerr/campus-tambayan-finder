@@ -23,18 +23,22 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 
 ## Provisional visual direction
 
-Retain the calm, welcoming student-oriented visual style as a design hypothesis for the class demo, not as approved final branding.
+Retain the calm, welcoming student-oriented visual style as a design hypothesis for the class demo, not as approved final branding. The current direction follows the client's exported home-screen mockup (confirmed November 5, 2026) and replaces the earlier "Warm Campus" teal palette.
 
-- Use Material 3 patterns, a warm neutral background, a deep teal/green primary for trust and primary actions, light sage surfaces, and restrained terracotta for demo/warning states.
-- The "Warm Campus" palette is the current working choice, still provisional rather than approved final branding. The owner approved a hybrid direction inspired by the PLV crest; the selected blue and yellow tones are not claimed to be official PLV brand colors, and the app must not imply institutional endorsement. Tokens live in `lib/app/app_theme.dart`; screens must not declare their own color literals.
-  - `background #FBF7EE`, `surface #FFFFFF`, `primary #14594A`, `sage #E3EFE8`
-  - `campusBlue #24558A`, `campusBlueContainer #E8F0F8`, `onCampusBlueContainer #173A5B`
-  - `ink #1C2320`, `mutedInk #57675F`, `outline #E7E2D5`
-  - `demoContainer #FFF1E7` with `onDemoContainer #A8452C`
-- `accent #F2B23E` is reserved for small emblem and campus-marker highlights.
-- Blue selection fills use matching dark-blue foregrounds or white foregrounds, with contrast covered by widget tests. Yellow is limited to emblem and campus-marker details; demo/warning terracotta remains visually distinct. `FilledButton` backgrounds stay `primary` so each screen has one action color.
-- Text contrast is checked in `test/widget_test.dart`. Keep every text/background pair at or above 4.5:1.
-- Prefer Roboto or the Android default sans-serif. Keep translated labels readable and check longer Filipino strings.
+- Use Material 3 patterns without relying on a bottom navigation bar. The home screen is the hub: three speech bubbles lead to the explore list, the informational mood preview, and the sidebar. The More bubble and home hamburger open that sidebar. Every other screen carries a visible Home control, and system Back returns to the hub.
+- The "speech bubble" palette is the current working choice, still provisional rather than approved final branding. Tokens live in `lib/app/app_theme.dart`; screens must not declare their own color literals.
+  - `background #FBF8F4`, `sky #DFEDFB`, `surface #E9F2F9`, `raised #FFFFFF`
+  - `ink #1F2A5C`, `inkStrong #0B1F4B`, `mutedInk #5A6485`
+  - `primary #1F6FD1`, `onPrimary #FFFFFF`, `brand #3490F5`, `onBrand #0B1F4B`
+  - `bubble #BBDDFF` with `bubbleUnder #8EC4FA`, and `surfaceUnder #C3D8E8`
+  - `accent #E2A92B`, `open #14594A`, `error #B3261E`
+  - `demoContainer #FBEBC8` with `onDemoContainer #6A4B00`
+- Fredoka (600/700) sets the brand and headings; Nunito (400–800) sets body and interface text. Both font families and their OFL licences are bundled, so the interface does not fetch fonts at runtime.
+- Cards and bubbles are flat shapes with a hard darker underside, not shadows or gradients. Speech-bubble outlines are painted from vectors so they stay crisp at any width; the student figure and wordmark are image assets.
+- Use 24 px side margins, an 8 px spacing grid, touch targets of at least 48 dp, and 24–30 px card radii. Sizes derive from screen width so the hub holds together on small phones. On the home header, give the wordmark the largest share, keep its emblem close, and leave the hamburger a distinct 48 dp utility target; position the sky scene and hub actions slightly lower for breathing room.
+- Primary controls use `primary #1F6FD1` with white text, which clears 4.5:1. The lighter `brand #3490F5` is reserved for large bold text or for deep-navy text, because white on it does not clear AA at normal sizes. Status badges use green for open and neutral grey/navy for closed; red is reserved for genuine errors. Demo markers keep their own warm container.
+- Text contrast is checked in `test/widget_test.dart`. Keep every normal-size text/background pair at or above 4.5:1.
+- Keep translated labels readable and check longer Filipino strings at narrow widths. Use Material icons only for interface utilities, with labels or tooltips where the meaning is not obvious.
 - Use clear listing cards, recognizable icons with labels, understandable filters, and an obvious list/map switch. Do not rely on color alone to communicate status or category.
 - Use only team-approved photos; otherwise retain clearly labeled placeholders.
 
@@ -50,10 +54,12 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - The five agreed categories come from one static catalog, so all remain selectable before any listing uses them.
 - Optional price ranges: a missing pair shows a "not listed" label and is excluded while a budget limit is active. The budget control is a preset chip row with a genuine "Any budget" state.
 - Structured per-day hours: the weekly list, the open/closed badge on cards and in details, and the "Open now" filter all read `hoursByDay`; free-text `hours` is a note only.
-- English/Filipino interface toggle, launch guide reopenable from Help, and a MapLibre/OpenFreeMap map with campus anchors, place pins, and a card carousel.
+- English/Filipino interface toggle in the sidebar, launch guide reopenable from Sidebar → Instructions, and a MapLibre/OpenFreeMap map with campus anchors, place pins, and a card carousel.
+- Home hub with three speech-bubble destinations and no bottom navigation; every spoke screen has a Home control, and system Back returns to the hub. The More bubble and home hamburger open a sidebar holding Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, language switching, and a version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; the mood bubble opens an informational preview that stores nothing.
+- Speech-bubble palette, Fredoka/Nunito typography, and flat card shapes applied across the app. The displayed app name and supplied wordmark are confirmed as Kamus Tambay; final logo treatment remains open.
 - Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
-- Widget, domain, repository, and map tests (69 at the time of writing).
+- Widget, domain, repository, and map tests (79 at the time of writing).
 
 This is a working starting point, not the finished class-demo MVP. Do not treat its fictional locations, coordinates, prices, hours, amenities, or translations as approved content.
 
@@ -96,7 +102,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 **Priority: second. Status: implemented for the class demo; approved place coordinates and verified flags are still missing.**
 
 - The app integrates MapLibre with OpenFreeMap's public Positron style and OSM-derived data. The fixed PLV Annex and CPAG anchors keep the basemap visible; the initial view uses zoom 16 centered on the midpoint between their owner-supplied coordinates. Their markers and labels are distinct from place pins. Bundled fictional listings have illustrative coordinates for local map previews so the carousel can be exercised without Supabase; these are not real locations and must be replaced with verified coordinates or omitted before use for live listings or directions.
-- The Map tab uses a full-body map layout between the app bar and bottom navigation, with a compact horizontally scrollable carousel overlay 30 dp above the bottom for places with valid coordinates and a floating internet/coordinate note at the top-right. The carousel uses equal left/right insets and sits above the map attribution control; it uses the same place cards and opens place details. Unlocated places are not shown in it. Its height accommodates card content without overflow. The searchable place list remains on Explore, and tapping a map marker/label also opens place details.
+- The Map tab uses a full-body map layout with a floating Home control at the top-left, a compact horizontally scrollable carousel overlay 30 dp above the bottom for places with valid coordinates, and an internet/coordinate note at the top-right. The carousel uses equal left/right insets and sits above the map attribution control; it uses the same place cards and opens place details. Unlocated places are not shown in it. Its height accommodates card content without overflow. The searchable place list remains on Explore, and tapping a map marker/label also opens place details.
 - OpenFreeMap currently has no registration, API key, or fee, but its public instance has no warranty/SLA and may be discontinued. Confirm the integrator meets the current terms (age 18+ and legally able to accept them, or authorized to bind the represented organization) and recheck availability/terms before live use. Include required attribution. Map tiles require internet.
 - The Positron style is a light neutral baseline. Evaluate a warm app-themed style without obscuring map information or attribution. OpenFreeMap's quick start says custom style JSON must be hosted; verify whether an app-bundled style works before introducing separate hosting. Do not add a paid/card-dependent host without approval.
 - Add verified decimal-degree `latitude` and `longitude` pairs to approved live place data. The app ignores missing, incomplete, non-numeric, or out-of-range coordinates; legacy schematic `mapX`/`mapY` values are no longer used. Never treat the bundled illustrative sample coordinates as real destinations. Update existing Supabase tables with the nullable coordinate columns and relax legacy schematic fields using the setup guide.
@@ -113,7 +119,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 **Priority: third, but privacy decisions are a prerequisite to real collection.**
 
-**Status: not started.**
+**Status: not started for data collection.** The home mood bubble now opens an informational preview that explains the plan and states that nothing is saved; it asks for no mood, nickname, or profile. Real collection remains blocked on the decisions below.
 
 - Confirm whether a nickname is required or optional and entered per check-in.
 - Confirm purpose, consent wording, whether a response is retained, who can access it, retention/deletion, and whether any aggregate analysis is intended.
@@ -151,7 +157,7 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 - Review translations of app UI and supplied place information with the team or its chosen translator.
 - Ensure language changes cover navigation, filters, errors, empty states, details, directions messaging, and mood UI if included. **Implemented:** all UI copy has English and Filipino entries behind one in-app toggle. The selection is held in memory and resets to English on relaunch.
-- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable. **Implemented:** the guide opens at launch and reopens from Help. Whether it should appear only on first launch is an open client question recorded in the brief.
+- Review the onboarding guide against the final class-demo feature set and keep it dismissible/reopenable. **Implemented:** the guide opens at launch and reopens from More → How to use. Whether it should appear only on first launch is an open client question recorded in the brief.
 
 **Acceptance:** both languages communicate the same approved meaning across in-scope screens; the guide accurately describes implemented behavior.
 

@@ -4,6 +4,31 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-05 — Rebalanced the home header and confirmed Kamus Tambay branding
+
+- Enlarged the home wordmark’s usable space, reduced the emblem, grouped it closer to the wordmark, and kept a wider gap before the separate 48 dp hamburger target. Lowered the sky scene, bubble column, and student figure slightly to give the branding clear breathing room without changing action order or targets.
+- Renamed every user-facing application label to `Kamus Tambay`: Flutter title, Android launcher label, browser title/metadata/PWA manifest, version footer, README, and product documentation. Kept the `commission` folder, GitHub repository/web path, Dart package name, Android namespace, and Android application ID unchanged.
+- Validation: `dart format`, `flutter analyze`, all 79 Flutter tests, and `flutter build web --base-href /campus-tambayan-finder/` passed.
+- Remaining: final logo treatment and reviewed Vision/Mission, Privacy, and Terms copy are still open.
+
+### 2026-11-05 — Replaced the More page with the approved sidebar
+
+- Added a shell-owned, cream sidebar opened by the home hamburger, More speech bubble, or edge swipe. It contains Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, an English/Filipino segmented control, and the subtle `Campus Tambayan Finder · Version 1.0.0 (demo)` footer.
+- Removed `MoreScreen` and its About dialog. Instructions closes the sidebar and opens the existing intro guide. Vision/Mission, Privacy, and Terms each open a clearly labelled placeholder that states client-reviewed copy is still pending; no mission, privacy, or legal content was invented.
+- Added `app_section.dart`, `app_drawer.dart`, and `info_placeholder_screen.dart`; updated bilingual strings, widget coverage for drawer navigation/language/instructions/placeholders/version/narrow screen, and the project brief, MVP plan, architecture, and README.
+- Validation: `dart format`, `flutter analyze`, all 79 Flutter tests, `flutter build web --base-href /campus-tambayan-finder/`, and `git diff --check` passed.
+- Remaining: review responsive/text-scale layouts on a device or browser. Final Vision/Mission, Privacy, and Terms copy is still pending from the client.
+
+### 2026-11-05 — Rebuilt the home hub and navigation from the client mockup
+
+- Replaced the Explore-first shell and bottom navigation with a home hub: three vector speech bubbles (Find a tambayan, Mood check-in, More), the supplied "Kamus Tambay" wordmark, a gold-ring emblem, the student figure, and the curved sky band. The explore list and map are still one tap apart through "View map".
+- Added `lib/features/home/` (home screen, custom-painted bubbles, headers/band chrome, More menu) and `lib/features/mood/mood_info_screen.dart`. The mood bubble opens an informational preview only; it stores no mood, nickname, or profile. More contains Language, How to use, and About; vision/mission copy is intentionally absent until the client supplies it.
+- Applied the new provisional palette and typography app-wide: cream `#FBF8F4`, sky `#DFEDFB`, navy `#1F2A5C`/`#0B1F4B`, primary `#1F6FD1`, brand `#3490F5`, bubble `#BBDDFF`, undersides, and gold `#E2A92B`; Fredoka headings with Nunito body text, both bundled. Restyled cards, status/demo pills, filters, detail/filter sheets, map overlays, and intro dialog. Added a Home control to every spoke screen and system Back-to-home behavior.
+- Updated `pubspec.yaml` assets/fonts and regenerated the Android splash for the new background/icon colors; updated `web/index.html` and `web/manifest.json` theme/background colors.
+- Updated `docs/PROJECT_BRIEF.md`, `docs/MVP_PLAN.md`, `docs/ARCHITECTURE.md`, `README.md`, and this handoff. No new dependencies beyond the bundled font files.
+- Validation: `flutter pub get`, `flutter analyze`, and all 78 tests passed. `flutter build web --base-href /campus-tambayan-finder/` succeeded. Reviewed headless browser screenshots at 390×844 for the intro, home, Explore, More, and mood preview; the 320×640 Filipino hub is covered by a widget test. `dart run flutter_native_splash:create` completed.
+- Remaining: confirm the official product name/spelling and logo, supply vision/mission copy, and re-export the oversized `interior.jpg`/`menu.jpg` assets. Mood persistence, consent, nickname, access, retention, and deletion remain open. Work is uncommitted.
+
 ### 2026-11-05 — Researched no-account routing for a possible ETA
 
 - Reviewed official OSRM API/demo and FOSSGIS server-policy pages. Documented OSRM/FOSSGIS as a candidate for low-volume estimates across car, bicycle, and foot profiles; recorded the no-sign-up/no-key/no-card request path alongside the one-request-per-second limit, request logging, attribution, lack of SLA, and non-commercial constraint. Since this is a commission, the operator must confirm eligibility before any app requests.

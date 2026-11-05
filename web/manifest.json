@@ -1,11 +1,11 @@
 {
-    "name": "Campus Tambayan Finder",
-    "short_name": "Tambayan",
+    "name": "Kamus Tambay",
+    "short_name": "Kamus Tambay",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FBF7EE",
-    "theme_color": "#14594A",
-    "description": "Preview build of Campus Tambayan Finder, a student place finder for Malinta, Valenzuela City.",
+    "background_color": "#FBF8F4",
+    "theme_color": "#1F6FD1",
+    "description": "Preview build of Kamus Tambay, a student place finder for Malinta, Valenzuela City.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

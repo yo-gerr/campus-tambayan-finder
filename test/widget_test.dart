@@ -87,7 +87,14 @@ void main() {
   Future<void> pumpPrototype(
     WidgetTester tester, {
     bool showIntroOnStart = false,
+    bool openExplore = true,
+    Size surface = const Size(390, 844),
   }) async {
+    tester.view.physicalSize = surface;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       TambayanApp(
         showIntroOnStart: showIntroOnStart,
@@ -97,7 +104,13 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pump();
-    expect(find.text('Sample Study Corner'), findsOneWidget);
+
+    if (showIntroOnStart) return;
+    if (openExplore) {
+      await tester.tap(find.byKey(const Key('home-find-tambayan')));
+      await tester.pumpAndSettle();
+      expect(find.text('Sample Study Corner'), findsOneWidget);
+    }
   }
 
   testWidgets('shows demo places and opens a place detail', (tester) async {
@@ -157,19 +170,10 @@ void main() {
     final amenityChip = find.widgetWithText(Chip, 'Free Wi-Fi');
     expect(amenityChip, findsOneWidget);
     final detailTheme = Theme.of(tester.element(amenityChip));
+    expect(detailTheme.chipTheme.backgroundColor, AppColors.raised);
+    expect(detailTheme.chipTheme.labelStyle?.color, AppColors.ink);
     expect(
-      detailTheme.chipTheme.backgroundColor,
-      detailTheme.colorScheme.secondaryContainer,
-    );
-    expect(
-      detailTheme.chipTheme.labelStyle?.color,
-      detailTheme.colorScheme.onSecondaryContainer,
-    );
-    expect(
-      _contrastRatio(
-        detailTheme.colorScheme.onSecondaryContainer,
-        detailTheme.colorScheme.secondaryContainer,
-      ),
+      _contrastRatio(AppColors.ink, AppColors.raised),
       greaterThanOrEqualTo(4.5),
     );
 
@@ -259,21 +263,22 @@ void main() {
     expect(find.text('Closed now'), findsOneWidget);
   });
 
-  test('campus-blue selected states clear AA contrast', () {
+  test('brand palette text pairs clear AA contrast', () {
     expect(
-      _contrastRatio(
-        AppColors.onCampusBlueContainer,
-        AppColors.campusBlueContainer,
-      ),
+      _contrastRatio(AppColors.inkStrong, AppColors.bubble),
       greaterThanOrEqualTo(4.5),
     );
     expect(
-      _contrastRatio(AppColors.onPrimary, AppColors.campusBlue),
+      _contrastRatio(AppColors.onPrimary, AppColors.primary),
       greaterThanOrEqualTo(4.5),
     );
     expect(
-      _contrastRatio(AppColors.accent, AppColors.campusBlue),
-      greaterThan(3),
+      _contrastRatio(AppColors.mutedInk, AppColors.outline),
+      greaterThanOrEqualTo(4.5),
+    );
+    expect(
+      _contrastRatio(AppColors.ink, AppColors.surface),
+      greaterThanOrEqualTo(4.5),
     );
   });
 
@@ -315,13 +320,13 @@ void main() {
     final coffeeChip = tester.widget<ChoiceChip>(
       find.byKey(const Key('category-coffee-filter')),
     );
-    expect(allChip.labelStyle?.color, AppColors.onCampusBlueContainer);
+    expect(allChip.labelStyle?.color, AppColors.inkStrong);
     expect(coffeeChip.labelStyle?.color, AppColors.ink);
     expect(
       Theme.of(tester.element(find.byKey(const Key('category-any-filter'))))
           .chipTheme
           .selectedColor,
-      AppColors.campusBlueContainer,
+      AppColors.bubble,
     );
 
     await tester.tap(find.byKey(const Key('category-coffee-filter')));
@@ -386,6 +391,8 @@ void main() {
         matching: find.byType(Scrollable),
       ),
     );
+    await tester.ensureVisible(find.byKey(const Key('open-now-filter')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('open-now-filter')));
     await tester.tap(find.byKey(const Key('apply-filters')));
     await tester.pumpAndSettle();
@@ -409,21 +416,28 @@ void main() {
     expect(find.text('Sample Study Corner'), findsOneWidget);
   });
 
-  testWidgets('shows campus anchors without fictional sample place pins', (
+  testWidgets('hub navigation, drawer language, and map Home control', (
     tester,
   ) async {
     await pumpPrototype(tester);
+    expect(find.text('Sample Kape Stop'), findsOneWidget);
 
-    expect(find.text('Tag'), findsOneWidget);
-    expect(find.byIcon(Icons.translate), findsNothing);
-    expect(find.byTooltip('Switch to Filipino'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('language-toggle')));
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Mag-explore'), findsOneWidget);
-    expect(find.text('Eng'), findsOneWidget);
-    expect(find.byTooltip('Lumipat sa English'), findsOneWidget);
+    // Back to the hub, then open the drawer and switch language there.
+    await tester.tap(find.byKey(const Key('home-button')).hitTestable());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('home-more')));
+    await tester.pumpAndSettle();
+    expect(find.text('Language'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('drawer-language-filipino')));
+    await tester.pumpAndSettle();
+    expect(find.text('Wika'), findsOneWidget);
 
-    await tester.tap(find.text('Mapa'));
+    // Return home, open Explore, then the map from there.
+    await tester.tap(find.byKey(const Key('drawer-home')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('home-find-tambayan')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tingnan ang mapa'));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.byType(MapLibreMap), findsOneWidget);
     expect(find.text('Kailangan ng internet ang mapa'), findsOneWidget);
@@ -435,6 +449,47 @@ void main() {
     );
     expect(find.byKey(const Key('map-place-carousel')), findsNothing);
     expect(find.text('Sample Kape Stop'), findsNothing);
+
+    // The map's Home control returns to the hub.
+    await tester.tap(find.byKey(const Key('map-home')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
+  });
+
+  testWidgets('home is the hub and the mood page stores nothing', (
+    tester,
+  ) async {
+    await pumpPrototype(tester, openExplore: false);
+
+    expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
+    expect(find.byKey(const Key('home-mood')), findsOneWidget);
+    expect(find.byKey(const Key('home-more')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('home-mood')));
+    await tester.pumpAndSettle();
+    expect(find.text('Coming soon'), findsOneWidget);
+    expect(find.textContaining('Nothing is saved here'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('mood-back-home')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
+  });
+
+  testWidgets('home hub fits a narrow phone in Filipino', (tester) async {
+    await pumpPrototype(
+      tester,
+      openExplore: false,
+      surface: const Size(320, 640),
+    );
+    await tester.tap(find.byKey(const Key('open-menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('drawer-language-filipino')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('drawer-home')));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
   });
 
   testWidgets('offers every agreed category even with no listing for it', (
@@ -457,10 +512,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('No Other place listings yet'), findsOneWidget);
-    expect(
-      find.text('Try changing or clearing your filters.'),
-      findsOneWidget,
-    );
+    expect(find.text('Try changing or clearing your filters.'), findsOneWidget);
   });
 
   testWidgets('onboarding can be dismissed and opened again', (tester) async {
@@ -470,14 +522,55 @@ void main() {
     await tester.tap(find.byKey(const Key('dismiss-intro')));
     await tester.pump(const Duration(milliseconds: 400));
 
-    await tester.tap(find.byKey(const Key('open-guide')));
+    await tester.tap(find.byKey(const Key('open-menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('drawer-instructions')));
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('Find your next tambayan'), findsOneWidget);
   });
 
+  testWidgets(
+    'drawer opens approved placeholder destinations and shows version',
+    (tester) async {
+      await pumpPrototype(tester, openExplore: false);
+
+      await tester.tap(find.byKey(const Key('open-menu')));
+      await tester.pumpAndSettle();
+      expect(find.text('Kamus Tambay · Version 1.0.0 (demo)'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('drawer-vision')));
+      await tester.pumpAndSettle();
+      expect(find.text('Vision & Mission'), findsOneWidget);
+      expect(find.text('Pending review'), findsOneWidget);
+      expect(
+        find.textContaining('has not supplied approved vision and mission'),
+        findsOneWidget,
+      );
+
+      await tester.dragFrom(const Offset(2, 300), const Offset(280, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('drawer-privacy')));
+      await tester.pumpAndSettle();
+      expect(find.text('Privacy'), findsOneWidget);
+      expect(find.textContaining('not available yet'), findsOneWidget);
+
+      await tester.dragFrom(const Offset(2, 300), const Offset(280, 0));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('drawer-terms')));
+      await tester.pumpAndSettle();
+      expect(find.text('Terms & Conditions'), findsOneWidget);
+      expect(find.textContaining('not available yet'), findsOneWidget);
+    },
+  );
+
   testWidgets('labels the bundled copy when shared listings are unavailable', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(
       TambayanApp(
         showIntroOnStart: false,
@@ -487,6 +580,9 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
     await tester.pump();
+
+    await tester.tap(find.byKey(const Key('home-find-tambayan')));
+    await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('offline-notice')), findsOneWidget);
     expect(

@@ -66,17 +66,38 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/data/sample_places.json
+    - assets/brand/wordmark.png
+    - assets/brand/student_male.png
+    - assets/brand/splash.png
+
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-600.ttf
+          weight: 600
+        - asset: assets/fonts/Fredoka-700.ttf
+          weight: 700
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-400.ttf
+          weight: 400
+        - asset: assets/fonts/Nunito-600.ttf
+          weight: 600
+        - asset: assets/fonts/Nunito-700.ttf
+          weight: 700
+        - asset: assets/fonts/Nunito-800.ttf
+          weight: 800
 
 flutter_native_splash:
   android: true
   ios: false
   web: false
-  color: "#FBF7EE"
+  color: "#FBF8F4"
   image: assets/brand/splash.png
   android_12:
-    color: "#FBF7EE"
+    color: "#FBF8F4"
     image: assets/brand/splash_android12.png
-    icon_background_color: "#24558A"
+    icon_background_color: "#1F6FD1"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

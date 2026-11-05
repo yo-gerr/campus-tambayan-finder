@@ -75,6 +75,7 @@ void main() {
           body: PlacesMapScreen(
             places: const [place, unmappedPlace],
             copy: const AppCopy(AppLanguage.english),
+            onHome: () {},
             onPlaceSelected: (selected) => selectedPlace = selected,
           ),
         ),
@@ -158,6 +159,7 @@ void main() {
           body: PlacesMapScreen(
             places: const [place],
             copy: const AppCopy(AppLanguage.english),
+            onHome: () {},
             onPlaceSelected: (_) {},
           ),
         ),

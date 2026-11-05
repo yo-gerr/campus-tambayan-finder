@@ -1,4 +1,4 @@
-# Campus Tambayan Finder
+# Kamus Tambay
 
 A proposed Android application to help students find suitable places to study, eat, relax, and socialize in Malinta, Valenzuela City, particularly near PLV Annex and CPAG.
 
@@ -6,7 +6,7 @@ This repository README is for project contributors and agents; it is not a publi
 
 ## Project status
 
-The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings load from a shared Supabase Free-plan table; the app caches the latest successful non-empty listing snapshot for offline browsing and uses bundled JSON before its first sync. Remote photos and map tiles may still need internet. The shipped baseline covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings load from a shared Supabase Free-plan table; the app caches the latest successful non-empty listing snapshot for offline browsing and uses bundled JSON before its first sync. Remote photos and map tiles may still need internet. The shipped baseline opens on a speech-bubble home hub and covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
 
 ## Start here
 
@@ -29,8 +29,12 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Topic | Status |
 |---|---|
 | Product direction | Student place finder with listings, filters, and a map; in-app travel estimates are deferred |
+| Navigation | Home is the hub with three speech bubbles; the More bubble and home hamburger open the sidebar; no bottom bar. Every other screen has a Home control and system Back returns to the hub |
+| Sidebar | Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, English/Filipino switching, and version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; About is removed |
+| Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins, 8 px grid, and 48 dp targets. Branding remains provisional |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
+| Product name and wordmark | Confirmed November 5, 2026: the displayed app name and supplied home wordmark are "Kamus Tambay". The internal package/application ID and GitHub repository name remain unchanged; final logo treatment is open |
 | App languages | Filipino (Tagalog) and English |
 | Requested delivery | Installable Android APK for class presentation/testing; no Google Play release |
 | Web preview | Browser build published to GitHub Pages so the client can review changes without reinstalling the APK. Review channel only; the APK remains the deliverable |
@@ -41,7 +45,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Operating hours | Structured `hoursByDay` drives the weekly list, the open/closed badge, and the "Open now" filter in Manila time; free-text `hours` is a note only |
 | Listing storage for class demo | Confirmed: shared Supabase Free-plan table; latest successful non-empty snapshot cached on-device for offline browsing; bundled JSON is the first-sync seed/fallback |
 | Directions | Open Google Maps, only for listings with verified coordinates; in-app ETA is deferred. Map renderer confirmed: MapLibre with OpenFreeMap tiles/styles |
-| Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open |
+| Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open. The home bubble currently opens an informational preview that stores nothing |
 | Listing edits | Authorized team members edit rows in the Supabase dashboard; no in-app admin screen |
 | Listing photos | Hybrid gallery: up to 10 approved Storage images per place, with optional bundled offline fallbacks; accessible loading skeleton and separate full-image zoom viewer; detail and card images are consistently cropped |
 | Public landing/information page | Not needed for current class-presentation/testing delivery |

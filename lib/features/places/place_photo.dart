@@ -542,7 +542,7 @@ class PlacePhotoPlaceholder extends StatelessWidget {
         ? null
         : PlaceCategory.fromKey(categoryKey);
     final icon = categoryInfo?.icon ?? Icons.image_outlined;
-    final tint = categoryInfo?.tint ?? AppColors.sage;
+    final tint = categoryInfo?.tint ?? AppColors.tambayanTint;
     final text = label;
 
     return ColoredBox(

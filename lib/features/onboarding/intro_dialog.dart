@@ -11,10 +11,13 @@ Future<void> showIntroDialog(BuildContext context, AppCopy copy) {
         width: 58,
         height: 58,
         decoration: const BoxDecoration(
-          color: AppColors.sage,
+          color: AppColors.bubble,
           shape: BoxShape.circle,
         ),
-        child: const Icon(Icons.explore_outlined, color: AppColors.primary),
+        child: const Icon(
+          Icons.explore_outlined,
+          color: AppColors.inkStrong,
+        ),
       ),
       title: Text(copy.get('guide_title'), textAlign: TextAlign.center),
       content: Column(
