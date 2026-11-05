@@ -125,16 +125,23 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 ### Phase 5 — Estimated travel time
 
-**Priority: fourth. Blocked on a product/service decision.**
+**Client presentation priority: fourth. Proposed implementation order: after real listings and verified map coordinates, and before mood check-in if the owner/team approves this in-app feature.**
 
-**Status: deferred; nothing is displayed.**
+**Status: research complete; no ETA is implemented or approved for display. OSRM's public FOSSGIS demo is a candidate for a low-volume, non-commercial class demo only.**
 
-- Confirm whether the travel estimate should be displayed inside this app or left to Google Maps.
-- Confirm travel mode(s), origin behavior, acceptable estimate wording, and whether a live routing service is permitted.
-- If an in-app ETA requires a paid or card-dependent service, disclose the cost and obtain approval before enabling it.
-- Until resolved, show no fabricated ETA; a clearly labeled non-live example may be used only for presentation if the team approves.
+- **Research result (checked 2026-11-05):** the current OSRM/FOSSGIS public demo exposes car, bicycle, and foot profiles. Its public API examples do not require a sign-up, API key, or payment card. The service is best-effort, has no uptime/latency/data-update guarantee, allows at most one request per second, logs route requests, and is documented for reasonable non-commercial use. Because this is a commission, ask the operator whether this use qualifies before making app requests; do not assume that “class demo” makes it eligible. This is not a production or commercial-service commitment. See [OSRM public routing server](REFERENCES.md#osrm-public-routing-server).
+- **Recommended first version (proposal, pending owner/team approval):** show an optional estimate in a place's detail view for a verified destination only. Let the student choose a fixed origin—PLV Annex or CPAG—and one available mode (walking, cycling, or driving). Keep the existing Google Maps directions action as the navigation handoff. Use the OSRM-reported duration and distance, clearly labeled as an approximate route estimate with no live traffic and no guarantee of actual travel time.
+- Request a route only after the student opens a place and chooses an origin/mode; never request routes for every card or refresh automatically. Allow one outstanding request at a time, enforce the public service's one-request-per-second limit, and reuse results in memory during the session where practical.
+- Do not add a sign-up, API key, payment card, paid plan, billing project, or self-hosted server for this proposal. If the public service later requires any of these, stop and request a new decision rather than silently switching providers or enabling billing. Public access can still be changed or withdrawn by its operator.
+- Identify the app with an appropriate User-Agent; show required OpenStreetMap and OSRM attribution; do not disguise the app or send bulk route requests. The routing provider logs requests, so disclose network use. A failed, unavailable, or unreachable route service should show a clear unavailable state while leaving the Google Maps directions action available.
+- Use only verified live destination coordinates. Never request an ETA for the fictional bundled sample coordinates. Check real walking/cycling/driving routes in Malinta against the map and Google Maps before presentation; OSM route coverage and profile speeds can be incomplete or differ from actual conditions.
+- **Origins and location privacy:** begin with the fixed campus origins only; this does not need device-location permission. A “use my current location” origin is not part of this proposal. If later requested, ask for foreground permission only after an explicit action, send a one-time coordinate to the routing server, do not store or track it, disclose that the provider logs requests, and provide campus-origin alternatives. Obtain a separate product/privacy decision before adding it.
+- OSRM's supported public demo profiles cover car, bicycle, and foot, not public-transit timetables or live traffic. Valhalla is a possible open-source alternative, but its public demo's app-API access, no-sign-up/no-card terms, and usage allowance were not verified; self-hosting would add hosting and operations costs. Do not switch to it without rechecking those constraints.
+- Until the in-app ETA behavior and public-server limitations are accepted by the owner/team, continue showing no ETA. Do not use fabricated or fixed-time examples.
 
-**Acceptance:** any displayed estimate has a defined source, origin, mode, limitations, and clear non-guaranteed wording; otherwise the app does not claim to provide an ETA.
+**Dependencies:** Phase 1 real listing data and verified destinations, visually checked campus anchors, confirmation that in-app estimates are still wanted, and the routing-service operator's confirmation that this commissioned use is allowed under its non-commercial policy. Keep mood check-in blocked separately on its unresolved privacy decisions.
+
+**Acceptance:** the student can request one estimate for a verified place from either fixed campus anchor in a supported mode; the UI states that the result is approximate, not live-traffic-aware, and may differ from actual travel; OSM/OSRM attribution is visible; rate and request constraints are observed; network failure gives no fabricated result; Google Maps directions remain available. No account, API key, payment card, billing setup, or paid service is introduced.
 
 ### Phase 6 — Filipino/English and introductory guide
 
@@ -173,7 +180,9 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 - Photo permissions, translation responsibility, data verification expectations, and update process.
 - Supabase organization ownership, dashboard edit access, and who exports the table back to the repository before each build.
 - Confirmed coordinates and whether Google Maps is installed/available on presentation devices.
-- Whether ETA appears in-app or only in Google Maps, travel modes, and approved source/cost.
+- Whether to approve an in-app ETA using the proposed OSRM/FOSSGIS public class-demo service, and acceptance of its non-commercial, best-effort, logged-request, and rate-limit constraints.
+- Ask the OSRM/FOSSGIS service operator whether this commissioned class-demo app is eligible under the public server's non-commercial-use policy before integrating or sending requests.
+- ETA origin and modes: the proposal uses fixed PLV Annex/CPAG origins and walking, cycling, or driving; current-location origin is excluded unless separately approved.
 - Mood nickname necessity, consent, storage, access, retention, deletion, and purpose.
 - Final app name/logo/assets, presentation deadline, target Android/device, and APK signing expectations.
 

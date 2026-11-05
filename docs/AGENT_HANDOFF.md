@@ -4,6 +4,14 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-05 — Researched no-account routing for a possible ETA
+
+- Reviewed official OSRM API/demo and FOSSGIS server-policy pages. Documented OSRM/FOSSGIS as a candidate for low-volume estimates across car, bicycle, and foot profiles; recorded the no-sign-up/no-key/no-card request path alongside the one-request-per-second limit, request logging, attribution, lack of SLA, and non-commercial constraint. Since this is a commission, the operator must confirm eligibility before any app requests.
+- Added a proposed Phase 5 flow using only verified destination coordinates and fixed PLV Annex/CPAG origins. Current-location routing remains excluded pending a separate permission/privacy decision. Added Valhalla as an unverified alternative and linked primary references.
+- Updated `docs/REFERENCES.md`, `docs/MVP_PLAN.md`, and `docs/PROJECT_BRIEF.md`. No app behavior changed; this research does not approve implementing an in-app ETA or relying on a public endpoint for production.
+- Validation: reviewed the cited official documentation as of 2026-11-05 and ran `git diff --check`. No app tests run because this was documentation-only.
+- Remaining: owner/team decision on whether the in-app ETA is still wanted, operator confirmation that this commissioned use is allowed, and acceptance of the OSRM public-demo constraints; real listing coordinates are still needed before route testing.
+
 ### 2026-11-05 — Replaced the default Android launcher icon
 
 - Used the existing blue-and-gold app mark to generate Android adaptive foreground and density-specific fallback icons. The icon is explicitly temporary until the team supplies the official logo/icon; splash artwork remains unchanged.
