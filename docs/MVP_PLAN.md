@@ -60,7 +60,7 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
 - Shared responsive layout utility for width bands, page margins, readable content width, sidebar sizing, sheet height, and large-text stacking; tested across 320–600 px widths at 1.0–2.0 text scale.
-- Widget, domain, repository, and map tests (102 at the time of writing).
+- Widget, domain, repository, and map tests (107 at the time of writing).
 
 This is a working starting point, not the finished class-demo MVP. Do not treat its fictional locations, coordinates, prices, hours, amenities, or translations as approved content.
 
@@ -145,14 +145,18 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 ### Phase 5 — Estimated travel time
 
-**Priority: fourth. Blocked on a product/service decision.**
+**Priority: fourth. Blocked on a product/service decision; an interface-only prototype is present for evaluation.**
 
-**Status: deferred; nothing is displayed.**
+- Prototype (November 6, 2026): campus origin selector (PLV Annex / CPAG) that starts from the nearest campus, distance-based walk/ride estimates (`RouteEstimate`), straight-line MapLibre polylines from the nearest campus anchor to the selected place, and a non-traffic disclaimer on the detail sheet.
+- The prototype makes no routing-service or backend calls. The OSRM + Supabase `route_cache` design is only a proposal recorded in [`SUPABASE_SETUP.md`](SUPABASE_SETUP.md); its SQL has not been applied.
+- `RouteEstimate` uses straight-line distance at about 4.5 km/h walking and 18 km/h riding plus a one-minute buffer. It is a rough aid, not a route plan; road distance and traffic could differ substantially.
+
+Open questions:
 
 - Confirm whether the travel estimate should be displayed inside this app or left to Google Maps.
 - Confirm travel mode(s), origin behavior, acceptable estimate wording, and whether a live routing service is permitted.
 - If an in-app ETA requires a paid or card-dependent service, disclose the cost and obtain approval before enabling it.
-- Until resolved, show no fabricated ETA; a clearly labeled non-live example may be used only for presentation if the team approves.
+- Decide whether the prototype stays visible in the class demo or is hidden until the decision is made.
 
 **Acceptance:** any displayed estimate has a defined source, origin, mode, limitations, and clear non-guaranteed wording; otherwise the app does not claim to provide an ETA.
 

@@ -12,6 +12,7 @@ import 'open_status_badge.dart';
 import 'opening_hours.dart';
 import 'place.dart';
 import 'place_photo.dart';
+import 'travel_estimate_card.dart';
 
 typedef DirectionsUrlLauncher = Future<bool> Function(Uri url);
 
@@ -88,9 +89,9 @@ class _PlaceDetailSheet extends StatelessWidget {
   }
 
   Future<void> _showDirectionsUnavailable(
-      BuildContext context,
-      String message,
-      ) {
+    BuildContext context,
+    String message,
+  ) {
     return showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -109,9 +110,8 @@ class _PlaceDetailSheet extends StatelessWidget {
   Future<void> _copyAddress(BuildContext context, String address) async {
     await Clipboard.setData(ClipboardData(text: address));
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(copy.get('address_copied'))),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(copy.get('address_copied'))));
   }
 
   Widget _facts(BuildContext context) {
@@ -232,6 +232,7 @@ class _PlaceDetailSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 _facts(context),
+                TravelEstimateCard(place: place, copy: copy),
                 const SizedBox(height: 10),
                 if (openingHours != null)
                   _HoursCard(
@@ -288,20 +289,20 @@ class _PlaceDetailSheet extends StatelessWidget {
                   runSpacing: 8,
                   children: place.amenities.isEmpty
                       ? [
-                    _Pill(
-                      icon: Icons.info_outline,
-                      label: place.isDemo
-                          ? copy.get('sample_data')
-                          : copy.get('not_listed'),
-                    ),
-                  ]
+                          _Pill(
+                            icon: Icons.info_outline,
+                            label: place.isDemo
+                                ? copy.get('sample_data')
+                                : copy.get('not_listed'),
+                          ),
+                        ]
                       : [
-                    for (final amenity in place.amenities)
-                      _Pill(
-                        icon: _amenityIcon(amenity),
-                        label: copy.get(amenity),
-                      ),
-                  ],
+                          for (final amenity in place.amenities)
+                            _Pill(
+                              icon: _amenityIcon(amenity),
+                              label: copy.get(amenity),
+                            ),
+                        ],
                 ),
               ],
             ),
@@ -354,17 +355,17 @@ class _DirectionsBar extends StatelessWidget {
               height: 52,
               child: verified
                   ? FilledButton.icon(
-                key: const Key('place-directions'),
-                onPressed: onPressed,
-                icon: icon,
-                label: label,
-              )
+                      key: const Key('place-directions'),
+                      onPressed: onPressed,
+                      icon: icon,
+                      label: label,
+                    )
                   : FilledButton.tonalIcon(
-                key: const Key('place-directions'),
-                onPressed: onPressed,
-                icon: icon,
-                label: label,
-              ),
+                      key: const Key('place-directions'),
+                      onPressed: onPressed,
+                      icon: icon,
+                      label: label,
+                    ),
             ),
             const SizedBox(height: 6),
             Text(
@@ -372,9 +373,8 @@ class _DirectionsBar extends StatelessWidget {
                   ? copy.get('opens_google_maps')
                   : copy.get('location_unverified'),
               textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: AppColors.mutedInk),
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: AppColors.mutedInk),
             ),
           ],
         ),
@@ -437,9 +437,9 @@ class _HoursCardState extends State<_HoursCard> {
     if (status) {
       final today = widget.hours.hoursFor(weekday);
       final DayHours? running =
-      (today != null &&
-          today.containsMinute(minute) &&
-          minute >= today.openMinutes)
+          (today != null &&
+              today.containsMinute(minute) &&
+              minute >= today.openMinutes)
           ? today
           : widget.hours.hoursFor(_previous(weekday));
       if (running == null) return null;
@@ -544,29 +544,29 @@ class _HoursCardState extends State<_HoursCard> {
             alignment: Alignment.topCenter,
             child: _expanded
                 ? Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final weekday in days)
-                    _DayRow(
-                      day: copy.weekday(weekday),
-                      value: _dayLabel(weekday),
-                      highlighted: weekday == _today,
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final weekday in days)
+                          _DayRow(
+                            day: copy.weekday(weekday),
+                            value: _dayLabel(weekday),
+                            highlighted: weekday == _today,
+                          ),
+                        if (widget.note != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              widget.note!,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: AppColors.mutedInk,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                  if (widget.note != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        widget.note!,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: AppColors.mutedInk,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            )
+                  )
                 : const SizedBox(width: double.infinity),
           ),
         ],
@@ -765,9 +765,8 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20, bottom: 10),
       child: Text(
         text,
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+        style: Theme.of(context).textTheme.titleSmall
+            ?.copyWith(fontWeight: FontWeight.w800),
       ),
     );
   }
@@ -794,10 +793,7 @@ class _Pill extends StatelessWidget {
           Icon(icon, size: 16, color: AppColors.primary),
           const SizedBox(width: 6),
           Flexible(
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            child: Text(label, style: Theme.of(context).textTheme.labelLarge),
           ),
         ],
       ),

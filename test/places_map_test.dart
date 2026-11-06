@@ -87,7 +87,11 @@ void main() {
     expect(map.styleString, 'https://tiles.openfreemap.org/styles/positron');
     expect(map.attributionEnabled, isTrue);
     expect(map.myLocationEnabled, isFalse);
-    expect(map.annotationOrder, [AnnotationType.symbol, AnnotationType.circle]);
+    expect(map.annotationOrder, [
+      AnnotationType.line,
+      AnnotationType.symbol,
+      AnnotationType.circle,
+    ]);
     expect(
       map.initialCameraPosition?.target.latitude,
       closeTo(initialCampusMapCenter.latitude, 1e-12),

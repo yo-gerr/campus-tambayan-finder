@@ -379,3 +379,56 @@ The pausing rule is the main operational risk. The paid plan (from USD 25/month)
 - No automatic backups on the Free plan. The repository JSON and periodic exports are the backup.
 - The app does not retry a failed shared connection automatically; reopen the app to reconnect. A fresh launch always starts from the bundled copy.
 - Photo galleries require a `place_photos` Realtime publication and usable network access; the bundled JSON only contains whatever approved asset fallbacks are included at build time.
+
+## 9. Route Caching Proposal (Phase 5 Optional ETA)
+
+This section is a proposal for a future product decision; the SQL has not been applied. The current in-app ETA prototype makes no routing-service or backend calls, so nothing here is required for the class demo.
+
+If the team later approves live in-app travel estimates (Phase 5), run this SQL script in the Supabase SQL Editor to create the `route_cache` table and read-only policy.
+
+```sql
+create table if not exists public.route_cache (
+  id uuid primary key default gen_random_uuid(),
+  cache_key text unique not null,
+  origin_lat double precision not null,
+  origin_lng double precision not null,
+  dest_lat double precision not null,
+  dest_lng double precision not null,
+  profile text not null default 'driving',
+  distance_meters double precision not null,
+  duration_seconds double precision not null,
+  geometry_geojson jsonb not null,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default (now() + interval '90 days')
+);
+
+create index if not exists idx_route_cache_key on public.route_cache (cache_key);
+
+alter table public.route_cache enable row level security;
+revoke all on table public.route_cache from anon, authenticated;
+grant select on table public.route_cache to anon, authenticated;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'route_cache'
+      and policyname = 'Public read of route cache'
+  ) then
+    create policy "Public read of route cache"
+      on public.route_cache
+      for select
+      to anon, authenticated
+      using (true);
+  end if;
+end $$;
+```
+
+### Pre-Warming Campus Routes
+
+To aim for presentation-day cache hits without live calls to OSRM:
+
+1. Insert pre-calculated routes for the two campus anchors used by the app (**PLV Annex**: `14.6959, 120.9677` and **CPAG**: `14.6942, 120.9698`) to all verified place coordinates.
+2. Format `cache_key` using 4-decimal-degree rounded coordinates, for example: `route:14.6959,120.9677:14.6964,120.9674:driving`.
+3. The proposed client would query `route_cache` using `select` with the publishable key. When a match exists, it would render the distance, duration, and GeoJSON polyline over MapLibre instantly.
