@@ -4,6 +4,16 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-06 — Centralized responsive layout and large-text coverage
+
+- Added [`app_layout.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_layout.dart) as the shared source for width bands (compact `<360`, regular `360–599`, expanded `>=600`), page margins (16/24), the 600 px readable content cap with a centered gutter, sidebar width (capped at 320), sheet height, and the `>1.3` large-text threshold.
+- Migrated the home hub, brand header, sidebar, app chrome, map carousel, place detail/filter sheets, Explore, mood, info placeholders, and onboarding screens to the utility instead of local `MediaQuery`/`LayoutBuilder` calculations.
+- Fixed real 2× text overflows found by the new matrix: the Explore campus row and the filter sheet's reset/apply actions now stack when text is large. The detail fact tiles keep their existing large-text stacking through the shared threshold.
+- Added [`app_layout_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/app_layout_test.dart) and a widget matrix covering 320×640, 360×800, 390×844, 430×932, and 600×960 at 1.0/1.5/2.0 text scale, plus a compact long-content pass.
+- Updated [`ARCHITECTURE.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), [`MVP_PLAN.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md), and [`PROJECT_BRIEF.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) for the responsive behavior and current test count.
+- Validation on the working tree: `flutter analyze` clean (0 issues), `flutter test` passed 104 tests (102 belong to this commit; the other 2 are the uncommitted route-estimate tests), `flutter build web --base-href /campus-tambayan-finder/` succeeded, and `git diff --check` reported no whitespace errors (only line-ending notices).
+- Committed separately from the in-progress route-estimate/closed-pin work, which remains uncommitted. Final Vision/Mission, Privacy, and Terms copy, official logo art, and the other open client decisions remain pending.
+
 ### 2026-11-05 — Enhanced full-screen photo viewer loading UX
 
 - Evaluated place photo caching, full-screen decoding, and loading UI.

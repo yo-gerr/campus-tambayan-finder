@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
 /// Home-only header: the Kamus Tambay wordmark, emblem in a gold ring, and
@@ -13,18 +14,23 @@ class BrandHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 14, 16, 8),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth;
-          // Give the wordmark the largest share of the header. The smaller
-          // emblem stays visually attached to it, while the wider gap before
-          // the hamburger preserves the menu as a separate utility action.
-          final ring = (width * 0.2).clamp(60.0, 76.0);
-          const wordmarkHeight = 102.0;
+    return AppResponsiveBuilder(
+      builder: (context, layout) {
+        final width = layout.width;
+        // Give the wordmark the largest share of the header. The smaller
+        // emblem stays visually attached to it, while the wider gap before
+        // the hamburger preserves the menu as a separate utility action.
+        final ring = (width * 0.2).clamp(60.0, 76.0);
+        const wordmarkHeight = 102.0;
 
-          return Row(
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            layout.pageMargin,
+            14,
+            layout.isCompact ? 12 : 16,
+            8,
+          ),
+          child: Row(
             children: [
               Expanded(
                 child: Align(
@@ -39,12 +45,12 @@ class BrandHeader extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               _LogoRing(size: ring),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSpacing.unit * 2),
               _MenuButton(copy: copy, onPressed: onMenu),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -99,8 +105,8 @@ class _MenuButton extends StatelessWidget {
       child: Tooltip(
         message: copy.get('menu'),
         child: Container(
-          width: 48,
-          height: 48,
+          width: AppSpacing.minTarget,
+          height: AppSpacing.minTarget,
           decoration: const BoxDecoration(
             color: AppColors.raised,
             shape: BoxShape.circle,

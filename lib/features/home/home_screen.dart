@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import 'brand_header.dart';
 import 'speech_bubble.dart';
@@ -30,10 +31,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth;
-          final height = constraints.maxHeight;
+      child: AppResponsiveBuilder(
+        builder: (context, layout) {
+          final width = layout.width;
+          final height = layout.height;
           // Lower the whole sky scene slightly, leaving the enlarged brand
           // group clear at the top while retaining the original bubble order.
           final bandTop = (height * 0.175 + 16).clamp(134.0, 180.0);

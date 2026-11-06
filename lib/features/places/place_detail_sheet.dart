@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
 import 'demo_badge.dart';
@@ -129,7 +130,7 @@ class _PlaceDetailSheet extends StatelessWidget {
       ),
     ];
     // Stack the tiles when the user runs a large system font.
-    final large = MediaQuery.textScalerOf(context).scale(1) > 1.3;
+    final large = AppLayout.of(context).usesLargeText;
     if (large) {
       return Column(children: [tiles[0], const SizedBox(height: 10), tiles[1]]);
     }
@@ -147,6 +148,7 @@ class _PlaceDetailSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     final textTheme = Theme.of(context).textTheme;
     final description = copy.isTagalog
         ? place.descriptionTl
@@ -157,7 +159,7 @@ class _PlaceDetailSheet extends StatelessWidget {
     final status = openingHours?.isOpenAt(clock);
 
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.85,
+      height: layout.sheetHeight(0.85),
       child: Column(
         children: [
           Expanded(

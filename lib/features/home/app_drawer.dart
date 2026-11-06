@@ -1,8 +1,7 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_section.dart';
 import '../../app/app_theme.dart';
 
@@ -33,10 +32,10 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = math.min(MediaQuery.sizeOf(context).width * 0.84, 320.0);
+    final layout = AppLayout.of(context);
 
     return Drawer(
-      width: width,
+      width: layout.drawerWidth,
       backgroundColor: AppColors.background,
       surfaceTintColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
@@ -46,7 +45,7 @@ class AppDrawer extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 12, 4),
+              padding: EdgeInsets.fromLTRB(layout.pageMargin, 12, 12, 4),
               child: Row(
                 children: [
                   Expanded(
@@ -153,7 +152,12 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              padding: EdgeInsets.fromLTRB(
+                layout.pageMargin,
+                8,
+                layout.pageMargin,
+                16,
+              ),
               child: Text(
                 copy.get('app_version'),
                 textAlign: TextAlign.center,
@@ -196,7 +200,9 @@ class _NavItem extends StatelessWidget {
             selected: selected,
             button: true,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 48),
+              constraints: const BoxConstraints(
+                minHeight: AppSpacing.minTarget,
+              ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 14,

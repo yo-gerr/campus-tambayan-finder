@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -52,7 +54,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: ListView(
           controller: _scrollController,
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+          padding: EdgeInsets.fromLTRB(
+            layout.contentInset,
+            8,
+            layout.contentInset,
+            28,
+          ),
           children: [
             Text(
               copy.get('guide_intro'),

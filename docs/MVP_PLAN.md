@@ -35,7 +35,7 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
   - `demoContainer #FBEBC8` with `onDemoContainer #6A4B00`
 - Fredoka (600/700) sets the brand and headings; Nunito (400–800) sets body and interface text. Both font families and their OFL licences are bundled, so the interface does not fetch fonts at runtime.
 - Cards and bubbles are flat shapes with a hard darker underside, not shadows or gradients. Speech-bubble outlines are painted from vectors so they stay crisp at any width; the student figure and wordmark are image assets.
-- Use 24 px side margins, an 8 px spacing grid, touch targets of at least 48 dp, and 24–30 px card radii. Sizes derive from screen width so the hub holds together on small phones. On the home header, give the wordmark the largest share, keep its emblem close, and leave the hamburger a distinct 48 dp utility target; position the sky scene and hub actions slightly lower for breathing room.
+- Use 24 px side margins, tightened to 16 px below 360 px widths, an 8 px spacing grid, touch targets of at least 48 dp, and 24–30 px card radii. Sizes derive from screen width so the hub holds together on small phones. Shared breakpoints, margins, readable content width, sheet sizing, and the large-text threshold live in `lib/app/app_layout.dart`; list pages cap content at 600 px with a centered gutter on wide screens, and rows that would overflow at large text stack instead. On the home header, give the wordmark the largest share, keep its emblem close, and leave the hamburger a distinct 48 dp utility target; position the sky scene and hub actions slightly lower for breathing room.
 - Primary controls use `primary #1F6FD1` with white text, which clears 4.5:1. The lighter `brand #3490F5` is reserved for large bold text or for deep-navy text, because white on it does not clear AA at normal sizes. Status badges use green for open and neutral grey/navy for closed; red is reserved for genuine errors. Demo markers keep their own warm container.
 - Text contrast is checked in `test/widget_test.dart`. Keep every normal-size text/background pair at or above 4.5:1.
 - Keep translated labels readable and check longer Filipino strings at narrow widths. Use Material icons only for interface utilities, with labels or tooltips where the meaning is not obvious.
@@ -59,7 +59,8 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - Speech-bubble palette, Fredoka/Nunito typography, and flat card shapes applied across the app. The displayed app name and supplied wordmark are confirmed as Kamus Tambay; final logo treatment remains open.
 - Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
-- Widget, domain, repository, and map tests (79 at the time of writing).
+- Shared responsive layout utility for width bands, page margins, readable content width, sidebar sizing, sheet height, and large-text stacking; tested across 320–600 px widths at 1.0–2.0 text scale.
+- Widget, domain, repository, and map tests (102 at the time of writing).
 
 This is a working starting point, not the finished class-demo MVP. Do not treat its fictional locations, coordinates, prices, hours, amenities, or translations as approved content.
 

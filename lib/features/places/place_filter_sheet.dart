@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
 import 'place_categories.dart';
@@ -60,11 +61,26 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
     });
   }
 
+  void _apply() {
+    Navigator.pop(
+      context,
+      PlaceFilters(
+        category: _category,
+        maxBudget: _maxBudget,
+        amenities: _amenities,
+        setting: _setting,
+        activity: _activity,
+        openNow: _openNow,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     return SizedBox(
       key: const Key('place-filter-sheet'),
-      height: MediaQuery.sizeOf(context).height * 0.9,
+      height: layout.sheetHeight(0.9),
       child: Column(
         children: [
           const Padding(
@@ -217,27 +233,36 @@ class _PlaceFilterSheetState extends State<_PlaceFilterSheet> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-              child: Row(
-                children: [
-                  TextButton(onPressed: _reset, child: Text(copy.get('reset'))),
-                  const Spacer(),
-                  FilledButton(
-                    key: const Key('apply-filters'),
-                    onPressed: () => Navigator.pop(
-                      context,
-                      PlaceFilters(
-                        category: _category,
-                        maxBudget: _maxBudget,
-                        amenities: _amenities,
-                        setting: _setting,
-                        activity: _activity,
-                        openNow: _openNow,
-                      ),
+              child: layout.usesLargeText
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextButton(
+                          onPressed: _reset,
+                          child: Text(copy.get('reset')),
+                        ),
+                        const SizedBox(height: AppSpacing.unit),
+                        FilledButton(
+                          key: const Key('apply-filters'),
+                          onPressed: _apply,
+                          child: Text(copy.get('apply')),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        TextButton(
+                          onPressed: _reset,
+                          child: Text(copy.get('reset')),
+                        ),
+                        const Spacer(),
+                        FilledButton(
+                          key: const Key('apply-filters'),
+                          onPressed: _apply,
+                          child: Text(copy.get('apply')),
+                        ),
+                      ],
                     ),
-                    child: Text(copy.get('apply')),
-                  ),
-                ],
-              ),
             ),
           ),
         ],

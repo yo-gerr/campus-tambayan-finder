@@ -89,11 +89,14 @@ void main() {
     bool showIntroOnStart = false,
     bool openExplore = true,
     Size surface = const Size(390, 844),
+    double textScale = 1,
   }) async {
     tester.view.physicalSize = surface;
     tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = textScale;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
 
     await tester.pumpWidget(
       TambayanApp(
@@ -492,6 +495,90 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
+  });
+
+  for (final surface in const [
+    Size(320, 640),
+    Size(360, 800),
+    Size(390, 844),
+    Size(430, 932),
+    Size(600, 960),
+  ]) {
+    for (final textScale in const [1.0, 1.5, 2.0]) {
+      testWidgets(
+        'home and drawer fit ${surface.width.toInt()}x${surface.height.toInt()} at ${textScale}x text',
+        (tester) async {
+          await pumpPrototype(
+            tester,
+            openExplore: false,
+            surface: surface,
+            textScale: textScale,
+          );
+
+          expect(tester.takeException(), isNull);
+          expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
+
+          await tester.tap(find.byKey(const Key('open-menu')));
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          expect(find.byKey(const Key('drawer-home')), findsOneWidget);
+
+          final drawerScrollable = find.descendant(
+            of: find.byType(Drawer),
+            matching: find.byType(Scrollable),
+          );
+          await tester.scrollUntilVisible(
+            find.byKey(const Key('drawer-language')),
+            120,
+            scrollable: drawerScrollable,
+          );
+          expect(find.byKey(const Key('drawer-language')), findsOneWidget);
+        },
+      );
+    }
+  }
+
+  testWidgets('compact screen keeps long content usable at 2x text', (
+    tester,
+  ) async {
+    await pumpPrototype(
+      tester,
+      openExplore: false,
+      surface: const Size(320, 640),
+      textScale: 2.0,
+    );
+    expect(tester.takeException(), isNull);
+
+    // Open Explore from the hub instead of relying on the card list being
+    // laid out above the fold at this text scale.
+    await tester.tap(find.byKey(const Key('home-find-tambayan')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    // The search field and its filter button sit below the welcome copy at
+    // this text scale, so scroll the Explore list to reach them.
+    await tester.dragUntilVisible(
+      find.byKey(const Key('open-filters')),
+      find.byType(ListView).first,
+      const Offset(0, -160),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('open-filters')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('home-button')).hitTestable());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('open-menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('drawer-vision')));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('Vision & Mission'), findsOneWidget);
+    expect(find.text('Pending review'), findsOneWidget);
   });
 
   testWidgets('offers every agreed category even with no listing for it', (

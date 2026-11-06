@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
 
@@ -27,10 +28,16 @@ class InfoPlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     return BandScaffold(
       header: SectionHeader(title: title, copy: copy, onHome: onHome),
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+        padding: EdgeInsets.fromLTRB(
+          layout.contentInset,
+          16,
+          layout.contentInset,
+          32,
+        ),
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),

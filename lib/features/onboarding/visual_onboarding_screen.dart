@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
 class VisualOnboardingScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _VisualOnboardingScreenState extends State<VisualOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     final pages = [
       _VisualPage(
         icon: Icons.location_on_rounded,
@@ -67,7 +69,12 @@ class _VisualOnboardingScreenState extends State<VisualOnboardingScreen> {
                 duration: const Duration(milliseconds: 220),
                 child: Padding(
                   key: ValueKey(_page),
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
+                  padding: EdgeInsets.fromLTRB(
+                    layout.contentInset,
+                    8,
+                    layout.contentInset,
+                    12,
+                  ),
                   child: pages[_page],
                 ),
               ),
@@ -91,7 +98,12 @@ class _VisualOnboardingScreenState extends State<VisualOnboardingScreen> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
+              padding: EdgeInsets.fromLTRB(
+                layout.contentInset,
+                20,
+                layout.contentInset,
+                28,
+              ),
               child: Row(
                 children: [
                   if (_page > 0)

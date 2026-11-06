@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
 /// The one control that returns a spoke screen to the hub.
@@ -22,8 +23,8 @@ class HomeButton extends StatelessWidget {
       child: Tooltip(
         message: copy.get('home'),
         child: Container(
-          width: 48,
-          height: 48,
+          width: AppSpacing.minTarget,
+          height: AppSpacing.minTarget,
           decoration: const BoxDecoration(
             color: AppColors.raised,
             shape: BoxShape.circle,
@@ -92,10 +93,7 @@ class SectionHeader extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
-            if (actions.isNotEmpty) ...[
-              const SizedBox(width: 8),
-              ...actions,
-            ],
+            if (actions.isNotEmpty) ...[const SizedBox(width: 8), ...actions],
           ],
         ),
       ),

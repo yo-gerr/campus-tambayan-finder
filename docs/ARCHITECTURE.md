@@ -60,7 +60,8 @@ The prototype uses a deliberately small Flutter layout:
 
 ```text
 lib/
-  app/                  # App shell, shared theme, bilingual copy, build config
+  app/                  # App shell, shared theme, bilingual copy, responsive
+                        # layout tokens, build config
   features/
     home/               # Hub screen, speech-bubble chrome, branding, sidebar
     info/               # Labelled placeholders pending reviewed client copy
@@ -76,6 +77,7 @@ assets/
   fonts/                # Bundled Fredoka/Nunito files and OFL licences
 test/
   widget_test.dart                  # Main interaction, hub navigation, and contrast tests
+  app_layout_test.dart              # Responsive bands, margins, content cap, sizing
   place_test.dart                   # Model parsing
   place_filters_test.dart           # Filter matching and budget limits
   opening_hours_test.dart           # Weekly schedule, timezone, boundaries
@@ -93,6 +95,16 @@ This layout is an implementation detail for the current MVP, not a commitment to
 ### Navigation shell
 
 `TambayanApp` owns the session state (language, filters, campus, selected section) and renders an `IndexedStack` of sections rather than pushing a navigator route per tab. The home section is the hub; the other sections are Explore, Map, the informational mood preview, and the Vision & Mission, Privacy, and Terms placeholder pages. A shell-owned `Scaffold` drawer opens from the home hamburger, More bubble, or an edge swipe; it contains Home, Instructions, the three information destinations, the in-memory language segmented control, and the version note. Instructions closes the drawer before opening the existing guide dialog. There is no bottom bar. Each spoke screen includes a Home control, and `PopScope` returns to the hub before allowing the app to exit. The map section is built only after it is first opened, so the MapLibre surface is not created during launch. Because all sections stay mounted, the interface must keep Home-control keys scoped or hit-testable in tests rather than assuming a single instance in the tree.
+
+### Responsive layout
+
+`lib/app/app_layout.dart` is the single source for width bands, page margins, readable content width, drawer sizing, sheet height, and the large-text threshold. Screens use `AppResponsiveBuilder` when they need the local box or `AppLayout.of(context)` when the screen size is enough; they should not re-derive breakpoints with ad-hoc `MediaQuery` checks.
+
+- Bands are coarse because the product targets phones: compact below 360 logical pixels, regular from 360 to 599, and expanded at 600 or wider.
+- Page margins are 16 on compact widths and 24 otherwise. List-based pages use `contentInset`, which keeps the 24 margin and caps content at 600 logical pixels, adding a centered gutter on wide screens. The home hub stays full-bleed and sizes its bubbles proportionally.
+- Text scale above 1.3 counts as large text. Rows that would otherwise overflow stack instead: the detail fact tiles, the Explore campus label above its selector, and the filter sheet's reset/apply actions. Sheets also gain height (up to 95% of the window) so their content stays reachable.
+- The sidebar is most of a phone width but never wider than 320 logical pixels, and interactive rows keep a 48-pixel minimum height.
+- `test/app_layout_test.dart` covers the utility, while `test/widget_test.dart` checks the home hub and drawer across 320, 360, 390, 430, and 600-pixel widths at 1.0, 1.5, and 2.0 text scale, plus a long-content pass at the narrowest size.
 
 ### Visual system boundary
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
 import '../places/place.dart';
@@ -93,11 +94,11 @@ class _MapPlaceCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardWidth = constraints.maxWidth >= 360
-            ? 360.0
-            : constraints.maxWidth;
+    return AppResponsiveBuilder(
+      builder: (context, layout) {
+        final cardWidth = layout.width >= AppBreakpoints.compact
+            ? AppBreakpoints.compact
+            : layout.width;
 
         return SizedBox(
           key: const Key('map-place-carousel'),
@@ -106,7 +107,8 @@ class _MapPlaceCarousel extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 2),
             itemCount: places.length,
-            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            separatorBuilder: (context, index) =>
+                const SizedBox(width: AppSpacing.unit),
             itemBuilder: (context, index) {
               final place = places[index];
               return SizedBox(

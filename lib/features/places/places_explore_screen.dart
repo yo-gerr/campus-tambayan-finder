@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
 import 'place.dart';
@@ -79,6 +80,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
 
   @override
   Widget build(BuildContext context) {
+    final layout = AppLayout.of(context);
     final copy = widget.copy;
     final results = widget.places.where((place) {
       if (!widget.filters.matches(place, now: _now)) return false;
@@ -108,7 +110,12 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
         onHome: widget.onHome,
       ),
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+        padding: EdgeInsets.fromLTRB(
+          layout.contentInset,
+          8,
+          layout.contentInset,
+          32,
+        ),
         children: [
           Text(
             copy.get('welcome'),
@@ -165,23 +172,40 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
             ),
           ),
           const SizedBox(height: 18),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
+          if (layout.usesLargeText)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
                   copy.get('starting_near'),
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: AppColors.mutedInk,
+                  style: Theme.of(context).textTheme.labelLarge
+                      ?.copyWith(color: AppColors.mutedInk),
+                ),
+                const SizedBox(height: AppSpacing.unit),
+                _CampusSelector(
+                  campus: widget.campus,
+                  copy: copy,
+                  onChanged: widget.onCampusChanged,
+                ),
+              ],
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    copy.get('starting_near'),
+                    style: Theme.of(context).textTheme.labelLarge
+                        ?.copyWith(color: AppColors.mutedInk),
                   ),
                 ),
-              ),
-              _CampusSelector(
-                campus: widget.campus,
-                copy: copy,
-                onChanged: widget.onCampusChanged,
-              ),
-            ],
-          ),
+                _CampusSelector(
+                  campus: widget.campus,
+                  copy: copy,
+                  onChanged: widget.onCampusChanged,
+                ),
+              ],
+            ),
           const SizedBox(height: 18),
           Row(
             children: [
@@ -335,10 +359,8 @@ class _OfflineNotice extends StatelessWidget {
               copy.get(
                 usingSavedCopy ? 'offline_saved_notice' : 'offline_notice',
               ),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.inkStrong,
-                letterSpacing: 0.3,
-              ),
+              style: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: AppColors.inkStrong, letterSpacing: 0.3),
             ),
           ),
         ],

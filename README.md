@@ -31,7 +31,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Product direction | Student place finder with listings, filters, and a map; in-app travel estimates are deferred |
 | Navigation | Home is the hub with three speech bubbles; the More bubble and home hamburger open the sidebar; no bottom bar. Every other screen has a Home control and system Back returns to the hub |
 | Sidebar | Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, English/Filipino switching, and version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; About is removed |
-| Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins, 8 px grid, and 48 dp targets. Branding remains provisional |
+| Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins (16 px on compact widths), 8 px grid, and 48 dp targets. Branding remains provisional |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
 | Product name and wordmark | Confirmed November 5, 2026: the displayed app name and supplied home wordmark are "Kamus Tambay". The internal package/application ID and GitHub repository name remain unchanged; final logo treatment is open |
