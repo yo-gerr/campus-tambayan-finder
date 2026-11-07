@@ -13,6 +13,8 @@ For each reference, record:
 
 Prefer linking to the original source rather than copying source code, assets, screenshots, or substantial text into this repository. If reuse is proposed, review the exact license and compatibility first, identify attribution obligations, and get owner approval before adding third-party code or assets.
 
+Attribution implemented in the app and the public inventory of third-party obligations are tracked in [`CREDITS.md`](../CREDITS.md). This file records research references; `CREDITS.md` is the release-facing notice list.
+
 ## References to investigate
 
 ### Official platform and service documentation
@@ -47,14 +49,38 @@ These are official service references researched on 2026-10-30 to compare likely
 #### OpenFreeMap public instance
 - Source: https://openfreemap.org/, https://openfreemap.org/quick_start/, and https://openfreemap.org/tos/
 - Relevant ideas: OpenFreeMap serves OSM-derived vector tiles and MapLibre-compatible styles. Its site currently says the public instance has no registration, API key, view limit, or fee; the map styles can be customized.
+- Attribution: Its quick-start page shows `OpenFreeMap © OpenMapTiles Data from OpenStreetMap`. The Positron style JSON contains no `attribution` metadata, so the app shows a visible map chip instead of relying only on MapLibre's info button.
 - Adaptation notes: It is a candidate tile/style source for a small, internet-connected class demo using MapLibre. Its current terms allow commercial use and limit offline downloads to 3,000 tiles or 50 MB per download, at most four parallel requests, with a unique identifying User-Agent. Its quick start says a customized style JSON must be hosted by the app developer; verify whether the Flutter plugin can instead load an app-bundled style before introducing a separate hosting service.
 - Caveats: The service is donation-supported, supplied as-is with no warranty or SLA, and may be discontinued without notice. Its terms (last updated 2026-10-14) require an integrator to be at least 18 and legally able to accept them, or to have authority to bind the represented organization. The service may use Cloudflare as a CDN. Recheck terms and availability before integration and presentation.
+
+#### OpenMapTiles schema and cartography
+- Source: https://www.openmaptiles.org/ and https://github.com/openmaptiles/openmaptiles/blob/master/LICENSE.md
+- License: BSD-3-Clause for the code; CC BY 4.0 for the cartography and visual design (checked 2026-11-07).
+- Attribution: show `© OpenMapTiles` with a link to https://www.openmaptiles.org/. The OpenFreeMap Positron style is built on this schema, so the app's map chip includes it.
+- Adaptation notes: The schema began as a Positron-like cartography with permission from CartoDB Inc.; the current tile set is served by OpenFreeMap rather than self-hosted.
+- Caveats: The design licence requires visible attribution for browsable maps. MapTiler can grant written exceptions on a commercial basis; this project does not have one.
+
+#### Natural Earth
+- Source: https://www.naturalearthdata.com/
+- License: public domain (checked 2026-11-07).
+- Relevant ideas: The OpenFreeMap Positron style uses a `ne2_shaded` raster for low-zoom relief.
+- Adaptation notes: No permission or attribution is required; the app credits it as a courtesy.
+- Caveats: Public-domain status applies to Natural Earth's own data, not to third-party layers mixed into a style.
 
 #### Google Maps URLs
 - Source: https://developers.google.com/maps/documentation/urls/get-started
 - Relevant ideas: A universal directions URL can open the Google Maps app or browser without a Google Maps API key.
 - Adaptation notes: This matches the team's preference to hand off navigation to Google Maps. Use a verified destination coordinate/address; this does not provide an in-app ETA.
 - Caveats: URL directions require valid destination data and an internet connection; provide a clear fallback if the URL cannot be opened.
+
+#### OSRM public demo routing service and terms
+- Source: http://project-osrm.org/, https://github.com/Project-OSRM/osrm-backend, and https://github.com/Project-OSRM/osrm-backend/wiki/Api-usage-policy
+- License: OSRM software is BSD-2-Clause. The public demo server is operated by FOSSGIS e.V.; see https://routing.openstreetmap.de/about.html and https://www.fossgis.de/arbeitsgruppen/osm-server/nutzungsbedingungen/ (checked 2026-11-07).
+- Relevant ideas: Open Source Routing Machine (OSRM) calculates shortest paths on OpenStreetMap data and returns distance, duration, and GeoJSON LineString geometry.
+- Attribution: Show `OSRM` with a link to the project, credit `© OpenStreetMap contributors` under the ODbL, and provide a "fix the map" link such as https://www.openstreetmap.org/fixthemap. The app shows the OSRM/ODbL line on the ETA card and the full list on the Credits screen.
+- Adaptation notes: Researched November 6, 2026 for a potential Phase 5 in-app ETA. Suitable for small demo applications when paired with backend/database route caching (`route_cache` table) and pre-warmed campus routes (PLV Annex / CPAG to ~20 shops). Road distance only is used; walk/ride minutes stay on the app's local distance model.
+- Caveats: The public server (`router.project-osrm.org`) is a best-effort demo server with no uptime SLA or live traffic data. Requests must include a custom identifying `User-Agent` (the app sends `KamusTambayApp/1.0 (+repository URL)`). The policy limits use to reasonable, non-commercial cases at no more than one request per second, forbids scraping and heavy usage, and allows access to be withdrawn at any time. Do not make direct client-side burst requests; cache entries in the shared database and keep the local estimate as fallback. The app does not yet enforce a client-side 1 req/s gate; the shared cache bounds calls by unique route. Whether the cache triggers ODbL share-alike is an owner/legal review item.
+- Courtesy: the FOSSGIS about page thanks nine.ch for colocating the routing server.
 
 #### Nominatim public geocoding policy
 - Source: https://operations.osmfoundation.org/policies/nominatim/

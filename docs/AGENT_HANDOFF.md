@@ -4,6 +4,108 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-07 — Removed live ETA to reduce delivery scope
+
+- Removed the in-app ETA prototype, OSRM client, Supabase route-cache and usage-log integration, route-estimate helpers, related tests, build flag, and direct HTTP dependency. Google Maps handoff remains the directions behavior for verified coordinates.
+- Updated the README, project brief, architecture, MVP plan, Supabase setup, credits, and in-app credits to state that ETA was removed from the lower-priced delivery scope. Historical ETA planning entries remain below for context.
+- Added the owner-run cleanup query after reviewing the supplied schema. It drops only `public.route_cache` and `public.osrm_usage_logs` with `cascade`; `places`, `place_photos`, and their Realtime entries are preserved.
+- Validation: documentation review and `git diff --check`; no app code changed. Hot restart is not applicable.
+- Remaining: run the cleanup query in the live Supabase project and verify both ETA tables return `null`; ETA can return only as a separately approved future phase.
+
+### 2026-11-07 — Added in-app and public third-party credits
+
+- Added [`CREDITS.md`](file:///C:/Users/roger/Downloads/GitHub/commission/CREDITS.md) with the public inventory of map data, routing, platform, font, and content obligations, exact attribution strings, the missing repository licence, and the open ODbL/brand/native-dependency review items.
+- Added [`CreditsScreen`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/info/credits_screen.dart) and wired it into `AppSection`, the drawer (`drawer-credits`), and the `IndexedStack`. It lists OpenStreetMap/ODbL, OpenFreeMap, OpenMapTiles, OSRM/FOSSGIS, Natural Earth, Flutter/Dart, Material Icons, MapLibre, Supabase, the other Dart packages, Fredoka, Nunito, Google Maps, the fictional samples, and the unconfirmed brand artwork.
+- The map now shows a visible `© OpenStreetMap contributors · OpenFreeMap · OpenMapTiles` chip. The OpenFreeMap Positron style has no `attribution` metadata, so MapLibre's info button alone showed nothing. The ETA card shows `Road distance: OSRM · © OpenStreetMap contributors` only when route data was used.
+- Added [`app_licenses.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_licenses.dart) and `registerBundledLicenses()`; `main.dart` registers the bundled OFL texts, and `pubspec.yaml` now ships `assets/fonts/OFL-fredoka.txt` and `OFL-nunito.txt`. The in-app licence page shows package notices plus both font licences.
+- Added [`external_links.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/external_links.dart) for the canonical OSM copyright and fix-the-map URLs. No new dependency; `url_launcher` was already present.
+- Updated the README sidebar/credits section, `docs/REFERENCES.md` (OpenFreeMap, OpenMapTiles, Natural Earth, OSRM/FOSSGIS attribution), and `docs/ARCHITECTURE.md` (Credits destination and third-party-credit boundary).
+- Tests: added credits-screen, licence-page, map-chip, and conditional ETA-attribution cases. Validation: `dart format` (only touched files), `flutter analyze` clean, full `flutter test` passing, `git diff --check` clean.
+- Remaining: the cross-session Supabase `cache_hit` proof, owner decisions on a repository `LICENSE`, brand-image ownership, ODbL share-alike review, native/Gradle licence audit, and final in-app ETA approval. No commit was made.
+
+### 2026-11-07 — Corrected Supabase setup SQL for the shared route cache
+
+- Reworked [`SUPABASE_SETUP.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md) section 9 so the route-cache script is idempotent and never drops the shared cache. `dest_place_id` is now plain text metadata instead of a foreign key to `places`, and existing tables get an `alter table ... drop constraint` repair.
+- Replaced the broad `FOR ALL` policies with least-privilege `select`/`insert`/`update` policies scoped to `cache_key like 'route:%'`; usage logs are insert-only for the app.
+- Added section 10 with a single copy-paste script covering `places`, `place_photos`, `route_cache`, `osrm_usage_logs`, realtime, the four fictional demo rows, and verification queries. The seed now keeps `location_verified = false` for bundled demo coordinates, matching the project rule that illustrative pins must not enable Directions.
+- Split the realtime `alter publication` statements into separate exception blocks so an already-published `places` table does not skip `place_photos`.
+- Validation: documentation review and `git diff --check`; no app code changed, so `flutter analyze`/`flutter test` were not re-run.
+- Remaining: apply the script to the live project, run the app once with `ENABLE_LIVE_ETA=true`, confirm one `route_cache` row plus `osrm_fetch`, then relaunch and confirm `cache_hit` with no new fetch. The service still swallows cache-write errors with only a `debugPrint`; surfacing them in `osrm_usage_logs` remains follow-up work.
+
+### 2026-11-07 — Wired opt-in live ETA validation and bounded OSRM usage
+
+- Added `AppConfig.enableLiveEta` (`bool.fromEnvironment('ENABLE_LIVE_ETA')`, default false). One shared [`OsrmRouteService`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/osrm_route_service.dart) is created lazily in `_TambayanHomeState`, passed through `showPlaceDetails`, and closed in `dispose`. Default builds still show only the local estimate and make no routing or cache calls.
+- [`OsrmRouteService`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/osrm_route_service.dart) now has a 10-second configurable timeout, an in-session memory cache ahead of Supabase, `expires_at` filtering, a repository `User-Agent`, `close()`, and `_asCached` for cache hits. `places_map_screen.dart` no longer creates or accepts an unused service.
+- [`TravelEstimateCard`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/travel_estimate_card.dart) now derives walk/ride minutes and the visible distance line from OSRM's road **distance** via `RouteEstimate.fromDistance`, and ignores stale responses with a request-generation counter. OSRM `duration` is not used for walk/ride because the demo server is car-only.
+- [`SUPABASE_SETUP.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md) now records the applied cache setup, the current broad `FOR ALL` policies, a least-privilege target policy set, an optional reset section, and the `ENABLE_LIVE_ETA=true` build command. [`PROJECT_BRIEF.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md), [`ARCHITECTURE.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), [`MVP_PLAN.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md), and the README were updated to match. In-app ETA stays deferred.
+- Tests: added memory-cache, timeout, road-distance rendering, and stale-response cases. Validation: `dart format`, `flutter analyze` clean, all 114 tests pass, `git diff --check` clean.
+- Remaining: manual proof against the live project and a device build (`ENABLE_LIVE_ETA=true` plus the Supabase defines). Expected: first open logs `osrm_fetch` and writes one cache row; reopen logs `cache_hit`; a campus switch adds one fetch; relaunch hits the cache; total fetches settle near 2 × mapped places; offline falls back locally. No commit was made for this spike, and in-app ETA plus closed-pin marking still need owner decisions.
+
+### 2026-11-06 — Implemented detail-sheet lazy ETA trigger and cleaned up map screen
+
+- Removed map polyline drawing in [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart) to eliminate map screen clutter when external Google Maps is used for directions.
+- Updated [`travel_estimate_card.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/travel_estimate_card.dart) and [`place_detail_sheet.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/place_detail_sheet.dart) to trigger [`OsrmRouteService`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/osrm_route_service.dart) lazily when a place detail sheet opens or when the campus origin changes.
+- Card displays local Haversine estimates instantly and updates asynchronously to exact OSRM / cached route durations and distance without blocking UI rendering.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: user executing SQL script in Supabase SQL Editor.
+
+### 2026-11-06 — Added `drop table if exists` to Supabase route cache SQL migration
+
+- Evaluated user proposal to trigger OSRM/Supabase route caching lazily when `PlaceDetailSheet` is opened, and remove line polylines on MapLibre.
+- Confirmed that lazy-loading on detail sheet open is 100% optimal for performance and OSRM policy compliance (prevents burst map calls, checks Supabase cache first, and falls back seamlessly to instant Haversine math).
+- Validation: documentation review against project standards; `git diff --check` clean.
+- Remaining: await user approval to apply the recommended lazy ETA trigger and map cleanup.
+
+### 2026-11-06 — Added `drop table if exists` to Supabase route cache SQL migration
+
+- Added `drop table if exists public.route_cache cascade;` to [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md#L375-L435) to fix Postgres error `42703: column "dest_place_id" does not exist` when executing SQL script on a database where `route_cache` already existed without `dest_place_id`.
+- Validation: documentation review against project standards; `git diff --check` clean.
+- Remaining: user executing SQL script in Supabase SQL Editor.
+
+### 2026-11-06 — Optimized route cache schema and provided complete Supabase setup guide
+
+- Optimized `route_cache` table schema in [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md#L375-L435) to use `cache_key text primary key` for sub-millisecond B-Tree index lookups, and added optional `dest_place_id` metadata tag linked to `places.id`.
+- Passed `destPlaceId: place.id` in [`osrm_route_service.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/osrm_route_service.dart) and [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart) for dashboard querying.
+- Provided copy-paste SQL setup script and step-by-step instructions for running in Supabase SQL Editor and initiating demo places data for live OSRM ETA testing.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: user executing SQL script in Supabase SQL Editor.
+
+### 2026-11-06 — Implemented OSRM route service, Supabase caching, and usage tracking
+
+- Added [`osrm_route_service.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/osrm_route_service.dart): checks Supabase `route_cache` table first, fetches from OSRM demo API on cache miss with custom `User-Agent: KamusTambayApp/1.0`, logs usage to `osrm_usage_logs` table, and falls back gracefully to straight-line geometry on network failure.
+- Integrated `OsrmRouteService` into [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart) to render road-following MapLibre polylines for selected places.
+- Added `public.osrm_usage_logs` analytics schema to [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md#L375-L435) to monitor OSRM requests and cache hits/misses.
+- Added unit & mock HTTP tests in [`osrm_route_service_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/osrm_route_service_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, and `git diff --check` clean.
+- Remaining: apply SQL migration in Supabase SQL editor when ready.
+
+### 2026-11-06 — Verified ETA feature plan and UI prototype status
+
+- Audited codebase and documentation regarding the OSRM Demo + Route Caching workflow plan and the shipped Flutter UI prototype.
+- Confirmed that the local UI/UX prototype ([`TravelEstimateCard`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/travel_estimate_card.dart), [`RouteEstimate`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/route_estimate.dart), MapLibre polylines) is active, fully functional, and covered by 107 passing tests.
+- Confirmed that the Supabase `public.route_cache` SQL schema, pre-warming strategy, and OSRM policy compliance safeguards remain fully documented in [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md#L375-L435) for Phase 5.
+- Validation: `flutter analyze` clean (0 issues), `flutter test` passed 107 tests, `git diff --check` clean.
+- Remaining: await client decision on Phase 5 in-app ETA vs. external Google Maps redirection.
+
+### 2026-11-06 — Verified repository state for ETA feature plan and prototype
+
+- Audited codebase and documentation regarding the ETA feature plan, domain math, UI prototype, and Supabase route caching setup.
+- Confirmed that the UI/UX prototype ([`TravelEstimateCard`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/travel_estimate_card.dart), [`RouteEstimate`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/route_estimate.dart), MapLibre polylines) is fully built and covered by 107 passing tests, while backend OSRM caching remains documented in [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md).
+- Validation: `flutter analyze` clean (0 issues), `flutter test` passed 107 tests, `git diff --check` clean.
+- Remaining: await client decision on whether to formally approve in-app ETA for Phase 5 or maintain external Google Maps redirection.
+
+### 2026-11-06 — ETA card redesign and ETA/closed-pin interface prototypes
+
+- Added [`travel_estimate_card.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/travel_estimate_card.dart): a full-width campus pill selector that starts from the campus nearest the place, large walk/ride minute tiles that stack for large or narrow text, a distance line, and a non-traffic disclaimer. Full sentences remain in the semantics tree while the visible tiles stay compact.
+- Replaced the private `_TravelEstimateCard`, `_CampusSegmentSelector`, and `_EtaChip` widgets in [`place_detail_sheet.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/place_detail_sheet.dart) with the reusable card and dropped the now-unused map imports.
+- Added `RouteEstimate.nearestAnchor` so the card's initial origin and the map's selected-place polyline both start from the campus with the shortest walk instead of always using the first anchor.
+- Closed places with structured hours now render muted map pins and labels at a slightly smaller size with an outline; `PlacesMapScreen.now` allows deterministic open/closed evaluation. Selecting a place draws a straight-line polyline from the nearest campus anchor.
+- Added bilingual `eta_from`, `eta_walk_label`, `eta_ride_label`, and `eta_distance` keys and removed the unused `travel_from` key in [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart).
+- Tests: [`travel_estimate_card_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/travel_estimate_card_test.dart) covers English labels and campus switching at 320×640 with 2.0 text scale plus Tagalog labels; [`route_estimate_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/route_estimate_test.dart) covers nearest-anchor selection.
+- Docs: kept in-app ETA **deferred** in [`PROJECT_BRIEF.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) and [`MVP_PLAN.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md) and labelled the shipped UI an unapproved, interface-only prototype with no routing or backend calls; restored the Phase 5 open questions and acceptance criteria. [`SUPABASE_SETUP.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md) now marks the `route_cache` SQL as an unapplied proposal and uses the app's actual campus coordinates.
+- Validation: `flutter analyze` clean (0 issues), all 107 Flutter tests passed, and `git diff --check` clean (line-ending notices only). The web build was not rerun for this interface-only change.
+- Remaining: the product/service decision for in-app ETA is still open, as is whether closed places should be marked on the map. Final Vision/Mission, Privacy, and Terms copy, official logo art, mood retention/consent, and approved listings remain pending.
+
 ### 2026-11-06 — Centralized responsive layout and large-text coverage
 
 - Added [`app_layout.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_layout.dart) as the shared source for width bands (compact `<360`, regular `360–599`, expanded `>=600`), page margins (16/24), the 600 px readable content cap with a centered gutter, sidebar width (capped at 320), sheet height, and the `>1.3` large-text threshold.
@@ -13,6 +115,60 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 - Updated [`ARCHITECTURE.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), [`MVP_PLAN.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md), and [`PROJECT_BRIEF.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) for the responsive behavior and current test count.
 - Validation on the working tree: `flutter analyze` clean (0 issues), `flutter test` passed 104 tests (102 belong to this commit; the other 2 are the uncommitted route-estimate tests), `flutter build web --base-href /campus-tambayan-finder/` succeeded, and `git diff --check` reported no whitespace errors (only line-ending notices).
 - Committed separately from the in-progress route-estimate/closed-pin work, which remains uncommitted. Final Vision/Mission, Privacy, and Terms copy, official logo art, and the other open client decisions remain pending.
+
+### 2026-11-06 — Prototyped ETA / travel estimate UI and map route visualization
+
+- Created [`route_estimate.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/route_estimate.dart) for Haversine distance, walking ETA (~4.5 km/h), and riding/tricycle ETA (~18 km/h + 1m buffer) calculations from campus anchors (PLV Annex / CPAG) to place destinations.
+- Added `_TravelEstimateCard` to [`place_detail_sheet.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/place_detail_sheet.dart) with campus origin selector (PLV Annex vs. CPAG), walk/ride time chips, and non-traffic disclaimers. (Later replaced by the reusable `TravelEstimateCard` and the `eta_*` copy keys.)
+- Updated [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart) to render MapLibre blue route polylines (`LineOptions`) connecting campus anchor coordinates to selected place markers.
+- Added bilingual translation keys (`travel_time`, `travel_from`, `eta_walk`, `eta_ride`, `eta_disclaimer`) to [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) and unit tests to `test/route_estimate_test.dart`.
+- Updated [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) and [MVP_PLAN.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md).
+- Validation: `flutter analyze` clean (**0 issues**), all 82 Flutter tests passed, and `git diff --check` clean.
+- Remaining: await client feedback and dataset.
+
+### 2026-11-06 — Implemented closed shops visual pin styling on the map
+
+- Updated `_PlacesMapState` in [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart) to evaluate open/closed status in Asia/Manila time (`UTC+8`).
+- Rendered closed shop map pins in muted slate grey (`AppColors.mutedInk`) with 8px radius and subtle outline (`AppColors.outline`), differentiating them from open shops in active blue (`AppColors.primary`).
+- Added `now` clock parameter to `PlacesMapScreen` for deterministic status evaluation in tests.
+- Validation: `flutter analyze` clean (**0 issues**), all 80 Flutter tests passed, and `git diff --check` passed.
+- Remaining: await client feedback and dataset.
+
+### 2026-11-06 — Completed project-wide implementation audit and progress roadmap
+
+- Evaluated MapLibre pin rendering (`_PlacesMapState` in `places_map_screen.dart`), color tokens (`AppColors`), and `OpenStatusBadge` status integration.
+- Formulated recommendations for distinct closed-shop pin colors (muted grey `AppColors.mutedInk`), text labels, and map carousel card overlays.
+- Validation: documentation review against project standards; `git diff --check` clean.
+- Remaining: await user approval to apply the recommended closed shops map styling.
+
+### 2026-11-06 — Completed project-wide implementation audit and progress roadmap
+
+- Conducted a full scan of code (`lib/`, `test/`) and documentation ([MVP_PLAN.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md), [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md), [CONCEPT_AND_FOLLOW_UP_ANSWERS.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/CONCEPT_AND_FOLLOW_UP_ANSWERS.md)).
+- Categorized all remaining unimplemented items into actionable tasks ready for immediate development vs. items blocked by client data or approvals.
+- Validation: documentation audit against project standards; `git diff --check` clean.
+- Remaining: await client feedback and dataset.
+
+### 2026-11-06 — Added Supabase route caching setup guide for Phase 5 ETA
+
+- Added `public.route_cache` SQL schema, RLS policies, index creation, and pre-warming guide to [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md).
+- Recomended deferring Flutter code implementation until real 15–20 establishment coordinates are provided by the client.
+- Validation: documentation review against project standards; `git diff --check` clean.
+- Remaining: await client decision on Phase 5 ETA implementation.
+
+### 2026-11-06 — Documented OSRM route caching plan for Phase 5 ETA
+
+- Updated project documentation ([PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md), [MVP_PLAN.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md), [ARCHITECTURE.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), and [REFERENCES.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/REFERENCES.md)) with the OSRM public demo routing + Supabase PostgreSQL route caching architecture.
+- Documented 4-decimal-degree coordinate rounding, 40–80 pre-warmed campus routes, MapLibre GeoJSON `LineLayer` polyline rendering, custom `User-Agent` requirements, and fallback straight-line ETA heuristics.
+- Validation: documentation review against project standards; `git diff --check` clean.
+- Remaining: await client decision on Phase 5 ETA implementation.
+
+### 2026-11-06 — Evaluated OSRM demo routing and Supabase route caching plan
+
+- Analyzed the proposed OSRM demo routing workflow, Supabase route caching architecture, OSRM usage policy compliance, coordinate normalization, and MapLibre polyline visualization.
+- Confirmed technical feasibility for campus-to-shop routes (PLV Annex/CPAG to ~20 Malinta establishments).
+- Documented key recommendations: cache pre-warming, custom User-Agent, Supabase Postgres RPC / Edge Functions, coordinate rounding, and fallback straight-line ETA.
+- Validation: documentation review against `docs/PROJECT_BRIEF.md`, `docs/MVP_PLAN.md`, `docs/ARCHITECTURE.md`, and `docs/REFERENCES.md`; `git diff --check` passed.
+- Remaining: await client decision on whether to implement in-app ETA or maintain external Google Maps redirection.
 
 ### 2026-11-05 — Enhanced full-screen photo viewer loading UX
 

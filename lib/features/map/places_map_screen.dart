@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../app/app_copy.dart';
+import '../../app/external_links.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
@@ -69,14 +70,105 @@ class PlacesMapScreen extends StatelessWidget {
             bottom: 30,
             child: SafeArea(
               top: false,
-              child: _MapPlaceCarousel(
-                places: mappablePlaces,
-                copy: copy,
-                onPlaceSelected: onPlaceSelected,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _MapAttribution(copy: copy),
+                  const SizedBox(height: 8),
+                  _MapPlaceCarousel(
+                    places: mappablePlaces,
+                    copy: copy,
+                    onPlaceSelected: onPlaceSelected,
+                  ),
+                ],
               ),
             ),
           ),
       ],
+    );
+  }
+}
+
+class _MapAttribution extends StatelessWidget {
+  const _MapAttribution({required this.copy});
+
+  final AppCopy copy;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.labelSmall
+        ?.copyWith(color: AppColors.ink);
+    return Container(
+      key: const Key('map-attribution'),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.raised,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          _AttributionLink(
+            label: '© OpenStreetMap contributors',
+            url: AppLinks.openStreetMapCopyright,
+            copy: copy,
+            style: style,
+          ),
+          Text(' · ', style: style),
+          _AttributionLink(
+            label: 'OpenFreeMap',
+            url: AppLinks.openFreeMap,
+            copy: copy,
+            style: style,
+          ),
+          Text(' · ', style: style),
+          _AttributionLink(
+            label: 'OpenMapTiles',
+            url: AppLinks.openMapTiles,
+            copy: copy,
+            style: style,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AttributionLink extends StatelessWidget {
+  const _AttributionLink({
+    required this.label,
+    required this.url,
+    required this.copy,
+    required this.style,
+  });
+
+  final String label;
+  final Uri url;
+  final AppCopy copy;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      link: true,
+      label: label,
+      child: InkWell(
+        key: Key('map-attribution-$label'),
+        borderRadius: BorderRadius.circular(6),
+        onTap: () => openExternalLink(
+          context,
+          url,
+          failureMessage: copy.get('external_link_failed'),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+          child: Text(
+            label,
+            style: style?.copyWith(decoration: TextDecoration.underline),
+          ),
+        ),
+      ),
     );
   }
 }

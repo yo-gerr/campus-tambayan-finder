@@ -13,7 +13,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - Help students discover places for studying, eating, relaxing, and socializing.
 - Limit the initial coverage area to Malinta, particularly around PLV Annex and CPAG.
 - Support Filipino (Tagalog) and English.
-- Provide useful listing details, an in-app map, and filters so students can choose a suitable place. In-app travel-time estimates are deferred; directions open in Google Maps.
+- Provide useful listing details, an in-app map, and filters so students can choose a suitable place. In-app travel-time estimates were removed from the lower-priced delivery scope; directions open in Google Maps.
 - The team will provide the initial compiled listing set; the development team will manage and verify listing information as much as possible.
 - Shop owners will not need app accounts, identification submissions, or in-app payments. The development team manages listings and updates.
 
@@ -32,7 +32,7 @@ The team answered the initial scope questions on November 2, 2026. These answers
 - **Google Play:** publication is not required.
 - **Web preview (added November 4, 2026):** the same app is also built for the browser and published to GitHub Pages, so the client can review changes without reinstalling the APK. This is a review channel rather than an additional deliverable; the APK remains what is presented and tested. It is not a landing, marketing, or product-information page.
 - **Separate public webpage:** not required for this delivery.
-- **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide. The original ranking is retained, but in-app travel-time estimates are deferred from the current map phase.
+- **Presentation priority (highest first):** place listings and details; map; optional mood check-in; estimated travel time; Filipino/English language options; introductory guide. The original ranking is retained, but in-app travel-time estimates were removed from the lower-priced delivery scope.
 - Filters remain part of the concept and MVP scope; the team did not rank them in this priority list.
 
 ### Navigation and visual direction
@@ -151,14 +151,14 @@ The approved GitHub Pages web preview is not this kind of page. It serves a buil
 | Production framework and minimum Android version | Open |
 | Current delivery | Confirmed installable APK for class presentation and testing; Google Play publication not required |
 | Android launcher icon | Temporary icon uses the existing blue-and-gold app mark; replace it when the team supplies the official logo/icon |
-| Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide; in-app ETA deferred from current map phase |
+| Feature priority | Confirmed ranking: listings/details, map, mood, estimated travel time, bilingual text, introductory guide; in-app ETA removed from the lower-priced delivery scope |
 | Navigation | Confirmed November 5, 2026: home hub with three speech bubbles; More and the home hamburger open one sidebar; no bottom navigation bar; every spoke screen has a Home control and system Back returns to the hub |
 | Visual direction | Confirmed November 5, 2026 as the provisional class-demo direction: cream/sky/navy/blue palette, Fredoka headings with Nunito body text, flat speech-bubble shapes with hard undersides, 24 px margins (16 px on compact widths), 8 px grid, and 48 dp targets |
 | Product name and wordmark | Confirmed November 5, 2026: displayed app name and supplied wordmark are "Kamus Tambay". Keep the internal package/application ID and GitHub repository name unchanged; final logo treatment remains open |
 | Sidebar content | Confirmed November 5, 2026: Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, language switching, and a version note. Vision/Mission, Privacy, and Terms are clearly labelled placeholders until reviewed client copy is supplied; About is removed |
 | Mood preview | The home mood bubble opens an informational page that stores no mood, nickname, or profile. The full check-in remains blocked on the privacy decisions below |
 | Map renderer/data provider | Confirmed November 4, 2026: MapLibre Flutter with OpenFreeMap public tiles/styles and OSM-derived data, subject to eligible representative accepting terms and current service review |
-| Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps; no in-app ETA is approved yet. Any future ETA requires a separate product and service decision |
+| Directions and in-app travel-time estimates | Confirmed November 4, 2026: open directions in Google Maps. In-app ETA, current-location routing, OSRM integration, and route caching were removed from the lower-priced delivery scope. A future ETA phase would require a separate product/service decision and review of provider terms, privacy, and maintenance |
 | Meaning of "available time" | Confirmed to mean shop operating hours; estimated travel time to the place is a separate desired detail |
 | Listing update cadence and correction/reporting process | Open |
 | Initial listing set | Approximately 15–20; team will provide a compiled list, up to 10 approved ordered photos per place, and available information, including names, locations, descriptions, hours, and prices |

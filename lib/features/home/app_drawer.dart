@@ -8,8 +8,9 @@ import '../../app/app_theme.dart';
 /// The app's single navigation drawer.
 ///
 /// It replaces the old More page: links, language, and the version note all
-/// live here. Information pages are placeholders until the client supplies
-/// approved copy, so the drawer never presents invented legal or mission text.
+/// live here. Vision, Privacy, and Terms remain placeholders until the client
+/// supplies approved copy, so the drawer never presents invented legal or
+/// mission text. Credits is factual third-party attribution.
 class AppDrawer extends StatelessWidget {
   const AppDrawer({
     required this.copy,
@@ -105,6 +106,13 @@ class AppDrawer extends StatelessWidget {
                     label: copy.get('terms'),
                     selected: section == AppSection.terms,
                     onTap: () => onSectionSelected(AppSection.terms),
+                  ),
+                  _NavItem(
+                    key: const Key('drawer-credits'),
+                    icon: Icons.copyright,
+                    label: copy.get('credits'),
+                    selected: section == AppSection.credits,
+                    onTap: () => onSectionSelected(AppSection.credits),
                   ),
                   const SizedBox(height: 12),
                   const Divider(height: 1),

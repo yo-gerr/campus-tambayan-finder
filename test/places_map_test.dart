@@ -86,6 +86,9 @@ void main() {
     final map = tester.widget<MapLibreMap>(find.byType(MapLibreMap));
     expect(map.styleString, 'https://tiles.openfreemap.org/styles/positron');
     expect(map.attributionEnabled, isTrue);
+    expect(find.byKey(const Key('map-attribution')), findsOneWidget);
+    expect(find.textContaining('© OpenStreetMap contributors'), findsOneWidget);
+    expect(find.textContaining('OpenFreeMap'), findsOneWidget);
     expect(map.myLocationEnabled, isFalse);
     expect(map.annotationOrder, [AnnotationType.symbol, AnnotationType.circle]);
     expect(

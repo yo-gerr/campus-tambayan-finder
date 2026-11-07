@@ -671,6 +671,19 @@ void main() {
     },
   );
 
+  testWidgets('drawer opens the credits page', (tester) async {
+    await pumpPrototype(tester, openExplore: false);
+
+    await tester.tap(find.byKey(const Key('open-menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('drawer-credits')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Credits'), findsOneWidget);
+    expect(find.text('Maps'), findsOneWidget);
+    expect(find.text('OpenStreetMap contributors'), findsOneWidget);
+  });
+
   testWidgets('labels the bundled copy when shared listings are unavailable', (
     tester,
   ) async {

@@ -379,3 +379,27 @@ The pausing rule is the main operational risk. The paid plan (from USD 25/month)
 - No automatic backups on the Free plan. The repository JSON and periodic exports are the backup.
 - The app does not retry a failed shared connection automatically; reopen the app to reconnect. A fresh launch always starts from the bundled copy.
 - Photo galleries require a `place_photos` Realtime publication and usable network access; the bundled JSON only contains whatever approved asset fallbacks are included at build time.
+
+## 9. Removed ETA backend
+
+Live ETA, OSRM requests, route caching, and usage logging were removed from the lower-priced delivery scope. The app now uses Google Maps handoff for directions and does not read or write route-cache tables.
+
+Based on the supplied live setup SQL, run the following in the Supabase SQL editor as the project owner. It removes only the ETA tables and their dependent policies, indexes, and constraints; it does not modify `places`, `place_photos`, or their Realtime publication entries.
+
+```sql
+begin;
+
+drop table if exists public.osrm_usage_logs cascade;
+drop table if exists public.route_cache cascade;
+
+commit;
+```
+
+`cascade` removes objects owned by those tables, including the route-cache index and RLS policies. The supplied setup SQL does not add either ETA table to `supabase_realtime`, so no publication cleanup is required. Verify the result with:
+
+```sql
+select to_regclass('public.route_cache') as route_cache,
+       to_regclass('public.osrm_usage_logs') as osrm_usage_logs;
+```
+
+Both returned values should be `null`. Review the affected objects before running this in a production project, and keep an export or backup if any cached route history is needed for audit purposes.

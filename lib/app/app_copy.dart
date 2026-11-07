@@ -89,6 +89,38 @@ class AppCopy {
       'Reviewed terms and conditions are not available yet. This page is a placeholder, not a legal agreement.',
       'Wala pang nasuring tuntunin at kundisyon. Placeholder pa lang ang pahinang ito, hindi ito legal na kasunduan.',
     ],
+    'credits': ['Credits', 'Mga kredito'],
+    'credits_intro': [
+      'These notices identify the external data, services, libraries, fonts, and content used by this demo.',
+      'Tinutukoy ng mga paalalang ito ang external data, serbisyo, library, font, at content na ginamit ng demo.',
+    ],
+    'credits_maps': ['Maps', 'Mapa'],
+    'credits_platform': ['Platform & libraries', 'Plataporma at mga library'],
+    'credits_fonts': ['Fonts & icons', 'Font at icon'],
+    'credits_content': ['Content & directions', 'Content at directions'],
+    'credits_repo': ['Repository license', 'Lisensya ng repository'],
+    'credits_repo_note': [
+      'This repository has no LICENSE file, so no open-source license is granted for the project code.',
+      'Walang LICENSE file ang repository na ito kaya walang open-source license para sa project code.',
+    ],
+    'credits_sample_title': ['Sample listings', 'Mga halimbawang listing'],
+    'credits_sample_note': [
+      'Sample places and coordinates are fictional or illustrative until the team supplies verified data.',
+      'Fictional o illustrative ang sample places at coordinates hanggang makapagbigay ang team ng verified na data.',
+    ],
+    'credits_brand_title': ['Brand artwork', 'Larawang pang-tatak'],
+    'credits_brand_note': [
+      'The supplied wordmark and artwork remain subject to confirmation of ownership and permission.',
+      'Kailangang kumpirmahin ang pagmamay-ari at pahintulot para sa wordmark at artwork na ibinigay.',
+    ],
+    'credits_licenses_button': [
+      'Open source licenses',
+      'Mga open source license',
+    ],
+    'credits_licenses_hint': [
+      'Package notices and bundled font licenses',
+      'Mga notice ng package at bundled font license',
+    ],
     'app_version': [
       'Kamus Tambay · Version 1.0.0 (demo)',
       'Kamus Tambay · Bersyon 1.0.0 (demo)',
@@ -357,7 +389,6 @@ class AppCopy {
     'guide_start': ['Start exploring', 'Simulan ang pag-explore'],
     'close': ['Close', 'Isara'],
     'got_it': ['Got it', 'Naintindihan'],
-    'choose_origin': ['Choose starting point', 'Piliin ang pinagmulan'],
     'place_count': ['places to explore', 'lugar na matutuklasan'],
     'open_now_unknown': ['Hours are sample data', 'Halimbawa lamang ang oras'],
   };

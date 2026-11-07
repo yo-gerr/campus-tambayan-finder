@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/home/app_drawer.dart';
 import '../features/home/home_screen.dart';
+import '../features/info/credits_screen.dart';
 import '../features/info/info_placeholder_screen.dart';
 import '../features/map/places_map_screen.dart';
 import '../features/mood/mood_info_screen.dart';
@@ -23,8 +24,8 @@ import 'app_theme.dart';
 ///
 /// The app no longer has a bottom bar: home is the hub and each spoke is a
 /// section of this one shell, so the Back control and the visible Home control
-/// both return to the same place. Information pages are placeholders until
-/// the client supplies approved copy.
+/// both return to the same place. Vision, Privacy, and Terms are placeholders
+/// until the client supplies approved copy; Credits is factual attribution.
 class TambayanApp extends StatelessWidget {
   const TambayanApp({this.showIntroOnStart, this.placesRepository, super.key});
 
@@ -258,6 +259,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                   copy: _copy,
                   onHome: _goHome,
                 ),
+                CreditsScreen(copy: _copy, onHome: _goHome),
               ],
             );
           },

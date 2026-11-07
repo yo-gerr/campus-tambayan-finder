@@ -6,7 +6,7 @@ This repository README is for project contributors and agents; it is not a publi
 
 ## Project status
 
-The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings load from a shared Supabase Free-plan table; the app caches the latest successful non-empty listing snapshot for offline browsing and uses bundled JSON before its first sync. Remote photos and map tiles may still need internet. The shipped baseline opens on a speech-bubble home hub and covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA and mood-data handling still need decisions.
+The team has agreed on the Android and Filipino/English direction and requested an installable APK for class presentation/testing; Google Play publication is not required. Flutter is the framework for this MVP but is not school-mandated or a confirmed production choice. The team will provide an initial list of about 15–20 establishments. Listings load from a shared Supabase Free-plan table; the app caches the latest successful non-empty listing snapshot for offline browsing and uses bundled JSON before its first sync. Remote photos and map tiles may still need internet. The shipped baseline opens on a speech-bubble home hub and covers five place categories, optional price ranges with preset budget chips, structured per-day hours with an open/closed badge and filter, photo galleries, a MapLibre/OpenFreeMap map, and Google Maps directions for verified coordinates. In-app ETA was removed from the lower-priced delivery scope; mood-data handling still needs decisions.
 
 ## Start here
 
@@ -28,9 +28,9 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 
 | Topic | Status |
 |---|---|
-| Product direction | Student place finder with listings, filters, and a map; in-app travel estimates are deferred |
+| Product direction | Student place finder with listings, filters, and a map; in-app travel estimates were removed from the lower-priced delivery scope |
 | Navigation | Home is the hub with three speech bubbles; the More bubble and home hamburger open the sidebar; no bottom bar. Every other screen has a Home control and system Back returns to the hub |
-| Sidebar | Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, English/Filipino switching, and version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; About is removed |
+| Sidebar | Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, Credits, English/Filipino switching, and version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; Credits is factual third-party attribution; About is removed |
 | Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins (16 px on compact widths), 8 px grid, and 48 dp targets. Branding remains provisional |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
@@ -44,7 +44,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Budget filter | Preset chips from ₱50 to ₱500 plus "Any budget"; "Any budget" applies no limit |
 | Operating hours | Structured `hoursByDay` drives the weekly list, the open/closed badge, and the "Open now" filter in Manila time; free-text `hours` is a note only |
 | Listing storage for class demo | Confirmed: shared Supabase Free-plan table; latest successful non-empty snapshot cached on-device for offline browsing; bundled JSON is the first-sync seed/fallback |
-| Directions | Open Google Maps, only for listings with verified coordinates; in-app ETA is deferred. Map renderer confirmed: MapLibre with OpenFreeMap tiles/styles |
+| Directions | Open Google Maps, only for listings with verified coordinates. In-app ETA was removed to lower the project price. Map renderer confirmed: MapLibre with OpenFreeMap tiles/styles |
 | Optional mood check-in | Requested for presentation; nickname may be used, but no profile linkage; storage and privacy decisions open. The home bubble currently opens an informational preview that stores nothing |
 | Listing edits | Authorized team members edit rows in the Supabase dashboard; no in-app admin screen |
 | Listing photos | Hybrid gallery: up to 10 approved Storage images per place, with optional bundled offline fallbacks; accessible loading skeleton and separate full-image zoom viewer; detail and card images are consistently cropped |
@@ -87,3 +87,13 @@ flutter build web --release --base-href "/campus-tambayan-finder/" --dart-define
 ```
 
 GitHub Pages serves project sites from `/<repository>/`, so `--base-href` must match the repository name or every asset request 404s. The preview has no password; treat anything the app can read as public.
+
+## Credits and third-party notices
+
+The app has a Credits screen (sidebar → Credits) with links to every third-party data source, service, library, font, and content note. The public inventory, licence notes, and open review items live in [CREDITS.md](CREDITS.md).
+
+- Map and route data: © OpenStreetMap contributors, under the ODbL 1.0.
+- Tiles and style: OpenFreeMap, with © OpenMapTiles cartography.
+- Fonts: Fredoka and Nunito under the SIL Open Font License 1.1. Their licence texts are bundled and shown in the in-app licence page.
+
+This repository has no `LICENSE` file, so no open-source licence is granted for the project's own code. Choosing one is an owner decision. This section is not legal advice.

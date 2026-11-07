@@ -11,11 +11,12 @@ The app already has a clickable Flutter baseline. This plan tracks the steps fro
 ## Delivery decisions and boundaries
 
 - **Target:** Android APK for class presentation/testing; no Google Play release.
-- **Feature priority:** place listings/details, map, optional mood check-in, estimated travel time, Filipino/English, introductory guide. In-app ETA is deferred from the current map phase; directions open in Google Maps.
+- **Feature priority:** place listings/details, map, optional mood check-in, Filipino/English, introductory guide. In-app ETA was removed from the lower-priced delivery scope; directions open in Google Maps.
 - **Initial listings:** approximately 15–20. The team will provide a compiled list, names, locations, descriptions, hours, prices, and up to 10 approved ordered photos per place.
 - **Listing edits:** authorized team members edit listing information manually in the Supabase dashboard; no custom in-app admin screen.
 - **Listing source:** shared Supabase Free-plan table; the latest successful non-empty snapshot is cached on-device for offline browsing, with bundled JSON kept as the first-sync seed/fallback. Remote photos and map tiles are not included in this listing cache. See [Shared Listings Setup](SUPABASE_SETUP.md).
 - **Directions:** open Google Maps rather than implementing in-app navigation.
+- **ETA scope reduction:** live ETA, current-location routing, route caching, and routing-service integration were removed to lower the project price. They may be reconsidered as a separately approved future phase.
 - **Services and costs:** prefer no-cost/no-card choices where feasible; explain any paid or card-dependent service and obtain approval before enabling it.
 - **Mood privacy:** mood responses must not be linked to a user profile. Persistence and nickname behavior are undecided; do not persist mood or nickname data until clarified.
 - **Web preview:** the same app is built for the browser and published to GitHub Pages so the client can review changes without reinstalling the APK. It rebuilds on every push to `master`, carries no marketing content, and is a review channel rather than an additional deliverable.
@@ -60,7 +61,7 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
 - Shared responsive layout utility for width bands, page margins, readable content width, sidebar sizing, sheet height, and large-text stacking; tested across 320–600 px widths at 1.0–2.0 text scale.
-- Widget, domain, repository, and map tests (102 at the time of writing).
+- Widget, domain, repository, and map tests (114 at the time of writing).
 
 This is a working starting point, not the finished class-demo MVP. Do not treat its fictional locations, coordinates, prices, hours, amenities, or translations as approved content.
 
@@ -145,14 +146,13 @@ This is a working starting point, not the finished class-demo MVP. Do not treat 
 
 ### Phase 5 — Estimated travel time
 
-**Priority: fourth. Blocked on a product/service decision.**
+**Priority: fourth. Removed from the lower-priced delivery scope.**
 
-**Status: deferred; nothing is displayed.**
+The earlier ETA prototype and opt-in OSRM/cache validation path were removed to lower the project price and reduce service, privacy, and maintenance requirements. The current delivery opens Google Maps for directions to verified destinations instead. This phase remains documented as a possible separately approved future feature.
 
-- Confirm whether the travel estimate should be displayed inside this app or left to Google Maps.
-- Confirm travel mode(s), origin behavior, acceptable estimate wording, and whether a live routing service is permitted.
-- If an in-app ETA requires a paid or card-dependent service, disclose the cost and obtain approval before enabling it.
-- Until resolved, show no fabricated ETA; a clearly labeled non-live example may be used only for presentation if the team approves.
+Open questions:
+
+- If ETA returns in a later phase, confirm travel modes, origin behavior, provider terms, caching, and acceptable estimate wording.
 
 **Acceptance:** any displayed estimate has a defined source, origin, mode, limitations, and clear non-guaranteed wording; otherwise the app does not claim to provide an ETA.
 

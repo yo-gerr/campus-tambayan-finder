@@ -38,7 +38,6 @@ dependencies:
   maplibre_gl: ^0.28.0
   url_launcher: ^6.3.3
   shared_preferences: ^2.5.6
-  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +69,8 @@ flutter:
     - assets/brand/wordmark.png
     - assets/brand/student_male.png
     - assets/brand/splash.png
+    - assets/fonts/OFL-fredoka.txt
+    - assets/fonts/OFL-nunito.txt
 
   fonts:
     - family: Fredoka

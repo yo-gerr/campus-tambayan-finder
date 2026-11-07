@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app_config.dart';
+import 'app/app_licenses.dart';
 import 'app/tambayan_app.dart';
 import 'features/places/places_repository.dart';
 import 'features/places/sample_places_repository.dart';
@@ -11,6 +12,7 @@ import 'features/places/synced_places_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  registerBundledLicenses();
 
   PlacesRepository? placesRepository;
   if (AppConfig.hasSharedListings) {
