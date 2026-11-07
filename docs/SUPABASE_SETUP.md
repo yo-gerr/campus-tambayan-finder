@@ -387,9 +387,11 @@ This section is a proposal for a future product decision; the SQL has not been a
 If the team later approves live in-app travel estimates (Phase 5), run this SQL script in the Supabase SQL Editor to create the `route_cache` table and read-only policy.
 
 ```sql
+drop table if exists public.route_cache cascade;
+
 create table if not exists public.route_cache (
-  id uuid primary key default gen_random_uuid(),
-  cache_key text unique not null,
+  cache_key text primary key,
+  dest_place_id text references public.places(id) on delete set null,
   origin_lat double precision not null,
   origin_lng double precision not null,
   dest_lat double precision not null,
@@ -402,11 +404,24 @@ create table if not exists public.route_cache (
   expires_at timestamptz not null default (now() + interval '90 days')
 );
 
-create index if not exists idx_route_cache_key on public.route_cache (cache_key);
+create index if not exists idx_route_cache_place on public.route_cache (dest_place_id);
+
+-- Table for tracking OSRM API calls and cache hit/miss analytics
+create table if not exists public.osrm_usage_logs (
+  id bigint generated always as identity primary key,
+  cache_key text not null,
+  request_type text not null,
+  response_code integer,
+  created_at timestamptz not null default now()
+);
 
 alter table public.route_cache enable row level security;
 revoke all on table public.route_cache from anon, authenticated;
-grant select on table public.route_cache to anon, authenticated;
+grant select, insert, update on table public.route_cache to anon, authenticated;
+
+alter table public.osrm_usage_logs enable row level security;
+revoke all on table public.osrm_usage_logs from anon, authenticated;
+grant insert, select on table public.osrm_usage_logs to anon, authenticated;
 
 do $$
 begin

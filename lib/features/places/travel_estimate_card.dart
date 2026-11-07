@@ -1,26 +1,31 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../map/campus_map_anchors.dart';
+import '../map/osrm_route_service.dart';
 import '../map/route_estimate.dart';
 import 'place.dart';
 
 /// Shows distance-based walk and ride estimates from a campus anchor.
 ///
 /// The card starts from the campus closest to the place, lets the reader switch
-/// origins, and keeps full sentences in the semantics tree while the visible
-/// tiles stay compact.
+/// origins, and fetches OSRM/Cached route details on demand when opened.
 class TravelEstimateCard extends StatefulWidget {
   const TravelEstimateCard({
     required this.place,
     required this.copy,
+    this.routeService,
     super.key,
   });
 
   final Place place;
   final AppCopy copy;
+  final OsrmRouteService? routeService;
 
   @override
   State<TravelEstimateCard> createState() => _TravelEstimateCardState();
@@ -28,11 +33,53 @@ class TravelEstimateCard extends StatefulWidget {
 
 class _TravelEstimateCardState extends State<TravelEstimateCard> {
   late CampusMapAnchor _selectedCampus;
+  OsrmRouteResult? _osrmResult;
 
   @override
   void initState() {
     super.initState();
     _selectedCampus = RouteEstimate.nearestAnchor(widget.place);
+    _fetchOsrmRoute();
+  }
+
+  @override
+  void didUpdateWidget(TravelEstimateCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.place.id != widget.place.id) {
+      _selectedCampus = RouteEstimate.nearestAnchor(widget.place);
+      _osrmResult = null;
+      _fetchOsrmRoute();
+    }
+  }
+
+  void _onCampusSelected(CampusMapAnchor campus) {
+    if (_selectedCampus == campus) return;
+    setState(() {
+      _selectedCampus = campus;
+      _osrmResult = null;
+    });
+    _fetchOsrmRoute();
+  }
+
+  void _fetchOsrmRoute() {
+    final routeService = widget.routeService;
+    final coordinates = widget.place.coordinates;
+    if (routeService == null || coordinates == null) return;
+
+    final origin = _selectedCampus.location;
+    final destination = LatLng(coordinates.latitude, coordinates.longitude);
+
+    routeService
+        .fetchRoute(
+          origin: origin,
+          destination: destination,
+          destPlaceId: widget.place.id,
+        )
+        .then((result) {
+      if (mounted && result != null) {
+        setState(() => _osrmResult = result);
+      }
+    });
   }
 
   @override
@@ -47,26 +94,40 @@ class _TravelEstimateCardState extends State<TravelEstimateCard> {
     final textTheme = Theme.of(context).textTheme;
     final largeText = AppLayout.of(context).usesLargeText;
 
+    // If OSRM/Cache returned distance and duration, use them; otherwise fallback to Haversine estimate.
+    final osrm = _osrmResult;
+    final double distanceMeters = osrm?.distanceMeters ?? estimate.distanceMeters;
+    final int walkMinutes = osrm != null
+        ? math.max(1, (osrm.durationSeconds / 60).round())
+        : estimate.walkMinutes;
+    final int rideMinutes = osrm != null
+        ? math.max(1, (osrm.durationSeconds / 240).round() + 1)
+        : estimate.rideMinutes;
+
+    final formattedDist = distanceMeters < 1000
+        ? '${distanceMeters.round()} m'
+        : '${(distanceMeters / 1000).toStringAsFixed(1)} km';
+
     // Full sentences are kept for screen readers.
     final walkSentence = copy
         .get('eta_walk')
-        .replaceAll('{minutes}', '${estimate.walkMinutes}')
-        .replaceAll('{distance}', estimate.formattedDistance);
+        .replaceAll('{minutes}', '$walkMinutes')
+        .replaceAll('{distance}', formattedDist);
     final rideSentence = copy
         .get('eta_ride')
-        .replaceAll('{minutes}', '${estimate.rideMinutes}')
-        .replaceAll('{distance}', estimate.formattedDistance);
+        .replaceAll('{minutes}', '$rideMinutes')
+        .replaceAll('{distance}', formattedDist);
 
     final walkTile = _EtaTile(
       icon: Icons.directions_walk_rounded,
       label: copy.get('eta_walk_label'),
-      minutes: estimate.walkMinutes,
+      minutes: walkMinutes,
       semanticLabel: walkSentence,
     );
     final rideTile = _EtaTile(
       icon: Icons.directions_bus_outlined,
       label: copy.get('eta_ride_label'),
-      minutes: estimate.rideMinutes,
+      minutes: rideMinutes,
       semanticLabel: rideSentence,
     );
 
@@ -113,7 +174,7 @@ class _TravelEstimateCardState extends State<TravelEstimateCard> {
           const SizedBox(height: 6),
           _CampusSelector(
             selected: _selectedCampus,
-            onSelected: (campus) => setState(() => _selectedCampus = campus),
+            onSelected: _onCampusSelected,
           ),
           const SizedBox(height: 14),
           LayoutBuilder(

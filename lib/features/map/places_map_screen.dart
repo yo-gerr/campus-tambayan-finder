@@ -8,7 +8,7 @@ import '../home/app_chrome.dart';
 import '../places/place.dart';
 import '../places/place_card.dart';
 import 'campus_map_anchors.dart';
-import 'route_estimate.dart';
+import 'osrm_route_service.dart';
 
 class PlacesMapScreen extends StatelessWidget {
   const PlacesMapScreen({
@@ -17,6 +17,7 @@ class PlacesMapScreen extends StatelessWidget {
     required this.onHome,
     required this.onPlaceSelected,
     this.now,
+    this.routeService,
     super.key,
   });
 
@@ -27,6 +28,9 @@ class PlacesMapScreen extends StatelessWidget {
 
   /// Injectable clock so callers can evaluate open/closed status deterministically.
   final DateTime? now;
+
+  /// Service for fetching OSRM or cached routes.
+  final OsrmRouteService? routeService;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,7 @@ class PlacesMapScreen extends StatelessWidget {
           places: mappablePlaces,
           onPlaceSelected: onPlaceSelected,
           now: now,
+          routeService: routeService ?? OsrmRouteService(),
         ),
         Positioned(
           top: 12,
@@ -209,11 +214,13 @@ class _PlacesMap extends StatefulWidget {
   const _PlacesMap({
     required this.places,
     required this.onPlaceSelected,
+    required this.routeService,
     this.now,
   });
 
   final List<Place> places;
   final ValueChanged<Place> onPlaceSelected;
+  final OsrmRouteService routeService;
   final DateTime? now;
 
   @override
@@ -381,26 +388,9 @@ class _PlacesMapState extends State<_PlacesMap> {
     _selectPlace(_placeIndexesBySymbolId[symbol.id]);
   }
 
-  Future<void> _selectPlace(int? index) async {
+  void _selectPlace(int? index) {
     if (index != null && index < widget.places.length) {
-      final place = widget.places[index];
-      final coordinates = place.coordinates;
-      final controller = _controller;
-      if (coordinates != null && controller != null) {
-        await controller.clearLines();
-        await controller.addLine(
-          LineOptions(
-            geometry: [
-              RouteEstimate.nearestAnchor(place).location,
-              LatLng(coordinates.latitude, coordinates.longitude),
-            ],
-            lineColor: _mapLibreColor(AppColors.primary),
-            lineWidth: 4,
-            lineOpacity: 0.85,
-          ),
-        );
-      }
-      widget.onPlaceSelected(place);
+      widget.onPlaceSelected(widget.places[index]);
     }
   }
 }

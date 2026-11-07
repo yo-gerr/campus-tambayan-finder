@@ -6,6 +6,7 @@ import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
+import '../map/osrm_route_service.dart';
 import 'demo_badge.dart';
 import 'google_maps_directions.dart';
 import 'open_status_badge.dart';
@@ -22,6 +23,7 @@ Future<void> showPlaceDetails({
   required AppCopy copy,
   DirectionsUrlLauncher? launchDirections,
   DateTime? now,
+  OsrmRouteService? routeService,
 }) {
   return showModalBottomSheet<void>(
     context: context,
@@ -33,6 +35,7 @@ Future<void> showPlaceDetails({
       copy: copy,
       launchDirections: launchDirections ?? _launchExternalUrl,
       now: now,
+      routeService: routeService,
     ),
   );
 }
@@ -43,12 +46,14 @@ class _PlaceDetailSheet extends StatelessWidget {
     required this.copy,
     required this.launchDirections,
     this.now,
+    this.routeService,
   });
 
   final Place place;
   final AppCopy copy;
   final DirectionsUrlLauncher launchDirections;
   final DateTime? now;
+  final OsrmRouteService? routeService;
 
   // ASSUMPTION: adjust this one line if your Place model names its photo
   // list differently. It only decides how tall the photo area is.
@@ -232,7 +237,11 @@ class _PlaceDetailSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 _facts(context),
-                TravelEstimateCard(place: place, copy: copy),
+                TravelEstimateCard(
+                  place: place,
+                  copy: copy,
+                  routeService: routeService,
+                ),
                 const SizedBox(height: 10),
                 if (openingHours != null)
                   _HoursCard(
