@@ -56,12 +56,6 @@ These are official service references researched on 2026-10-30 to compare likely
 - Adaptation notes: This matches the team's preference to hand off navigation to Google Maps. Use a verified destination coordinate/address; this does not provide an in-app ETA.
 - Caveats: URL directions require valid destination data and an internet connection; provide a clear fallback if the URL cannot be opened.
 
-#### OSRM public demo routing service and terms
-- Source: http://project-osrm.org/ and https://github.com/Project-OSRM/osrm-backend/wiki/Api-usage-policy
-- Relevant ideas: Open Source Routing Machine (OSRM) calculates shortest paths on OpenStreetMap data and returns distance, duration, and GeoJSON LineString geometry.
-- Adaptation notes: Researched November 6, 2026 for a potential Phase 5 in-app ETA. Suitable for small demo applications when paired with backend/database route caching (`route_cache` table) and pre-warmed campus routes (PLV Annex / CPAG to ~20 shops).
-- Caveats: The public server (`router.project-osrm.org`) is a best-effort demo server with no uptime SLA or live traffic data. Requests MUST include a custom identifying `User-Agent` header (e.g. `KamusTambayApp/1.0`). Do not make direct client-side burst requests; cache entries on the backend/database and provide fallback ETA heuristics.
-
 #### Nominatim public geocoding policy
 - Source: https://operations.osmfoundation.org/policies/nominatim/
 - Relevant ideas: Address lookup/geocoding is a separate capability from displaying OSM tiles or calculating routes.

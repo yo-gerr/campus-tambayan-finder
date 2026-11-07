@@ -8,7 +8,6 @@ import '../home/app_chrome.dart';
 import '../places/place.dart';
 import '../places/place_card.dart';
 import 'campus_map_anchors.dart';
-import 'osrm_route_service.dart';
 
 class PlacesMapScreen extends StatelessWidget {
   const PlacesMapScreen({
@@ -16,8 +15,6 @@ class PlacesMapScreen extends StatelessWidget {
     required this.copy,
     required this.onHome,
     required this.onPlaceSelected,
-    this.now,
-    this.routeService,
     super.key,
   });
 
@@ -25,12 +22,6 @@ class PlacesMapScreen extends StatelessWidget {
   final AppCopy copy;
   final VoidCallback onHome;
   final ValueChanged<Place> onPlaceSelected;
-
-  /// Injectable clock so callers can evaluate open/closed status deterministically.
-  final DateTime? now;
-
-  /// Service for fetching OSRM or cached routes.
-  final OsrmRouteService? routeService;
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +34,7 @@ class PlacesMapScreen extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        _PlacesMap(
-          places: mappablePlaces,
-          onPlaceSelected: onPlaceSelected,
-          now: now,
-          routeService: routeService ?? OsrmRouteService(),
-        ),
+        _PlacesMap(places: mappablePlaces, onPlaceSelected: onPlaceSelected),
         Positioned(
           top: 12,
           left: 12,
@@ -87,7 +73,6 @@ class PlacesMapScreen extends StatelessWidget {
                 places: mappablePlaces,
                 copy: copy,
                 onPlaceSelected: onPlaceSelected,
-                now: now,
               ),
             ),
           ),
@@ -101,13 +86,11 @@ class _MapPlaceCarousel extends StatelessWidget {
     required this.places,
     required this.copy,
     required this.onPlaceSelected,
-    this.now,
   });
 
   final List<Place> places;
   final AppCopy copy;
   final ValueChanged<Place> onPlaceSelected;
-  final DateTime? now;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +117,6 @@ class _MapPlaceCarousel extends StatelessWidget {
                   place: place,
                   copy: copy,
                   onTap: () => onPlaceSelected(place),
-                  now: now,
                 ),
               );
             },
@@ -211,17 +193,10 @@ class _MapStatusOverlay extends StatelessWidget {
 }
 
 class _PlacesMap extends StatefulWidget {
-  const _PlacesMap({
-    required this.places,
-    required this.onPlaceSelected,
-    required this.routeService,
-    this.now,
-  });
+  const _PlacesMap({required this.places, required this.onPlaceSelected});
 
   final List<Place> places;
   final ValueChanged<Place> onPlaceSelected;
-  final OsrmRouteService routeService;
-  final DateTime? now;
 
   @override
   State<_PlacesMap> createState() => _PlacesMapState();
@@ -245,7 +220,6 @@ class _PlacesMapState extends State<_PlacesMap> {
 
   @override
   Widget build(BuildContext context) {
-    final clock = widget.now ?? DateTime.now();
     return MapLibreMap(
       key: ValueKey(
         [
@@ -255,8 +229,7 @@ class _PlacesMapState extends State<_PlacesMap> {
           ),
           ...widget.places.map((place) {
             final coordinates = place.coordinates!;
-            final isClosed = place.openingHours?.isOpenAt(clock) == false;
-            return '${place.id}:${coordinates.latitude},${coordinates.longitude}:$isClosed';
+            return '${place.id}:${coordinates.latitude},${coordinates.longitude}';
           }),
         ].join('|'),
       ),
@@ -267,11 +240,7 @@ class _PlacesMapState extends State<_PlacesMap> {
       ),
       attributionEnabled: true,
       logoEnabled: false,
-      annotationOrder: const [
-        AnnotationType.line,
-        AnnotationType.symbol,
-        AnnotationType.circle,
-      ],
+      annotationOrder: const [AnnotationType.symbol, AnnotationType.circle],
       annotationConsumeTapEvents: const [
         AnnotationType.symbol,
         AnnotationType.circle,
@@ -291,25 +260,18 @@ class _PlacesMapState extends State<_PlacesMap> {
     final controller = _controller;
     if (controller == null) return;
 
-    final clock = widget.now ?? DateTime.now();
-
     _placeIndexesByCircleId.clear();
     _placeIndexesBySymbolId.clear();
     final placeSymbols = await controller.addSymbols(
       widget.places.map((place) {
         final coordinates = place.coordinates!;
-        final isClosed = place.openingHours?.isOpenAt(clock) == false;
-        final textColor = isClosed
-            ? AppColors.mutedInk
-            : Theme.of(context).colorScheme.primary;
-
         return SymbolOptions(
           geometry: LatLng(coordinates.latitude, coordinates.longitude),
           textField: place.name,
-          textSize: isClosed ? 11 : 12,
+          textSize: 12,
           textAnchor: 'top',
           textOffset: const Offset(0, 0.9),
-          textColor: _mapLibreColor(textColor),
+          textColor: _mapLibreColor(Theme.of(context).colorScheme.primary),
           textHaloColor: _mapLibreColor(Theme.of(context).colorScheme.surface),
           textHaloWidth: 2,
         );
@@ -343,19 +305,13 @@ class _PlacesMapState extends State<_PlacesMap> {
     final circles = await controller.addCircles(
       widget.places.map((place) {
         final coordinates = place.coordinates!;
-        final isClosed = place.openingHours?.isOpenAt(clock) == false;
-        final circleColor = isClosed
-            ? AppColors.mutedInk
-            : Theme.of(context).colorScheme.primary;
-        final strokeColor = isClosed
-            ? AppColors.outline
-            : Theme.of(context).colorScheme.surface;
-
         return CircleOptions(
           geometry: LatLng(coordinates.latitude, coordinates.longitude),
-          circleRadius: isClosed ? 8 : 9,
-          circleColor: _mapLibreColor(circleColor),
-          circleStrokeColor: _mapLibreColor(strokeColor),
+          circleRadius: 9,
+          circleColor: _mapLibreColor(Theme.of(context).colorScheme.primary),
+          circleStrokeColor: _mapLibreColor(
+            Theme.of(context).colorScheme.surface,
+          ),
           circleStrokeWidth: 3,
         );
       }).toList(),

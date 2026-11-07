@@ -233,23 +233,6 @@ class AppCopy {
     'not_listed': ['Not listed', 'Hindi nakalista'],
     'directions': ['Directions', 'Direksyon'],
     'opens_google_maps': ['Opens in Google Maps', 'Magbubukas sa Google Maps'],
-    'travel_time': ['Travel estimate', 'Tinatayang biyahe'],
-    'eta_from': ['From', 'Mula sa'],
-    'eta_walk_label': ['Walk', 'Lakad'],
-    'eta_ride_label': ['Ride', 'Sakay'],
-    'eta_distance': ['About {distance} away', 'Mga {distance} ang layo'],
-    'eta_walk': [
-      '{minutes} min walk ({distance})',
-      '{minutes} min lakad ({distance})',
-    ],
-    'eta_ride': [
-      '{minutes} min ride ({distance})',
-      '{minutes} min sakay ({distance})',
-    ],
-    'eta_disclaimer': [
-      'Estimated time based on distance; traffic not included.',
-      'Tinatayang oras batay sa distansya; hindi kasama ang trapiko.',
-    ],
     'directions_location_unverified': [
       'Directions are unavailable because this listing’s location has not been verified yet.',
       'Hindi pa available ang direksyon dahil hindi pa beripikado ang lokasyon ng listahang ito.',
