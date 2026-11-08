@@ -9,10 +9,16 @@ import '../home/speech_bubble.dart';
 enum _MoodStep { intro, consent, checkIn, review, complete }
 
 class MoodInfoScreen extends StatefulWidget {
-  const MoodInfoScreen({required this.copy, required this.onHome, super.key});
+  const MoodInfoScreen({
+    required this.copy,
+    required this.onHome,
+    required this.onMenu,
+    super.key,
+  });
 
   final AppCopy copy;
   final VoidCallback onHome;
+  final VoidCallback onMenu;
 
   @override
   State<MoodInfoScreen> createState() => _MoodInfoScreenState();
@@ -63,7 +69,7 @@ class _MoodInfoScreenState extends State<MoodInfoScreen> {
       header: SectionHeader(
         title: copy.get('mood_title'),
         copy: copy,
-        onHome: widget.onHome,
+        onMenu: widget.onMenu,
       ),
       child: ListView(
         padding: EdgeInsets.fromLTRB(

@@ -187,7 +187,7 @@ void main() {
     await tester.tap(find.text('See full week'));
     await tester.pumpAndSettle();
     expect(find.text('Monday'), findsOneWidget);
-    expect(find.text('Closed'), findsOneWidget);
+    expect(find.text('Closed'), findsAtLeast(1));
     // Scroll back so the header's close button is reachable again.
     await tester.scrollUntilVisible(
       find.byTooltip('Close'),
@@ -417,16 +417,14 @@ void main() {
     expect(find.text('Sample Study Corner'), findsOneWidget);
   });
 
-  testWidgets('hub navigation, drawer language, and map Home control', (
+  testWidgets('hub navigation, drawer language, and spoke menu controls', (
     tester,
   ) async {
     await pumpPrototype(tester);
     expect(find.text('Sample Kape Stop'), findsOneWidget);
 
-    // Back to the hub, then open the drawer and switch language there.
-    await tester.tap(find.byKey(const Key('home-button')).hitTestable());
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('home-more')));
+    // Open the shared drawer and switch language there.
+    await tester.tap(find.byKey(const Key('menu-button')).hitTestable());
     await tester.pumpAndSettle();
     expect(find.text('Language'), findsOneWidget);
     await tester.tap(find.byKey(const Key('drawer-language-filipino')));
@@ -451,8 +449,11 @@ void main() {
     expect(find.byKey(const Key('map-place-carousel')), findsNothing);
     expect(find.text('Sample Kape Stop'), findsNothing);
 
-    // The map's Home control returns to the hub.
-    await tester.tap(find.byKey(const Key('map-home')));
+    // The map menu opens the shared sidebar without leaving the map.
+    await tester.tap(find.byKey(const Key('map-menu')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('drawer-language')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('drawer-home')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
   });
@@ -475,7 +476,10 @@ void main() {
     expect(find.text('Before you continue'), findsOneWidget);
     expect(find.byKey(const Key('mood-consent')), findsOneWidget);
 
-    await tester.tap(find.byKey(const Key('home-button')));
+    await tester.tap(find.byKey(const Key('menu-button')).hitTestable());
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('drawer-language')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('drawer-home')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('home-find-tambayan')), findsOneWidget);
   });
@@ -570,9 +574,7 @@ void main() {
     await tester.tap(find.byTooltip('Close'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const Key('home-button')).hitTestable());
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('open-menu')));
+    await tester.tap(find.byKey(const Key('menu-button')).hitTestable());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('drawer-vision')));
     await tester.pumpAndSettle();

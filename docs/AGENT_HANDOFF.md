@@ -4,6 +4,52 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-08 — Centralized spoke navigation menus and completed responsive validation
+
+- Confirmed that shared [`AppLayout`](../lib/app/app_layout.dart) and [`AppResponsiveBuilder`](../lib/app/app_layout.dart) provide the common width bands, margins, readable content widths, drawer/sheet sizing, and text-scale decisions used across the app; feature-specific spacing remains local where needed.
+- Replaced spoke-screen top-left Home controls with top-right menu buttons that open the shared drawer. Home remains available from the drawer; mood workflow content buttons remain intentional for its in-content actions.
+- Updated application wiring, map controls, navigation tests, and current project documentation to match the navigation behavior.
+- Validation: `flutter analyze` clean (0 issues), all 106 Flutter tests passed, and `git diff --check` clean.
+- Hot restart could not be performed because no Flutter app was connected to the active VS Code DTD instance; rerun it after launching the app in debug mode.
+- Remaining: preserve and review the other uncommitted credits/map changes before committing this navigation work.
+
+### 2026-11-07 — Reduced map place carousel bottom offset by an additional 5px
+
+- Updated `Positioned` bottom offset of `_MapPlaceCarousel` from `20` to `15` in [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart), lowering the carousel by an additional 5px directly above the native bottom-right MapLibre info icon.
+- Updated `screenSize.height - 15` test assertion in [`places_map_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/places_map_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
+### 2026-11-07 — Lowered map place carousel by 10px above native attribution icon
+
+- Updated `Positioned` bottom offset of `_MapPlaceCarousel` from `30` to `20` in [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart), positioning the carousel 10px lower, just above MapLibre's native bottom-right info icon.
+- Updated `screenSize.height - 20` test assertion in [`places_map_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/places_map_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
+### 2026-11-07 — Removed custom map attribution overlay
+
+- Removed the custom floating `_MapAttribution` chip overlay from [`places_map_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/places_map_screen.dart). MapLibre's native attribution info button at the bottom-right corner (`map.attributionEnabled = true`) remains enabled and functional.
+- Updated [`places_map_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/places_map_test.dart) to verify `map.attributionEnabled` without looking for the removed chip key.
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
+### 2026-11-07 — Conducted application completion audit for class-demo deliverable
+
+- Audited all application features across `lib/`, `test/`, and `docs/`.
+- Confirmed that the application code is 95%+ complete (home hub, search/filters, place details, photo gallery, MapLibre map with closed-pin styling, external Google Maps directions, bilingual toggle, offline cache, onboarding guide, credits, and responsive layouts).
+- Documented the remaining non-code deliverables: client establishment dataset/photos, legal copy sign-offs (Vision/Mission, Privacy, Terms), mood retention decisions, and official logo art.
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
+### 2026-11-07 — Verified repository state for ETA removal and test suite
+
+- Inspected repository state against [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md), [ARCHITECTURE.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), and [MVP_PLAN.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/MVP_PLAN.md).
+- Confirmed that in-app ETA, OSRM client code, route caching, and `http` dependency were previously **removed from the active codebase** to reduce delivery scope, while Google Maps redirection (`google_maps_directions.dart`) remains the active directions behavior.
+- Synchronized `test/widget_test.dart` for the weekly closed-day label match (`findsAtLeast(1)`).
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner running cleanup query in Supabase SQL editor; await client dataset and legal copy.
+
 ### 2026-11-07 — Removed live ETA to reduce delivery scope
 
 - Removed the in-app ETA prototype, OSRM client, Supabase route-cache and usage-log integration, route-estimate helpers, related tests, build flag, and direct HTTP dependency. Google Maps handoff remains the directions behavior for verified coordinates.

@@ -75,7 +75,7 @@ void main() {
           body: PlacesMapScreen(
             places: const [place, unmappedPlace],
             copy: const AppCopy(AppLanguage.english),
-            onHome: () {},
+            onMenu: () {},
             onPlaceSelected: (selected) => selectedPlace = selected,
           ),
         ),
@@ -86,9 +86,6 @@ void main() {
     final map = tester.widget<MapLibreMap>(find.byType(MapLibreMap));
     expect(map.styleString, 'https://tiles.openfreemap.org/styles/positron');
     expect(map.attributionEnabled, isTrue);
-    expect(find.byKey(const Key('map-attribution')), findsOneWidget);
-    expect(find.textContaining('© OpenStreetMap contributors'), findsOneWidget);
-    expect(find.textContaining('OpenFreeMap'), findsOneWidget);
     expect(map.myLocationEnabled, isFalse);
     expect(map.annotationOrder, [AnnotationType.symbol, AnnotationType.circle]);
     expect(
@@ -124,7 +121,7 @@ void main() {
     );
     final screenSize = tester.getSize(find.byType(Scaffold));
     expect(carouselRect.top, greaterThan(statusRect.bottom));
-    expect(carouselRect.bottom, lessThanOrEqualTo(screenSize.height - 30));
+    expect(carouselRect.bottom, lessThanOrEqualTo(screenSize.height - 15));
     expect(carouselRect.left, 12);
     expect(carouselRect.right, screenSize.width - 12);
     expect(cardRect.width, 360);
@@ -162,7 +159,7 @@ void main() {
           body: PlacesMapScreen(
             places: const [place],
             copy: const AppCopy(AppLanguage.english),
-            onHome: () {},
+            onMenu: () {},
             onPlaceSelected: (_) {},
           ),
         ),

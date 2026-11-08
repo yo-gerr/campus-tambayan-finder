@@ -29,7 +29,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Topic | Status |
 |---|---|
 | Product direction | Student place finder with listings, filters, and a map; in-app travel estimates were removed from the lower-priced delivery scope |
-| Navigation | Home is the hub with three speech bubbles; the More bubble and home hamburger open the sidebar; no bottom bar. Every other screen has a Home control and system Back returns to the hub |
+| Navigation | Home is the hub with three speech bubbles; the More bubble, home hamburger, and top-right menu button on spoke screens open the sidebar; no bottom bar. System Back returns to the hub |
 | Sidebar | Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, Credits, English/Filipino switching, and version note. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; Credits is factual third-party attribution; About is removed |
 | Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins (16 px on compact widths), 8 px grid, and 48 dp targets. Branding remains provisional |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |

@@ -12,10 +12,10 @@ import '../home/app_chrome.dart';
 /// repository. Keep the two in step when a provider, dependency, or asset
 /// changes. This page is factual attribution, not a legal review.
 class CreditsScreen extends StatelessWidget {
-  const CreditsScreen({required this.copy, required this.onHome, super.key});
+  const CreditsScreen({required this.copy, required this.onMenu, super.key});
 
   final AppCopy copy;
-  final VoidCallback onHome;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class CreditsScreen extends StatelessWidget {
       header: SectionHeader(
         title: copy.get('credits'),
         copy: copy,
-        onHome: onHome,
+        onMenu: onMenu,
       ),
       child: ListView(
         padding: EdgeInsets.fromLTRB(

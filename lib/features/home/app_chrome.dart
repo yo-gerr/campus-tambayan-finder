@@ -4,13 +4,12 @@ import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
-/// The one control that returns a spoke screen to the hub.
+/// The control that opens the sidebar drawer from any spoke screen.
 ///
-/// The home screen is the hub of the navigation, so every other screen carries
-/// this instead of a bottom bar. It is a 48 dp target with a navy utility icon
-/// and the same hard underside as the bubble cards.
-class HomeButton extends StatelessWidget {
-  const HomeButton({required this.copy, required this.onPressed, super.key});
+/// It is a 48 dp target with a navy menu icon and the same hard underside
+/// as the home hamburger and bubble cards.
+class MenuButton extends StatelessWidget {
+  const MenuButton({required this.copy, required this.onPressed, super.key});
 
   final AppCopy copy;
   final VoidCallback onPressed;
@@ -19,9 +18,9 @@ class HomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: copy.get('home'),
+      label: copy.get('menu'),
       child: Tooltip(
-        message: copy.get('home'),
+        message: copy.get('menu'),
         child: Container(
           width: AppSpacing.minTarget,
           height: AppSpacing.minTarget,
@@ -44,7 +43,7 @@ class HomeButton extends StatelessWidget {
               customBorder: const CircleBorder(),
               onTap: onPressed,
               child: const Icon(
-                Icons.home_rounded,
+                Icons.menu_rounded,
                 size: 24,
                 color: AppColors.inkStrong,
               ),
@@ -56,19 +55,19 @@ class HomeButton extends StatelessWidget {
   }
 }
 
-/// Cream header used by every spoke screen: Home control, title, actions.
+/// Cream header used by every spoke screen: title, actions, and top-right Menu control.
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
     required this.title,
     required this.copy,
-    required this.onHome,
+    required this.onMenu,
     this.actions = const [],
     super.key,
   });
 
   final String title;
   final AppCopy copy;
-  final VoidCallback onHome;
+  final VoidCallback onMenu;
   final List<Widget> actions;
 
   @override
@@ -76,15 +75,9 @@ class SectionHeader extends StatelessWidget {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
+        padding: const EdgeInsets.fromLTRB(20, 8, 12, 10),
         child: Row(
           children: [
-            HomeButton(
-              key: const Key('home-button'),
-              copy: copy,
-              onPressed: onHome,
-            ),
-            const SizedBox(width: 10),
             Expanded(
               child: Text(
                 title,
@@ -94,6 +87,12 @@ class SectionHeader extends StatelessWidget {
               ),
             ),
             if (actions.isNotEmpty) ...[const SizedBox(width: 8), ...actions],
+            const SizedBox(width: 8),
+            MenuButton(
+              key: const Key('menu-button'),
+              copy: copy,
+              onPressed: onMenu,
+            ),
           ],
         ),
       ),

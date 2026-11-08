@@ -19,7 +19,7 @@ class PlacesExploreScreen extends StatefulWidget {
     required this.campus,
     required this.usingOfflineCopy,
     required this.usingSavedCopy,
-    required this.onHome,
+    required this.onMenu,
     required this.onCampusChanged,
     required this.onFiltersPressed,
     required this.onClearFilters,
@@ -34,7 +34,7 @@ class PlacesExploreScreen extends StatefulWidget {
   final String campus;
   final bool usingOfflineCopy;
   final bool usingSavedCopy;
-  final VoidCallback onHome;
+  final VoidCallback onMenu;
   final ValueChanged<String> onCampusChanged;
   final VoidCallback onFiltersPressed;
   final VoidCallback onClearFilters;
@@ -107,7 +107,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
       header: SectionHeader(
         title: copy.get('explore'),
         copy: copy,
-        onHome: widget.onHome,
+        onMenu: widget.onMenu,
       ),
       child: ListView(
         padding: EdgeInsets.fromLTRB(

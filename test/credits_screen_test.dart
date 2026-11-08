@@ -18,7 +18,7 @@ void main() {
         home: Scaffold(
           body: CreditsScreen(
             copy: const AppCopy(AppLanguage.english),
-            onHome: () {},
+            onMenu: () {},
           ),
         ),
       ),
@@ -58,7 +58,7 @@ void main() {
         home: Scaffold(
           body: CreditsScreen(
             copy: const AppCopy(AppLanguage.tagalog),
-            onHome: () {},
+            onMenu: () {},
           ),
         ),
       ),

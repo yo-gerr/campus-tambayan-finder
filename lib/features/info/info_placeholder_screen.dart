@@ -16,7 +16,7 @@ class InfoPlaceholderScreen extends StatelessWidget {
     required this.message,
     required this.icon,
     required this.copy,
-    required this.onHome,
+    required this.onMenu,
     super.key,
   });
 
@@ -24,13 +24,13 @@ class InfoPlaceholderScreen extends StatelessWidget {
   final String message;
   final IconData icon;
   final AppCopy copy;
-  final VoidCallback onHome;
+  final VoidCallback onMenu;
 
   @override
   Widget build(BuildContext context) {
     final layout = AppLayout.of(context);
     return BandScaffold(
-      header: SectionHeader(title: title, copy: copy, onHome: onHome),
+      header: SectionHeader(title: title, copy: copy, onMenu: onMenu),
       child: ListView(
         padding: EdgeInsets.fromLTRB(
           layout.contentInset,

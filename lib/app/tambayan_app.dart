@@ -220,7 +220,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                   campus: _campus,
                   usingOfflineCopy: snapshot.data!.isOfflineFallback,
                   usingSavedCopy: snapshot.data!.isSavedOfflineCopy,
-                  onHome: _goHome,
+                  onMenu: _openMenu,
                   onCampusChanged: (campus) => setState(() => _campus = campus),
                   onFiltersPressed: _openFilters,
                   onClearFilters: () =>
@@ -232,34 +232,34 @@ class _TambayanHomeState extends State<_TambayanHome> {
                   PlacesMapScreen(
                     places: visiblePlaces,
                     copy: _copy,
-                    onHome: _goHome,
+                    onMenu: _openMenu,
                     onPlaceSelected: _openPlace,
                   )
                 else
                   const SizedBox.shrink(),
-                MoodInfoScreen(copy: _copy, onHome: _goHome),
+                MoodInfoScreen(copy: _copy, onHome: _goHome, onMenu: _openMenu),
                 InfoPlaceholderScreen(
                   title: _copy.get('vision_mission'),
                   message: _copy.get('vision_pending'),
                   icon: Icons.flag_outlined,
                   copy: _copy,
-                  onHome: _goHome,
+                  onMenu: _openMenu,
                 ),
                 InfoPlaceholderScreen(
                   title: _copy.get('privacy'),
                   message: _copy.get('privacy_pending'),
                   icon: Icons.lock_outline,
                   copy: _copy,
-                  onHome: _goHome,
+                  onMenu: _openMenu,
                 ),
                 InfoPlaceholderScreen(
                   title: _copy.get('terms'),
                   message: _copy.get('terms_pending'),
                   icon: Icons.description_outlined,
                   copy: _copy,
-                  onHome: _goHome,
+                  onMenu: _openMenu,
                 ),
-                CreditsScreen(copy: _copy, onHome: _goHome),
+                CreditsScreen(copy: _copy, onMenu: _openMenu),
               ],
             );
           },
