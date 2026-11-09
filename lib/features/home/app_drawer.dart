@@ -107,13 +107,6 @@ class AppDrawer extends StatelessWidget {
                     selected: section == AppSection.terms,
                     onTap: () => onSectionSelected(AppSection.terms),
                   ),
-                  _NavItem(
-                    key: const Key('drawer-credits'),
-                    icon: Icons.copyright,
-                    label: copy.get('credits'),
-                    selected: section == AppSection.credits,
-                    onTap: () => onSectionSelected(AppSection.credits),
-                  ),
                   const SizedBox(height: 12),
                   const Divider(height: 1),
                   Padding(

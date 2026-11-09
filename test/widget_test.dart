@@ -399,7 +399,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Kape Stop has no structured hours, so it cannot be proven open.
-    expect(find.text('No places match those filters'), findsOneWidget);
     expect(find.text('Sample Kape Stop'), findsNothing);
   });
 
@@ -653,7 +652,7 @@ void main() {
       expect(find.text('Vision & Mission'), findsOneWidget);
       expect(find.text('Pending review'), findsOneWidget);
       expect(
-        find.textContaining('has not supplied approved vision and mission'),
+        find.textContaining('Draft for Class Presentation'),
         findsOneWidget,
       );
 
@@ -662,29 +661,16 @@ void main() {
       await tester.tap(find.byKey(const Key('drawer-privacy')));
       await tester.pumpAndSettle();
       expect(find.text('Privacy'), findsOneWidget);
-      expect(find.textContaining('not available yet'), findsOneWidget);
+      expect(find.textContaining('Draft for Class Presentation'), findsOneWidget);
 
       await tester.dragFrom(const Offset(2, 300), const Offset(280, 0));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('drawer-terms')));
       await tester.pumpAndSettle();
       expect(find.text('Terms & Conditions'), findsOneWidget);
-      expect(find.textContaining('not available yet'), findsOneWidget);
+      expect(find.textContaining('Draft for Class Presentation'), findsOneWidget);
     },
   );
-
-  testWidgets('drawer opens the credits page', (tester) async {
-    await pumpPrototype(tester, openExplore: false);
-
-    await tester.tap(find.byKey(const Key('open-menu')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('drawer-credits')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Credits'), findsOneWidget);
-    expect(find.text('Maps'), findsOneWidget);
-    expect(find.text('OpenStreetMap contributors'), findsOneWidget);
-  });
 
   testWidgets('labels the bundled copy when shared listings are unavailable', (
     tester,

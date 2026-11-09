@@ -4,6 +4,31 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-08 — Created bilingual demo Vision & Mission content
+
+- Updated [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) with structured bilingual (English & Tagalog) draft demo text for Vision & Mission based on [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) core project concepts.
+- Vision focuses on being the premier student-centered campus discovery companion in Malinta, Valenzuela City.
+- Mission pillars cover Empowering Student Discovery (PLV Annex & CPAG), Supporting Student Well-Being (budget, atmosphere, hours), and Uplifting Local Campus Businesses.
+- Updated widget test assertions in [`widget_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/widget_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 105 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client final copy sign-offs.
+
+### 2026-11-08 — Created bilingual demo Privacy Policy and Terms & Conditions content
+
+- Updated [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) with structured bilingual (English & Tagalog) draft demo text for Privacy Policy and Terms & Conditions based on [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md).
+- Privacy Notice covers Data Minimization (no account/registration), Location Privacy (no GPS tracking, campus anchors, Google Maps redirection), and Anonymous Mood Check-ins in consideration of RA 10173.
+- Terms & Conditions covers Purpose & Scope, No In-App Payments/Transactions, Listing Accuracy & Consumer Information in consideration of RA 7394, and External Navigation.
+- Updated [`info_placeholder_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/info/info_placeholder_screen.dart) for clean multi-paragraph text alignment and updated widget assertions in [`widget_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/widget_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 105 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client formal legal review and copy sign-offs.
+
+### 2026-11-08 — Removed Credits link from sidebar drawer menu
+
+- Removed `drawer-credits` `_NavItem` from [`app_drawer.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/home/app_drawer.dart). [`CreditsScreen`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/info/credits_screen.dart) remains fully intact and covered by unit/widget tests in [`credits_screen_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/credits_screen_test.dart).
+- Updated widget tests in [`widget_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/widget_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 105 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
 ### 2026-11-08 — Centralized spoke navigation menus and completed responsive validation
 
 - Confirmed that shared [`AppLayout`](../lib/app/app_layout.dart) and [`AppResponsiveBuilder`](../lib/app/app_layout.dart) provide the common width bands, margins, readable content widths, drawer/sheet sizing, and text-scale decisions used across the app; feature-specific spacing remains local where needed.

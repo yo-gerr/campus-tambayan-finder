@@ -82,8 +82,10 @@ class InfoPlaceholderScreen extends StatelessWidget {
                 const SizedBox(height: 18),
                 Text(
                   message,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.5,
+                  ),
                 ),
               ],
             ),

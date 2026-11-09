@@ -78,16 +78,72 @@ class AppCopy {
     'terms': ['Terms & Conditions', 'Mga Tuntunin at Kundisyon'],
     'pending_review': ['Pending review', 'Naghihintay ng pagsusuri'],
     'vision_pending': [
-      'The client has not supplied approved vision and mission copy yet. This page is a placeholder.',
-      'Wala pang aprubadong bisyon at misyon mula sa client. Placeholder pa lang ang pahinang ito.',
+      'Demo Vision & Mission (Draft for Class Presentation)\n\n'
+          'VISION:\n'
+          'To be the premier student-centered campus discovery companion in Malinta, Valenzuela City—fostering a supportive, connected, and conducive environment where every student easily finds the right place to study, refresh, and thrive.\n\n'
+          'MISSION:\n'
+          '1. Empower Student Discovery:\n'
+          'Provide students near PLV Annex and CPAG with accurate, accessible, and comprehensive information on local tambayan spots, cafes, eateries, and study spaces.\n\n'
+          '2. Support Student Well-Being:\n'
+          'Help students choose environments tailored to their budget, study needs, operating schedules, and personal comfort.\n\n'
+          '3. Uplift Local Campus Businesses:\n'
+          'Promote awareness and appreciation of local establishments and micro-eateries in the Malinta campus community.\n\n'
+          '*Note: This draft copy represents the core project concept for class presentation and review, pending final client sign-off.*',
+      'Demo Bisyon at Misyon (Draft para sa Class Presentation)\n\n'
+          'BISYON:\n'
+          'Maging pangunahing gabay ng mga estudyante sa pagtuklas ng mga lugar sa Malinta, Valenzuela City—nagtataguyod ng isang nakatutulong, konektado, at angkop na kapaligiran kung saan madaling makahanap ang bawat mag-aaral ng tamang tambayan para mag-aral, magpahinga, at umunlad.\n\n'
+          'MISYON:\n'
+          '1. Palakasin ang Pagtuklas ng Estudyante:\n'
+          'Magbigay sa mga mag-aaral malapit sa PLV Annex at CPAG ng tumpak, madaling ma-access, at kumpletong impormasyon tungkol sa mga lokal na tambayan, kapihan, kainan, at lugar-aralan.\n\n'
+          '2. Suportahan ang Kesehayaan ng Mag-aaral:\n'
+          'Tulungan ang mga estudyante na pumili ng kapaligirang angkop sa kanilang badyet, pangangailangan sa pag-aaral, oras ng pagbubukas, at kaginhawaan.\n\n'
+          '3. Iangat ang mga Lokal na Negosyo sa Campus:\n'
+          'Itaguyod ang kamalayan at pagpapahalaga sa mga lokal na establisimyento at karinderya sa komunidad ng campus sa Malinta.\n\n'
+          '*Paalala: Ang draft na ito ay kumakatawan sa pangunahing konsepto ng proyekto para sa class presentation, habang naghihintay ng pormal na pagsusuri ng client.*',
     ],
     'privacy_pending': [
-      'A reviewed privacy notice is not available yet. This page is a placeholder, not a privacy policy.',
-      'Wala pang nasuring privacy notice. Placeholder pa lang ang pahinang ito, hindi ito privacy policy.',
+      'Demo Privacy Notice (Draft for Class Presentation)\n\n'
+          '1. Data Minimization & Accounts:\n'
+          'Kamus Tambay does not require user registration, student profiles, emails, passwords, or personal account creation. You can browse listings freely.\n\n'
+          '2. Location Privacy:\n'
+          'The application does not track, store, or share your precise real-time GPS location. Map features rely on fixed campus anchors (PLV Annex & CPAG), and directions launch externally in Google Maps.\n\n'
+          '3. Anonymous Mood Check-ins:\n'
+          'Mood check-ins are optional and anonymous. Optional nicknames are entered per check-in and are not linked to a user profile or persistent account.\n\n'
+          '4. Compliance Reference:\n'
+          'Designed in consideration of the Philippine Data Privacy Act of 2012 (RA 10173).\n\n'
+          '*Note: This draft copy is for class presentation and review purposes only, pending formal legal review by a qualified professional.*',
+      'Demo Privacy Notice (Draft para sa Class Presentation)\n\n'
+          '1. Pagpapaliit ng Data at Account:\n'
+          'Hindi nangangailangan ang Kamus Tambay ng rehistrasyon, student profile, email, password, o personal account. Malaya mong mababrowse ang mga lugar.\n\n'
+          '2. Privacy sa Lokasyon:\n'
+          'Hindi sinusubaybayan o itinuturo ng app ang iyong eksaktong real-time GPS location. Ang mga mapa ay gumagamit ng mga nakatakdang anchor sa campus (PLV Annex & CPAG), at ang direksyon ay binubuksan sa Google Maps.\n\n'
+          '3. Anonymous Mood Check-in:\n'
+          'Ang mood check-in ay opsyonal at anonymous. Ang opsyonal na nickname ay inilalagay kada check-in at hindi nakakabit sa anumang account o profile.\n\n'
+          '4. Sanggunian sa Batas:\n'
+          'Dinesenyo alinsunod sa mga prinsipyo ng Philippine Data Privacy Act of 2012 (RA 10173).\n\n'
+          '*Paalala: Ang draft na ito ay para sa class presentation at pagsusuri lamang, habang naghihintay ng pormal na pagsusuring legal.*',
     ],
     'terms_pending': [
-      'Reviewed terms and conditions are not available yet. This page is a placeholder, not a legal agreement.',
-      'Wala pang nasuring tuntunin at kundisyon. Placeholder pa lang ang pahinang ito, hindi ito legal na kasunduan.',
+      'Demo Terms & Conditions (Draft for Class Presentation)\n\n'
+          '1. Purpose & Scope:\n'
+          'Kamus Tambay is an informational directory helping students discover study, coffee, food, and relaxation spots near PLV Annex and CPAG in Malinta, Valenzuela City.\n\n'
+          '2. No In-App Payments or Transactions:\n'
+          'All listings are informational. The application does not process monetary transactions, reservations, or payments.\n\n'
+          '3. Listing Accuracy & Consumer Information:\n'
+          'Operating hours, prices, amenities, and addresses are estimates based on compiled listing data. In consideration of the Consumer Act of the Philippines (RA 7394), the development team verifies information to the best extent feasible; prices and hours remain subject to change by business owners.\n\n'
+          '4. External Navigation:\n'
+          'Directions launch externally in Google Maps for verified coordinates.\n\n'
+          '*Note: This draft copy is for class presentation and review purposes only, pending formal legal review by a qualified professional.*',
+      'Demo Terms at Kundisyon (Draft para sa Class Presentation)\n\n'
+          '1. Layunin at Saklaw:\n'
+          'Ang Kamus Tambay ay isang impormatibong direktoryo upang tulungan ang mga estudyante na makahanap ng lugar para sa pag-aaral, kape, pagkain, at pahingahan malapit sa PLV Annex at CPAG sa Malinta, Valenzuela City.\n\n'
+          '2. Walang Bayad o Transaksyon sa App:\n'
+          'Ang lahat ng listing ay para sa impormasyon lamang. Walang anumang bayad, booking, o transaksyon sa loob ng app.\n\n'
+          '3. Katumpakan ng Listing at Impormasyon sa Mamimili:\n'
+          'Ang oras ng pagbubukas, presyo, amenity, at address ay mga pagtatantya batay sa nakalap na datos. Alinsunod sa mga prinsipyo ng Consumer Act of the Philippines (RA 7394), pinagsisikapang tiyakin ang katumpakan ng datos; ang mga presyo at oras ay maaaring magbago ayon sa may-ari ng establisimyento.\n\n'
+          '4. Eksternal na Navigasyon:\n'
+          'Ang mga direksyon ay binubuksan sa Google Maps para sa mga na-verify na lokasyon.\n\n'
+          '*Paalala: Ang draft na ito ay para sa class presentation at pagsusuri lamang, habang naghihintay ng pormal na pagsusuring legal.*',
     ],
     'credits': ['Credits', 'Mga kredito'],
     'credits_intro': [
