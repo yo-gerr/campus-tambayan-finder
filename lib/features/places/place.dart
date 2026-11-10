@@ -105,12 +105,6 @@ class Place implements PlaceLike {
   /// the original single-photo fields as the card image.
   final List<PlaceGalleryPhoto> photos;
 
-  /// Temporary marker for the repository's fictional prototype records.
-  ///
-  /// Real listing IDs must not use this reserved prefix. Replace this bridge
-  /// with an explicit listing-status field when the team imports real data.
-  bool get isDemo => id.startsWith('sample-');
-
   PlaceGalleryPhoto? get coverPhoto {
     for (final photo in photos) {
       if (photo.isCover) return photo;

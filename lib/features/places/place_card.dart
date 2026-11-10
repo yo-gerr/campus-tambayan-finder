@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_theme.dart';
-import 'demo_badge.dart';
 import 'open_status_badge.dart';
 import 'place.dart';
 import 'place_photo.dart';
@@ -64,18 +63,13 @@ class PlaceCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Status and the demo marker share one wrapping row at
-                      // the top of the card, so neither can push the other out
-                      // when the interface is in Filipino or text is enlarged.
-                      if (status != null || place.isDemo) ...[
+                      if (place.openingHours != null) ...[
                         Wrap(
                           spacing: 6,
                           runSpacing: 4,
                           children: [
                             if (status != null)
                               OpenStatusBadge(open: status, copy: copy),
-                            if (place.isDemo)
-                              DemoBadge(label: copy.get('demo_badge')),
                           ],
                         ),
                         const SizedBox(height: 6),

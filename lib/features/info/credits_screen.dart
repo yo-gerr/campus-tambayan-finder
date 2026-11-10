@@ -107,7 +107,7 @@ class CreditsScreen extends StatelessWidget {
     showLicensePage(
       context: context,
       applicationName: 'Kamus Tambay',
-      applicationVersion: '1.0.0 (demo)',
+      applicationVersion: '1.0.0',
       applicationIcon: const Padding(
         padding: EdgeInsets.all(8),
         child: Icon(Icons.menu_book_rounded, size: 40),

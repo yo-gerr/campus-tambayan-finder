@@ -120,11 +120,11 @@ void main() {
     }
   }
 
-  testWidgets('shows demo places and opens a place detail', (tester) async {
+  testWidgets('shows places and opens a place detail', (tester) async {
     await pumpPrototype(tester);
 
     expect(find.text('Sample Study Corner'), findsOneWidget);
-    expect(find.text('DEMO CONTENT · NOT VERIFIED'), findsOneWidget);
+    expect(find.text('DEMO CONTENT · NOT VERIFIED'), findsNothing);
 
     await tester.tap(find.byKey(const Key('place-card-sample-study-corner')));
     await tester.pumpAndSettle();
@@ -134,13 +134,7 @@ void main() {
       112,
     );
     expect(find.text('Estimated\nspend'), findsOneWidget);
-    expect(
-      find.textContaining(
-        'DEMO CONTENT',
-        skipOffstage: false,
-      ),
-      findsOneWidget,
-    );
+    expect(find.textContaining('DEMO CONTENT', skipOffstage: false), findsNothing);
     final detailList = find.byKey(const Key('place-detail-list'));
     final detailScrollable = find.descendant(
       of: detailList,
@@ -648,7 +642,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('open-menu')));
       await tester.pumpAndSettle();
-      expect(find.text('Kamus Tambay · Version 1.0.0 (demo)'), findsOneWidget);
+      expect(find.text('Kamus Tambay · Version 1.0.0'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('drawer-vision')));
       await tester.pumpAndSettle();

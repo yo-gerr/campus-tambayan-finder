@@ -6,7 +6,6 @@ import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../../app/app_widgets.dart';
-import 'demo_badge.dart';
 import 'google_maps_directions.dart';
 import 'open_status_badge.dart';
 import 'opening_hours.dart';
@@ -173,7 +172,7 @@ class _PlaceDetailSheet extends StatelessWidget {
 
   // Order, top to bottom (the Directions bar stays pinned below the list),
   // following how a student scans a place:
-  //   1. Open/Closed and demo badges, close button
+  //   1. Open/Closed status and close button
   //   2. Photo: the vibe check comes first for a hangout spot
   //   3. Name, category · area
   //   4. What it offers: Good for, then Amenities (wifi, outlets, aircon)
@@ -239,8 +238,6 @@ class _PlaceDetailSheet extends StatelessWidget {
                           spacing: 8,
                           runSpacing: 6,
                           children: [
-                            if (place.isDemo)
-                              DemoBadge(label: copy.get('demo_badge')),
                             if (status != null)
                               OpenStatusBadge(open: status, copy: copy),
                           ],
@@ -301,9 +298,7 @@ class _PlaceDetailSheet extends StatelessWidget {
                       ? [
                     _Pill(
                       icon: Icons.info_outline,
-                      label: place.isDemo
-                          ? copy.get('sample_data')
-                          : copy.get('not_listed'),
+                      label: copy.get('not_listed'),
                     ),
                   ]
                       : [
@@ -352,9 +347,7 @@ class _PlaceDetailSheet extends StatelessWidget {
                 const SizedBox(height: 14),
                 _NoteBanner(
                   icon: Icons.info_outline,
-                  text: place.isDemo
-                      ? '${copy.get('sample_data')} $description'
-                      : description,
+                  text: description,
                 ),
               ],
             ),

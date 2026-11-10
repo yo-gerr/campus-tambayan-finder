@@ -4,6 +4,19 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-10 — Removed visible demo tags
+
+- Removed the DEMO banner from Explore, demo pills from place cards and details, sample-data prefixes in place details, and the demo suffix from the version label.
+- Kept the underlying sample-data fallback and draft/information wording unchanged.
+- Validation: pending.
+- Remaining: none for this request.
+
+### 2026-11-10 — Added client-facing application capability guide
+
+- Added [`CLIENT_APP_GUIDE.md`](CLIENT_APP_GUIDE.md), describing the implemented app features, user-facing behavior, and practical limitations based on the current Flutter application.
+- Validation: documentation-only change; not run.
+- Remaining: client review of wording and final dataset, privacy, and legal copy decisions.
+
 ### 2026-11-10 — Implemented Campus Distance Sorting for Explore place list
 
 - Added `anchorForCampus` and `distanceMetersBetween` helpers to [`campus_map_anchors.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/campus_map_anchors.dart).

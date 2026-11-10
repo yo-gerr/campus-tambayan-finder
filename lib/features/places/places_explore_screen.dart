@@ -150,34 +150,7 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 18),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: const BoxDecoration(
-              color: AppColors.demoContainer,
-              borderRadius: BorderRadius.all(Radius.circular(18)),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.science_outlined,
-                  size: 19,
-                  color: AppColors.onDemoContainer,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    copy.get('demo_banner'),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.onDemoContainer,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
           if (widget.usingOfflineCopy) ...[
-            const SizedBox(height: 10),
             _OfflineNotice(copy: copy, usingSavedCopy: widget.usingSavedCopy),
           ],
           const SizedBox(height: 16),

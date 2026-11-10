@@ -178,8 +178,8 @@ class AppCopy {
       'Mga notice ng package at bundled font license',
     ],
     'app_version': [
-      'Kamus Tambay · Version 1.0.0 (demo)',
-      'Kamus Tambay · Bersyon 1.0.0 (demo)',
+      'Kamus Tambay · Version 1.0.0',
+      'Kamus Tambay · Bersyon 1.0.0',
     ],
     'language': ['Language', 'Wika'],
     'language_english': ['English', 'English'],
@@ -274,10 +274,6 @@ class AppCopy {
     ],
     'filters': ['Filters', 'Mga filter'],
     'starting_near': ['Starting near', 'Simula malapit sa'],
-    'demo_banner': [
-      'DEMO CONTENT · NOT VERIFIED',
-      'DEMO CONTENT · HINDI BERIPIKADO',
-    ],
     'offline_notice': [
       'Showing the bundled sample copy · live updates unavailable',
       'Ipinapakita ang naka-bundle na halimbawa · walang live updates',
@@ -291,11 +287,6 @@ class AppCopy {
     'view_photo': [
       'View photo full screen',
       'Tingnan ang larawan sa buong screen',
-    ],
-    'demo_badge': ['DEMO', 'HALIMBAWA'],
-    'sample_data': [
-      'Sample information for prototype review only.',
-      'Halimbawang impormasyon para lamang sa prototype.',
     ],
     'hours': ['Hours', 'Oras'],
     'opens': ['Opens', 'Bubukas'],
