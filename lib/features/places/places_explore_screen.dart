@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
+import '../map/campus_map_anchors.dart';
 import 'place.dart';
 import 'place_card.dart';
 import 'place_categories.dart';
@@ -25,6 +27,7 @@ class PlacesExploreScreen extends StatefulWidget {
     required this.onClearFilters,
     required this.onPlaceSelected,
     required this.onMapPressed,
+    this.onRefresh,
     super.key,
   });
 
@@ -40,6 +43,7 @@ class PlacesExploreScreen extends StatefulWidget {
   final VoidCallback onClearFilters;
   final ValueChanged<Place> onPlaceSelected;
   final VoidCallback onMapPressed;
+  final Future<void> Function()? onRefresh;
 
   @override
   State<PlacesExploreScreen> createState() => _PlacesExploreScreenState();
@@ -91,6 +95,25 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
           copy.category(place.category).toLowerCase().contains(query);
     }).toList();
 
+    // Sort results by distance from the selected campus anchor.
+    final activeAnchor = anchorForCampus(widget.campus);
+    results.sort((a, b) {
+      final coordsA = a.coordinates;
+      final coordsB = b.coordinates;
+      if (coordsA == null && coordsB == null) return 0;
+      if (coordsA == null) return 1;
+      if (coordsB == null) return -1;
+      final distA = distanceMetersBetween(
+        activeAnchor.location,
+        LatLng(coordsA.latitude, coordsA.longitude),
+      );
+      final distB = distanceMetersBetween(
+        activeAnchor.location,
+        LatLng(coordsB.latitude, coordsB.longitude),
+      );
+      return distA.compareTo(distB);
+    });
+
     // A category is selectable before any listing uses it. Distinguish "we have
     // nothing in this category yet" from "your filters excluded everything", so
     // the empty state does not blame the filters for missing data.
@@ -109,14 +132,19 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
         copy: copy,
         onMenu: widget.onMenu,
       ),
-      child: ListView(
-        padding: EdgeInsets.fromLTRB(
-          layout.contentInset,
-          8,
-          layout.contentInset,
-          32,
-        ),
-        children: [
+      child: RefreshIndicator(
+        onRefresh: widget.onRefresh ?? () async {},
+        color: AppColors.primary,
+        backgroundColor: AppColors.raised,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.fromLTRB(
+            layout.contentInset,
+            8,
+            layout.contentInset,
+            32,
+          ),
+          children: [
           Text(
             copy.get('welcome'),
             style: Theme.of(context).textTheme.headlineSmall,
@@ -246,8 +274,9 @@ class _PlacesExploreScreenState extends State<PlacesExploreScreen>
             ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class _CampusSelector extends StatelessWidget {

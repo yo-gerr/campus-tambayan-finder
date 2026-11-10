@@ -19,6 +19,9 @@ class SamplePlacesRepository implements PlacesRepository {
     );
   }
 
+  @override
+  Future<void> refresh() async {}
+
   Future<List<Place>> loadPlaces() async {
     final content = await rootBundle.loadString(
       'assets/data/sample_places.json',

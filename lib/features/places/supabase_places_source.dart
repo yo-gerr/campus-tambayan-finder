@@ -15,6 +15,18 @@ class SupabasePlacesSource implements PlacesRemoteSource {
   final SupabaseClient _client;
 
   @override
+  Future<List<Place>> fetchPlaces() async {
+    final rows = await _client
+        .from('places')
+        .select('*, place_photos(*)')
+        .order('name');
+    return (rows as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .map(Place.fromJson)
+        .toList(growable: false);
+  }
+
+  @override
   Stream<List<Place>> watchPlaces() {
     late final StreamController<List<Place>> controller;
     RealtimeChannel? channel;

@@ -41,4 +41,7 @@ class PlacesSnapshot {
 abstract interface class PlacesRepository {
   /// Emits the bundled listings first, then shared updates when available.
   Stream<PlacesSnapshot> watchPlaces();
+
+  /// Forces a fresh fetch from the remote shared listing source if supported.
+  Future<void> refresh() async {}
 }

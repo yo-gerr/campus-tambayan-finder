@@ -22,6 +22,9 @@ class _TestPlacesRepository implements PlacesRepository {
     );
   }
 
+  @override
+  Future<void> refresh() async {}
+
   Future<List<Place>> _places() async => const [
     Place(
       id: 'sample-study-corner',
@@ -133,7 +136,7 @@ void main() {
     expect(find.text('Estimated\nspend'), findsOneWidget);
     expect(
       find.textContaining(
-        'Sample information for prototype review only.',
+        'DEMO CONTENT',
         skipOffstage: false,
       ),
       findsOneWidget,
@@ -468,8 +471,8 @@ void main() {
 
     await tester.tap(find.byKey(const Key('home-mood')));
     await tester.pumpAndSettle();
-    expect(find.text('A private check-in preview'), findsOneWidget);
-    expect(find.textContaining('Nothing is saved here'), findsOneWidget);
+    expect(find.text('Share your visit mood'), findsOneWidget);
+    expect(find.textContaining('no GPS tracking'), findsOneWidget);
     await tester.tap(find.byKey(const Key('mood-start-checkin')));
     await tester.pumpAndSettle();
     expect(find.text('Before you continue'), findsOneWidget);

@@ -7,4 +7,9 @@ import 'place.dart';
 abstract interface class PlacesRemoteSource {
   /// Emits the current listings, then new sets whenever the source changes.
   Stream<List<Place>> watchPlaces();
+
+  /// Fetches a single current snapshot of listings.
+  Future<List<Place>> fetchPlaces() async {
+    return watchPlaces().first;
+  }
 }

@@ -99,6 +99,20 @@ class SyncedPlacesRepository implements PlacesRepository {
     }
   }
 
+  @override
+  Future<void> refresh() async {
+    try {
+      final freshPlaces =
+          await remote.fetchPlaces().timeout(firstUpdateTimeout);
+      if (freshPlaces.isNotEmpty) {
+        debugPrint('Shared listings refreshed: ${freshPlaces.length} places');
+        await _saveCache(freshPlaces);
+      }
+    } catch (error) {
+      debugPrint('Could not refresh shared listings: $error');
+    }
+  }
+
   Future<void> _saveCache(List<Place> places) async {
     final placesCache = cache;
     if (placesCache == null) return;

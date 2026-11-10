@@ -4,6 +4,60 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-10 — Implemented Campus Distance Sorting for Explore place list
+
+- Added `anchorForCampus` and `distanceMetersBetween` helpers to [`campus_map_anchors.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/map/campus_map_anchors.dart).
+- Updated [`places_explore_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/places_explore_screen.dart) to sort filtered place results by straight-line Haversine distance from the selected campus anchor (**PLV Annex** vs **CPAG**).
+- Added unit tests in [`campus_distance_sorting_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/campus_distance_sorting_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner executing updated SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Wired Supabase mood repository in main.dart and fixed review submit button label
+
+- Fixed `main.dart` ([`main.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/main.dart)) to instantiate `SupabaseMoodCheckInRepository(Supabase.instance.client)` when `AppConfig.hasSharedListings` is true, enabling live Supabase inserts into `public.mood_check_ins`.
+- Added `'mood_submit'` translation key in [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) (`"Submit check-in"` / `"I-submit ang check-in"`) and updated `_ReviewStep` in [`mood_info_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/mood/mood_info_screen.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 108 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner executing updated SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Fixed DropdownButtonFormField Place equality assertion
+
+- Implemented `operator ==` and `hashCode` based on `id` in [`Place`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/place.dart) so distinct instances with matching IDs are treated as equal.
+- Updated `_CheckInStep` dropdown in [`mood_info_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/mood/mood_info_screen.dart) to validate `validSelectedPlace` against the active places list before building `initialValue`.
+- Validation: `flutter analyze` clean (**0 issues**), all 108 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner executing updated SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Updated Mood Check-in copy from preview prototype to live submission text
+
+- Updated [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) translation keys (`mood_preview_title`, `mood_body`, `mood_privacy`, `mood_consent_body`, `mood_consent_agree`, etc.) from old prototype preview text to active, live check-in copy in both English and Tagalog.
+- Updated widget test assertions in [`widget_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/widget_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 108 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner executing updated SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Cleaned up Supabase setup SQL query to remove deferred ETA tables
+
+- Updated master SQL setup query and [SUPABASE_SETUP.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md) to remove deferred ETA tables (`public.route_cache` and `public.osrm_usage_logs`).
+- Provided clean SQL script containing `places`, `place_photos`, `mood_check_ins`, Realtime publications, and demo seeds.
+- Validation: documentation review and `git diff --check` clean.
+- Remaining: owner executing updated SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Built functional Mood Check-in feature with Supabase and offline queue
+
+- Implemented full 4-step Mood Check-in flow in [`mood_info_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/mood/mood_info_screen.dart) (Step 1: Place Selection, Step 2: Mood Selection, Step 3: Consent & Optional Nickname with Privacy Tip, Step 4: Submission Confirmation).
+- Added [`MoodCheckIn`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/mood/mood_check_in.dart) model and [`SupabaseMoodCheckInRepository`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/mood/mood_check_in_repository.dart) with direct Supabase inserts and `SharedPreferences` offline queueing.
+- Added Section 7 to [`SUPABASE_SETUP.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/SUPABASE_SETUP.md) for `public.mood_check_ins` table schema, indexes, RLS policies, and 90-day retention.
+- Added unit and widget tests in [`mood_check_in_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/mood_check_in_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 108 Flutter tests passed, `git diff --check` clean.
+- Remaining: owner executing SQL script in Supabase SQL Editor.
+
+### 2026-11-09 — Implemented Pull-to-Refresh for place discovery list
+
+- Added `refresh()` method to [`PlacesRepository`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/places_repository.dart) interface and [`SyncedPlacesRepository`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/synced_places_repository.dart) to force an immediate re-fetch from Supabase and update local cache.
+- Added `fetchPlaces()` to [`PlacesRemoteSource`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/places_remote_source.dart) and [`SupabasePlacesSource`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/supabase_places_source.dart).
+- Wrapped `ListView` in [`PlacesExploreScreen`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/places/places_explore_screen.dart) with `RefreshIndicator` and wired `onRefresh: _refreshPlaces` in [`tambayan_app.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/tambayan_app.dart).
+- Added unit test in [`synced_places_repository_test.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/test/synced_places_repository_test.dart).
+- Validation: `flutter analyze` clean (**0 issues**), all 106 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client dataset and legal copy sign-offs.
+
 ### 2026-11-08 — Created bilingual demo Vision & Mission content
 
 - Updated [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) with structured bilingual (English & Tagalog) draft demo text for Vision & Mission based on [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md) core project concepts.

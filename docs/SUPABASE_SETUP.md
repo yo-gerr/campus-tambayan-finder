@@ -380,7 +380,45 @@ The pausing rule is the main operational risk. The paid plan (from USD 25/month)
 - The app does not retry a failed shared connection automatically; reopen the app to reconnect. A fresh launch always starts from the bundled copy.
 - Photo galleries require a `place_photos` Realtime publication and usable network access; the bundled JSON only contains whatever approved asset fallbacks are included at build time.
 
-## 9. Removed ETA backend
+## 7. Mood Check-ins Setup
+
+The Mood Check-in feature allows students to voluntarily share anonymous mood feedback for visited places. To create the `mood_check_ins` table, indexes, and least-privilege RLS policies, run the following SQL script:
+
+```sql
+--------------------------------------------------------------------------------
+-- 7. Mood Check-ins
+--------------------------------------------------------------------------------
+create table if not exists public.mood_check_ins (
+  id uuid primary key default gen_random_uuid(),
+  place_id text not null references public.places(id) on delete cascade,
+  mood text not null check (mood in ('happy', 'relaxed', 'stressed', 'sad')),
+  nickname text,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default (now() + interval '90 days')
+);
+
+create index if not exists idx_mood_check_ins_place on public.mood_check_ins (place_id);
+
+alter table public.mood_check_ins enable row level security;
+revoke all on table public.mood_check_ins from anon, authenticated;
+grant insert, select on table public.mood_check_ins to anon, authenticated;
+
+drop policy if exists "Public insert of mood check-ins" on public.mood_check_ins;
+create policy "Public insert of mood check-ins"
+  on public.mood_check_ins
+  for insert
+  to anon, authenticated
+  with check (true);
+
+drop policy if exists "Public select of mood check-ins" on public.mood_check_ins;
+create policy "Public select of mood check-ins"
+  on public.mood_check_ins
+  for select
+  to anon, authenticated
+  using (true);
+```
+
+## 8. Removed ETA backend
 
 Live ETA, OSRM requests, route caching, and usage logging were removed from the lower-priced delivery scope. The app now uses Google Maps handoff for directions and does not read or write route-cache tables.
 

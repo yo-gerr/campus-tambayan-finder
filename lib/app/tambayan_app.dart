@@ -6,6 +6,7 @@ import '../features/home/home_screen.dart';
 import '../features/info/credits_screen.dart';
 import '../features/info/info_placeholder_screen.dart';
 import '../features/map/places_map_screen.dart';
+import '../features/mood/mood_check_in_repository.dart';
 import '../features/mood/mood_info_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/onboarding/visual_onboarding_screen.dart';
@@ -27,10 +28,16 @@ import 'app_theme.dart';
 /// both return to the same place. Vision, Privacy, and Terms are placeholders
 /// until the client supplies approved copy; Credits is factual attribution.
 class TambayanApp extends StatelessWidget {
-  const TambayanApp({this.showIntroOnStart, this.placesRepository, super.key});
+  const TambayanApp({
+    this.showIntroOnStart,
+    this.placesRepository,
+    this.moodCheckInRepository,
+    super.key,
+  });
 
   final bool? showIntroOnStart;
   final PlacesRepository? placesRepository;
+  final MoodCheckInRepository? moodCheckInRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +48,8 @@ class TambayanApp extends StatelessWidget {
       home: _TambayanHome(
         showIntroOnStart: showIntroOnStart,
         placesRepository: placesRepository ?? SamplePlacesRepository(),
+        moodCheckInRepository:
+            moodCheckInRepository ?? SupabaseMoodCheckInRepository(null),
       ),
     );
   }
@@ -50,10 +59,12 @@ class _TambayanHome extends StatefulWidget {
   const _TambayanHome({
     required this.showIntroOnStart,
     required this.placesRepository,
+    required this.moodCheckInRepository,
   });
 
   final bool? showIntroOnStart;
   final PlacesRepository placesRepository;
+  final MoodCheckInRepository moodCheckInRepository;
 
   @override
   State<_TambayanHome> createState() => _TambayanHomeState();
@@ -166,6 +177,10 @@ class _TambayanHomeState extends State<_TambayanHome> {
     if (mounted) await _showGuide();
   }
 
+  Future<void> _refreshPlaces() async {
+    await widget.placesRepository.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -227,6 +242,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                       setState(() => _filters = const PlaceFilters()),
                   onPlaceSelected: _openPlace,
                   onMapPressed: () => _openSection(AppSection.map),
+                  onRefresh: _refreshPlaces,
                 ),
                 if (_mapOpened)
                   PlacesMapScreen(
@@ -237,7 +253,13 @@ class _TambayanHomeState extends State<_TambayanHome> {
                   )
                 else
                   const SizedBox.shrink(),
-                MoodInfoScreen(copy: _copy, onHome: _goHome, onMenu: _openMenu),
+                MoodInfoScreen(
+                  copy: _copy,
+                  onHome: _goHome,
+                  onMenu: _openMenu,
+                  places: places,
+                  repository: widget.moodCheckInRepository,
+                ),
                 InfoPlaceholderScreen(
                   title: _copy.get('vision_mission'),
                   message: _copy.get('vision_pending'),

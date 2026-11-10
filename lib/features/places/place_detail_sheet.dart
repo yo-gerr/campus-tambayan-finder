@@ -53,6 +53,31 @@ class _PlaceDetailSheet extends StatelessWidget {
   // list differently. It only decides how tall the photo area is.
   bool get _hasPhotos => place.coverPhoto != null;
 
+  // Study essentials lead. Anything not listed keeps its original order after
+  // them.
+  static const _activityOrder = [
+    'study',
+    'eat',
+    'relax',
+    'social',
+    'socialize',
+  ];
+  static const _amenityOrder = ['wifi', 'outlets', 'aircon'];
+
+  static List<String> _byPriority(Iterable<String> items, List<String> order) {
+    int rank(String item) {
+      final i = order.indexOf(item);
+      return i < 0 ? order.length : i;
+    }
+
+    final indexed = items.toList().asMap().entries.toList()
+      ..sort((a, b) {
+        final byRank = rank(a.value).compareTo(rank(b.value));
+        return byRank != 0 ? byRank : a.key.compareTo(b.key);
+      });
+    return [for (final entry in indexed) entry.value];
+  }
+
   Future<void> _openDirections(BuildContext context) async {
     if (!place.locationVerified) {
       await _showDirectionsUnavailable(
@@ -146,6 +171,16 @@ class _PlaceDetailSheet extends StatelessWidget {
     );
   }
 
+  // Order, top to bottom (the Directions bar stays pinned below the list),
+  // following how a student scans a place:
+  //   1. Open/Closed and demo badges, close button
+  //   2. Photo: the vibe check comes first for a hangout spot
+  //   3. Name, category · area
+  //   4. What it offers: Good for, then Amenities (wifi, outlets, aircon)
+  //   5. Price and setting
+  //   6. Hours (collapsed answer first, full week on tap)
+  //   7. Address
+  //   8. About
   @override
   Widget build(BuildContext context) {
     final layout = AppLayout.of(context);
@@ -157,6 +192,28 @@ class _PlaceDetailSheet extends StatelessWidget {
     final openingHours = place.openingHours;
     final clock = now ?? DateTime.now();
     final status = openingHours?.isOpenAt(clock);
+    final activities = _byPriority(place.activities, _activityOrder);
+    final amenities = _byPriority(place.amenities, _amenityOrder);
+
+    final photo = PlacePhotoGallery(
+      place: place,
+      width: double.infinity,
+      // A missing photo should not take over the screen.
+      height: _hasPhotos ? 210 : 112,
+      borderRadius: 22,
+      loadingLabel: copy.get('loading_photo'),
+      placeholder: PlacePhotoPlaceholder(
+        category: place.category,
+        label: copy.get('no_photo'),
+        iconSize: _hasPhotos ? 40 : 30,
+      ),
+      photoPosition: copy.photoPosition,
+      viewPhotoLabel: copy.get('view_photo'),
+      closeLabel: copy.get('close'),
+      photoCaption: (photo) => copy.isTagalog
+          ? photo.captionTl ?? photo.captionEn
+          : photo.captionEn ?? photo.captionTl,
+    );
 
     return SizedBox(
       height: layout.sheetHeight(0.85),
@@ -167,6 +224,7 @@ class _PlaceDetailSheet extends StatelessWidget {
               key: const Key('place-detail-list'),
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
               children: [
+                // 1. Is it open? Always visible, next to the close button.
                 const Center(child: SheetHandle()),
                 const SizedBox(height: 8),
                 // Badges keep their natural size; the close button stays
@@ -197,6 +255,8 @@ class _PlaceDetailSheet extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 4),
+
+                // 2. What is it called, and where?
                 Text(
                   place.name,
                   style: textTheme.headlineSmall?.copyWith(
@@ -211,25 +271,51 @@ class _PlaceDetailSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 14),
-                PlacePhotoGallery(
-                  place: place,
-                  width: double.infinity,
-                  // A missing photo should not take over the screen.
-                  height: _hasPhotos ? 210 : 112,
-                  borderRadius: 22,
-                  loadingLabel: copy.get('loading_photo'),
-                  placeholder: PlacePhotoPlaceholder(
-                    category: place.category,
-                    label: copy.get('no_photo'),
-                    iconSize: _hasPhotos ? 40 : 30,
+
+                // 3. What does it feel like? The photo follows the name.
+                photo,
+
+                // 4. Can I study or hang out here? What the place offers.
+                if (activities.isNotEmpty) ...[
+                  _SectionTitle(copy.get('good_for'), top: 16),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final activity in activities)
+                        _Pill(
+                          icon: _activityIcon(activity),
+                          label: copy.activity(activity),
+                        ),
+                    ],
                   ),
-                  photoPosition: copy.photoPosition,
-                  viewPhotoLabel: copy.get('view_photo'),
-                  closeLabel: copy.get('close'),
-                  photoCaption: (photo) => copy.isTagalog
-                      ? photo.captionTl ?? photo.captionEn
-                      : photo.captionEn ?? photo.captionTl,
+                ],
+                _SectionTitle(
+                  copy.get('amenities'),
+                  top: activities.isEmpty ? 16 : 20,
                 ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: amenities.isEmpty
+                      ? [
+                    _Pill(
+                      icon: Icons.info_outline,
+                      label: place.isDemo
+                          ? copy.get('sample_data')
+                          : copy.get('not_listed'),
+                    ),
+                  ]
+                      : [
+                    for (final amenity in amenities)
+                      _Pill(
+                        icon: _amenityIcon(amenity),
+                        label: copy.get(amenity),
+                      ),
+                  ],
+                ),
+
+                // 5-7. Practical facts: price, hours, address.
                 const SizedBox(height: 14),
                 _facts(context),
                 const SizedBox(height: 10),
@@ -261,47 +347,14 @@ class _PlaceDetailSheet extends StatelessWidget {
                     onTap: () => _copyAddress(context, address),
                   ),
                 ],
+
+                // 8. Extra context.
                 const SizedBox(height: 14),
                 _NoteBanner(
                   icon: Icons.info_outline,
                   text: place.isDemo
                       ? '${copy.get('sample_data')} $description'
                       : description,
-                ),
-                if (place.activities.isNotEmpty) ...[
-                  _SectionTitle(copy.get('good_for')),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (final activity in place.activities)
-                        _Pill(
-                          icon: _activityIcon(activity),
-                          label: copy.activity(activity),
-                        ),
-                    ],
-                  ),
-                ],
-                _SectionTitle(copy.get('amenities')),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: place.amenities.isEmpty
-                      ? [
-                    _Pill(
-                      icon: Icons.info_outline,
-                      label: place.isDemo
-                          ? copy.get('sample_data')
-                          : copy.get('not_listed'),
-                    ),
-                  ]
-                      : [
-                    for (final amenity in place.amenities)
-                      _Pill(
-                        icon: _amenityIcon(amenity),
-                        label: copy.get(amenity),
-                      ),
-                  ],
                 ),
               ],
             ),
@@ -755,19 +808,25 @@ class _NoteBanner extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.text);
+  const _SectionTitle(this.text, {this.top = 20});
 
   final String text;
+
+  /// Space above the title. Smaller for the first section under the header.
+  final double top;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 10),
-      child: Text(
-        text,
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+      padding: EdgeInsets.only(top: top, bottom: 10),
+      child: Semantics(
+        header: true,
+        child: Text(
+          text,
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+        ),
       ),
     );
   }

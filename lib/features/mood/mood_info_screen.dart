@@ -5,6 +5,9 @@ import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 import '../home/app_chrome.dart';
 import '../home/speech_bubble.dart';
+import '../places/place.dart';
+import 'mood_check_in.dart';
+import 'mood_check_in_repository.dart';
 
 enum _MoodStep { intro, consent, checkIn, review, complete }
 
@@ -13,12 +16,18 @@ class MoodInfoScreen extends StatefulWidget {
     required this.copy,
     required this.onHome,
     required this.onMenu,
+    this.places = const [],
+    this.repository,
+    this.initialPlace,
     super.key,
   });
 
   final AppCopy copy;
   final VoidCallback onHome;
   final VoidCallback onMenu;
+  final List<Place> places;
+  final MoodCheckInRepository? repository;
+  final Place? initialPlace;
 
   @override
   State<MoodInfoScreen> createState() => _MoodInfoScreenState();
@@ -26,11 +35,19 @@ class MoodInfoScreen extends StatefulWidget {
 
 class _MoodInfoScreenState extends State<MoodInfoScreen> {
   _MoodStep _step = _MoodStep.intro;
+  Place? _selectedPlace;
   String? _selectedMood;
   bool _consentAccepted = false;
   final _nicknameController = TextEditingController();
 
   AppCopy get copy => widget.copy;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPlace = widget.initialPlace ??
+        (widget.places.isNotEmpty ? widget.places.first : null);
+  }
 
   @override
   void dispose() {
@@ -99,6 +116,29 @@ class _MoodInfoScreenState extends State<MoodInfoScreen> {
     );
   }
 
+  Future<void> _submitCheckIn() async {
+    final place = _selectedPlace;
+    final mood = _selectedMood;
+    if (place == null || mood == null) return;
+
+    final checkIn = MoodCheckIn(
+      placeId: place.id,
+      mood: mood,
+      nickname: _nicknameController.text.trim().isNotEmpty
+          ? _nicknameController.text.trim()
+          : null,
+      createdAt: DateTime.now(),
+    );
+
+    final repository = widget.repository;
+    if (repository != null) {
+      await repository.submitCheckIn(checkIn);
+    }
+    if (mounted) {
+      setState(() => _step = _MoodStep.complete);
+    }
+  }
+
   Widget _buildStep(BuildContext context) {
     return switch (_step) {
       _MoodStep.intro => _IntroStep(
@@ -115,18 +155,22 @@ class _MoodInfoScreenState extends State<MoodInfoScreen> {
       ),
       _MoodStep.checkIn => _CheckInStep(
         copy: copy,
+        places: widget.places,
+        selectedPlace: _selectedPlace,
         selectedMood: _selectedMood,
         nicknameController: _nicknameController,
+        onPlaceChanged: (place) => setState(() => _selectedPlace = place),
         onSelected: (mood) => setState(() => _selectedMood = mood),
         onBack: _back,
-        onContinue: _selectedMood == null ? null : _next,
+        onContinue: (_selectedPlace != null && _selectedMood != null) ? _next : null,
       ),
       _MoodStep.review => _ReviewStep(
         copy: copy,
+        place: _selectedPlace,
         mood: _selectedMood!,
         nickname: _nicknameController.text,
         onBack: _back,
-        onPreview: _next,
+        onSubmit: _submitCheckIn,
       ),
       _MoodStep.complete => _CompleteStep(
         copy: copy,
@@ -240,16 +284,22 @@ class _ConsentStep extends StatelessWidget {
 class _CheckInStep extends StatelessWidget {
   const _CheckInStep({
     required this.copy,
+    required this.places,
+    required this.selectedPlace,
     required this.selectedMood,
     required this.nicknameController,
+    required this.onPlaceChanged,
     required this.onSelected,
     required this.onBack,
     required this.onContinue,
   });
 
   final AppCopy copy;
+  final List<Place> places;
+  final Place? selectedPlace;
   final String? selectedMood;
   final TextEditingController nicknameController;
+  final ValueChanged<Place?> onPlaceChanged;
   final ValueChanged<String> onSelected;
   final VoidCallback onBack;
   final VoidCallback? onContinue;
@@ -262,16 +312,51 @@ class _CheckInStep extends StatelessWidget {
       ('stressed', Icons.sentiment_dissatisfied_rounded),
       ('sad', Icons.sentiment_very_dissatisfied_rounded),
     ];
+    final validSelectedPlace = (selectedPlace != null && places.contains(selectedPlace))
+        ? selectedPlace
+        : (places.isNotEmpty ? places.first : null);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (places.isNotEmpty) ...[
+          Text(
+            copy.get('mood_place_title'),
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 10),
+          DropdownButtonFormField<Place>(
+            key: const Key('mood-place-select'),
+            initialValue: validSelectedPlace,
+            isExpanded: true,
+            decoration: InputDecoration(
+              labelText: copy.get('mood_place_select'),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            items: [
+              for (final place in places)
+                DropdownMenuItem<Place>(
+                  value: place,
+                  child: Text(
+                    place.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+            onChanged: onPlaceChanged,
+          ),
+          const SizedBox(height: 20),
+        ],
         Text(
           copy.get('mood_select_title'),
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 6),
         Text(copy.get('mood_select_body')),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         for (final mood in moods)
           Card(
             color: selectedMood == mood.$1 ? AppColors.bubble : null,
@@ -300,6 +385,11 @@ class _CheckInStep extends StatelessWidget {
             helperText: copy.get('mood_nickname_help'),
           ),
         ),
+        const SizedBox(height: 8),
+        _Notice(
+          icon: Icons.privacy_tip_outlined,
+          text: copy.get('mood_privacy_tip'),
+        ),
         const SizedBox(height: 16),
         _StepActions(copy: copy, onBack: onBack, onContinue: onContinue),
       ],
@@ -310,17 +400,19 @@ class _CheckInStep extends StatelessWidget {
 class _ReviewStep extends StatelessWidget {
   const _ReviewStep({
     required this.copy,
+    required this.place,
     required this.mood,
     required this.nickname,
     required this.onBack,
-    required this.onPreview,
+    required this.onSubmit,
   });
 
   final AppCopy copy;
+  final Place? place;
   final String mood;
   final String nickname;
   final VoidCallback onBack;
-  final VoidCallback onPreview;
+  final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -332,6 +424,11 @@ class _ReviewStep extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 10),
+        if (place != null)
+          _ReviewRow(
+            label: copy.get('starting_near'),
+            value: place!.name,
+          ),
         _ReviewRow(
           label: copy.get('mood_review_mood'),
           value: copy.get('mood_$mood'),
@@ -340,13 +437,12 @@ class _ReviewStep extends StatelessWidget {
           label: copy.get('mood_review_nickname'),
           value: nickname.isEmpty ? copy.get('mood_not_provided') : nickname,
         ),
-        _Notice(icon: Icons.info_outline, text: copy.get('mood_demo_notice')),
         const SizedBox(height: 20),
         _StepActions(
           copy: copy,
           onBack: onBack,
-          onContinue: onPreview,
-          continueLabel: copy.get('mood_preview_submit'),
+          onContinue: onSubmit,
+          continueLabel: copy.get('mood_submit'),
         ),
       ],
     );
@@ -416,6 +512,7 @@ class _StepActions extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: FilledButton(
+            key: const Key('mood-continue-button'),
             onPressed: onContinue,
             child: Text(continueLabel ?? copy.get('mood_continue')),
           ),

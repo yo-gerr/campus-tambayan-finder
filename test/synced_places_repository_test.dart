@@ -58,6 +58,9 @@ class _BundledRepository implements PlacesRepository {
       source: PlacesDataSource.bundledSeed,
     );
   }
+
+  @override
+  Future<void> refresh() async {}
 }
 
 class _MemoryPlacesCache implements PlacesCache {
@@ -83,6 +86,9 @@ class _FakeRemote implements PlacesRemoteSource {
 
   @override
   Stream<List<Place>> watchPlaces() => _create();
+
+  @override
+  Future<List<Place>> fetchPlaces() async => watchPlaces().first;
 }
 
 void main() {
@@ -212,4 +218,16 @@ void main() {
       expect(snapshots.last.places.single.name, 'Live Place');
     },
   );
+
+  test('refreshes shared listings and updates local cache', () async {
+    final cache = _MemoryPlacesCache();
+    final repository = SyncedPlacesRepository(
+      local: _BundledRepository(),
+      remote: _FakeRemote(() => Stream.value(const [_livePlace])),
+      cache: cache,
+    );
+
+    await repository.refresh();
+    expect(cache.places?.single.name, 'Live Place');
+  });
 }

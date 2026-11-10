@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class CampusMapAnchor {
@@ -24,6 +26,28 @@ const campusMapAnchors = [
     location: LatLng(14.694196132789166, 120.96981742109614),
   ),
 ];
+
+CampusMapAnchor anchorForCampus(String key) {
+  final normalized = key.toLowerCase();
+  if (normalized.contains('cpag')) return campusMapAnchors[1];
+  return campusMapAnchors[0];
+}
+
+double distanceMetersBetween(LatLng point1, LatLng point2) {
+  const earthRadius = 6371000.0;
+  final dLat = _toRadians(point2.latitude - point1.latitude);
+  final dLng = _toRadians(point2.longitude - point1.longitude);
+  final a =
+      math.sin(dLat / 2) * math.sin(dLat / 2) +
+      math.cos(_toRadians(point1.latitude)) *
+          math.cos(_toRadians(point2.latitude)) *
+          math.sin(dLng / 2) *
+          math.sin(dLng / 2);
+  final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+  return earthRadius * c;
+}
+
+double _toRadians(double degree) => degree * math.pi / 180.0;
 
 LatLng get initialCampusMapCenter => LatLng(
   campusMapAnchors

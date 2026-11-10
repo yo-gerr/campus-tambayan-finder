@@ -179,6 +179,14 @@ class Place implements PlaceLike {
       photos: _photos(json['place_photos'] ?? json['photos']),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Place && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class PlaceCoordinates {
