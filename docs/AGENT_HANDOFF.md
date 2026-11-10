@@ -4,6 +4,27 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-10 — Refined client app guide with non-technical walkthrough and screenshot placeholders
+
+- Rewrote [`CLIENT_APP_GUIDE.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/CLIENT_APP_GUIDE.md) into an engaging, non-technical feature walkthrough tailored for client presentation.
+- Added explicit image placeholders (`![Screenshot ...](...)`) and 7 screenshot capture annotations with recommended filenames in `docs/screenshots/`.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: capturing PNG screenshots for the 7 presentation placeholders.
+
+### 2026-11-10 — Updated visual onboarding pages and in-app guide sections
+
+- Added 4th visual page (`_MoodIllustration`) to [`visual_onboarding_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/onboarding/visual_onboarding_screen.dart) covering anonymous Mood Check-ins.
+- Added 6th guide section (`guide_mood_title`) to [`onboarding_screen.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/features/onboarding/onboarding_screen.dart).
+- Updated bilingual translation strings in [`app_copy.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/app_copy.dart) to accurately describe Campus Distance Sorting, Pull-to-Refresh sync, Google Maps directions, active Mood Check-in flow, and top-right sidebar menu controls.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client final dataset and legal copy sign-offs.
+
+### 2026-11-10 — Updated onboarding, instructions, and project documentation
+
+- Updated [PROJECT_BRIEF.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/PROJECT_BRIEF.md), [ARCHITECTURE.md](file:///C:/Users/roger/Downloads/GitHub/commission/docs/ARCHITECTURE.md), and [README.md](file:///C:/Users/roger/Downloads/GitHub/commission/README.md) to record active features (Mood Check-in flow with Supabase & offline queue, Campus Distance Sorting, Pull-to-Refresh sync, and top-right menu controls).
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client final dataset and copy sign-offs.
+
 ### 2026-11-10 — Removed visible demo tags
 
 - Removed the DEMO banner from Explore, demo pills from place cards and details, sample-data prefixes in place details, and the demo suffix from the version label.

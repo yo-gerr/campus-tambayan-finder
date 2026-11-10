@@ -18,13 +18,12 @@ The agreed target is an Android application, initially serving students near PLV
 
 These are capabilities in the agreed product direction. Their presentation priority is recorded in the project brief; details still need definition:
 
-- **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Search matches the place name, area, and localized category label with a simple in-memory substring match; it is not geo or fuzzy search.
+- **Place discovery:** browse and filter student-friendly places by category, budget, amenities, environment, capacity, and intended activity. Places are sorted by straight-line Haversine distance to the active campus anchor (**PLV Annex** vs **CPAG**). Swiping down on the list triggers an on-demand pull-to-refresh sync from Supabase. Search matches the place name, area, and localized category label.
 - **Place details:** show verified-as-possible listing information such as address, photos, amenities, estimated prices, and operating hours.
-- **Map and directions:** the owner approved MapLibre Flutter with OpenFreeMap public tiles/styles and OpenStreetMap-derived data for the current class demo, subject to an eligible representative accepting the terms and rechecking availability. Keep provider code in the map feature's presentation/infrastructure boundary and place coordinates in approved listing data. The app opens directions in Google Maps. In-app ETA and routing-service integration were removed from the lower-priced delivery scope; any future provider, cache, permission, and terms decision remains open.
-- **Listing operations:** the team plans to provide approximately 15–20 initial entries with available photos and details. Authorized team members will edit listing information manually in the Supabase dashboard (no custom in-app admin screen). Listings are loaded from Supabase when configured; the latest successful non-empty snapshot is cached on-device, while bundled local JSON remains the first-install seed and fallback. Each listing can have an ordered, Storage-backed gallery with optional bundled fallbacks.
-- **Bilingual experience and guidance:** support Filipino and English and provide first-use and in-app instructions.
-- **Location-aware behavior:** request device location only when needed and provide a useful experience if permission is denied.
-- **Optional mood check-in:** requested as an optional presentation feature, with no user profile linkage. Keep it separate from browsing; do not assume persistent storage, analytics, or research use. Privacy and data-handling decisions remain open.
+- **Map and directions:** MapLibre Flutter with OpenFreeMap public tiles/styles. Directions open externally in Google Maps for verified coordinates.
+- **Listing operations:** listings load from Supabase `places` and `place_photos` tables with on-device caching and bundled local JSON seed.
+- **Bilingual experience and guidance:** Filipino and English language switching, visual onboarding wizard, and detailed section-navigable guide.
+- **Mood check-in:** 4-step check-in flow with `public.mood_check_ins` table, 90-day automated retention, explicit privacy consent, nickname privacy tips, and local `SharedPreferences` offline queueing.
 - **Public product information:** no separate landing page is needed for the current APK presentation/testing delivery. Revisit only if the team later requests one.
 
 ## Possible feature-first shape

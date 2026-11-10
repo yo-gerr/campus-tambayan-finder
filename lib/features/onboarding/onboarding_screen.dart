@@ -14,7 +14,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _sectionKeys = List.generate(5, (_) => GlobalKey());
+  final _sectionKeys = List.generate(6, (_) => GlobalKey());
   final _scrollController = ScrollController();
 
   AppCopy get copy => widget.copy;
@@ -98,10 +98,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             _GuideSection(
               key: _sectionKeys[4],
-              icon: Icons.info_outline_rounded,
+              icon: Icons.mood_rounded,
+              title: copy.get('guide_mood_title'),
+              body: copy.get('guide_mood_body'),
+              color: AppColors.sky,
+            ),
+            _GuideSection(
+              key: _sectionKeys[5],
+              icon: Icons.menu_rounded,
               title: copy.get('guide_info_title'),
               body: copy.get('guide_info_body'),
-              color: AppColors.sky,
+              color: AppColors.demoContainer,
             ),
             const SizedBox(height: 8),
             FilledButton(
@@ -129,6 +136,7 @@ class _GuideContents extends StatelessWidget {
       copy.get('guide_filter_title'),
       copy.get('guide_details_title'),
       copy.get('guide_map_title'),
+      copy.get('guide_mood_title'),
       copy.get('guide_info_title'),
     ];
 

@@ -48,6 +48,12 @@ class _VisualOnboardingScreenState extends State<VisualOnboardingScreen> {
         body: widget.copy.get('visual_go_body'),
         illustration: const _DetailsIllustration(),
       ),
+      _VisualPage(
+        icon: Icons.mood_rounded,
+        title: widget.copy.get('visual_mood_title'),
+        body: widget.copy.get('visual_mood_body'),
+        illustration: const _MoodIllustration(),
+      ),
     ];
 
     final isLast = _page == pages.length - 1;
@@ -155,37 +161,39 @@ class _VisualPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 292,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(36),
-            boxShadow: const [
-              BoxShadow(color: AppColors.surfaceUnder, offset: Offset(0, 8)),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 250,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(36),
+              boxShadow: const [
+                BoxShadow(color: AppColors.surfaceUnder, offset: Offset(0, 8)),
+              ],
+            ),
+            child: illustration,
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Icon(icon, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+              ),
             ],
           ),
-          child: illustration,
-        ),
-        const SizedBox(height: 42),
-        Row(
-          children: [
-            Icon(icon, color: AppColors.primary),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 14),
-        Text(body, style: Theme.of(context).textTheme.bodyLarge),
-      ],
+          const SizedBox(height: 12),
+          Text(body, style: Theme.of(context).textTheme.bodyLarge),
+        ],
+      ),
     );
   }
 }
@@ -285,22 +293,23 @@ class _DetailsIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(12),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(12),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Sample Kape Stop',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 6),
               Text('Hours   9 AM–9 PM'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text('Estimated spend   ₱80–₱250'),
-              const Spacer(),
+              const SizedBox(height: 10),
               const SizedBox(
                 width: double.infinity,
                 child: FilledButton(onPressed: null, child: Text('Directions')),
@@ -308,6 +317,82 @@ class _DetailsIllustration extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MoodIllustration extends StatelessWidget {
+  const _MoodIllustration();
+
+  @override
+  Widget build(BuildContext context) {
+    final moods = [
+      ('Happy', Icons.sentiment_very_satisfied_rounded, AppColors.primary),
+      ('Relaxed', Icons.sentiment_satisfied_alt_rounded, AppColors.brand),
+      ('Stressed', Icons.sentiment_dissatisfied_rounded, AppColors.mutedInk),
+      ('Sad', Icons.sentiment_very_dissatisfied_rounded, AppColors.mutedInk),
+    ];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              for (final mood in moods)
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: AppColors.bubble,
+                      child: Icon(mood.$2, color: mood.$3, size: 24),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      mood.$1,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.inkStrong,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.bubble,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.privacy_tip_outlined,
+                  size: 16,
+                  color: AppColors.inkStrong,
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    '100% Anonymous & Voluntary',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.inkStrong,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

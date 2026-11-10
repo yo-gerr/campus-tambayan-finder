@@ -607,7 +607,7 @@ void main() {
   ) async {
     await pumpPrototype(tester, showIntroOnStart: true);
 
-    expect(find.text('Find your next tambayan'), findsOneWidget);
+    expect(find.text('Find & sort tambayan spots'), findsOneWidget);
     expect(find.byKey(const Key('visual-onboarding-skip')), findsOneWidget);
     await tester.tap(find.byKey(const Key('visual-onboarding-skip')));
     await tester.pumpAndSettle();
@@ -623,7 +623,7 @@ void main() {
   testWidgets('visual onboarding moves through pages', (tester) async {
     await pumpPrototype(tester, showIntroOnStart: true);
 
-    expect(find.text('Find your next tambayan'), findsOneWidget);
+    expect(find.text('Find & sort tambayan spots'), findsOneWidget);
     expect(find.byKey(const Key('visual-onboarding-skip')), findsOneWidget);
     await tester.tap(find.byKey(const Key('visual-onboarding-next')));
     await tester.pumpAndSettle();
@@ -631,7 +631,11 @@ void main() {
 
     await tester.tap(find.byKey(const Key('visual-onboarding-next')));
     await tester.pumpAndSettle();
-    expect(find.text('Check it, then go'), findsOneWidget);
+    expect(find.text('Map & directions'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('visual-onboarding-next')));
+    await tester.pumpAndSettle();
+    expect(find.text('Share your visit mood'), findsOneWidget);
     expect(find.byKey(const Key('visual-onboarding-start')), findsOneWidget);
   });
 

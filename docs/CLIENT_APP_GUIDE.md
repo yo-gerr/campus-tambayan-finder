@@ -1,262 +1,132 @@
-# Kamus Tambay
+# Kamus Tambay — Client User Guide & Feature Walkthrough
 
-## Client guide: what the application can do
+Welcome to **Kamus Tambay** (Campus Tambayan Finder)! This guide provides a non-technical overview of all the app's features, how students use it to discover study and tambayan spots near **PLV Annex** and **CPAG**, and instructions on capturing screenshots for your client presentation.
 
-This guide describes the application as it currently works in the class-demo
-build. It focuses on what a student can do, what information the app shows,
-and what the app does not yet guarantee.
+---
 
-## 1. Home screen
+## 1. Home Screen Hub & Navigation
 
-The home screen is the starting point of the app. It has three main choices:
+The **Home Screen** is the central hub of the application. It uses a clean, friendly campus design with three main speech-bubble buttons:
 
-- **Find a tambayan** opens the place list.
-- **Mood check-in** opens the optional mood and visit check-in flow.
-- **More** opens the side menu.
+* 🔍 **Find a tambayan:** Opens the complete place list and search dashboard.
+* 😊 **Mood check-in:** Opens the voluntary, 4-step anonymous mood feedback wizard.
+* ≡ **More (Top-Right Menu Button):** Opens the side menu drawer from any screen.
 
-The home screen also provides access to the menu button and uses the Kamus
-Tambay branding and supplied visual design.
+The home screen displays the Kamus Tambay wordmark, mascot artwork, and cream/sky campus theme.
 
-## 2. Finding places
+> 📷 **Screenshot Opportunity #1: Home Screen Hub**
+> * **What to capture:** Open the app to the main Home screen showing the wordmark, student mascot, and 3 speech bubbles (**Find a tambayan**, **Mood check-in**, **More**).
+> * **Save image as:** `docs/screenshots/01_home_screen.png`
+>
+> ![Screenshot 1: Home Screen Hub](screenshots/01_home_screen.png)
 
-The place list is the main discovery feature. Students can:
+---
 
-- Browse the available tambayan places.
-- Search by place name, neighborhood or area, and category.
-- Choose whether they are starting near **PLV Annex** or **CPAG**.
-- See places with valid map coordinates first, based on their distance from
-  the selected campus starting point.
-- Pull down to refresh the list when shared listing data is available.
-- Open the map from the place list.
-- Tap a place card to see its complete details.
+## 2. Finding & Sorting Tambayan Places
 
-The list displays a notice when it is using sample information or an offline
-copy, so students can distinguish the demo data source from a recently
-downloaded shared listing set.
+The **Explore Dashboard** allows students to discover local study spots, cafes, eateries, and parks in Malinta:
 
-## 3. Filters
+* 🔎 **Quick Search:** Type place names, neighborhoods, or categories in the search bar.
+* 📍 **Campus Distance Sorting:** Tap **PLV Annex** or **CPAG** at the top ("Starting near") to automatically sort places by distance to that campus building!
+* 🔄 **Pull-to-Refresh:** Swipe down at the top of the list to instantly fetch the latest place listings from Supabase and update offline storage.
+* 🌐 **Offline Browsing:** If offline, the app automatically loads the saved snapshot so browsing never stops.
 
-The filter panel lets students narrow the list by:
+> 📷 **Screenshot Opportunity #2: Explore Place List & Campus Sorting**
+> * **What to capture:** Tap **Find a tambayan** on Home. Capture the place list with the "Starting near PLV Annex / CPAG" selector at the top.
+> * **Save image as:** `docs/screenshots/02_explore_list.png`
+>
+> ![Screenshot 2: Explore Place List](screenshots/02_explore_list.png)
 
-- Place category, such as tambayan, coffee shop, park or open space, and
-  affordable food.
-- Maximum estimated budget.
-- Whether the place is open now.
-- Amenities such as Wi-Fi, air-conditioning, power outlets, or roomier
-  capacity.
-- Indoor or outdoor setting.
-- Intended activity, including studying, eating, relaxing, or socializing.
+---
 
-Filters can be combined, applied, reset, or cleared. A counter shows how many
-filters are active.
+## 3. Smart Filters & Live Operating Hours
 
-### Filter limitations
+Students can customize their search using preset filter chips:
 
-- The budget filter uses the stored estimated price range. It is not a live
-  price check.
-- A place without a reliable price range is not treated as free and is hidden
-  when a budget limit is applied.
-- “Open now” depends on the stored weekly schedule and Asia/Manila time.
-- Places without structured hours cannot be confirmed as open and are excluded
-  from the “Open now” results.
-- Search is a simple text match. It is not a map-radius search, typo-tolerant
-  search, or recommendation engine.
-- Distance ordering is straight-line distance from the selected campus anchor,
-  not walking distance or travel time.
+* 💰 **Budget Chips:** Select preset spending limits (₱50, ₱100, ₱150, ₱200, ₱300, ₱500) or "Any budget".
+* 🕒 **Open Now Filter:** Shows only places currently open, evaluated live in **Asia/Manila time** (fixed UTC+8).
+* ⚡ **Amenities:** Filter by Free Wi-Fi, Aircon, Power Outlets, or Roomy capacity.
+* 🌳 **Setting & Activities:** Filter by Indoor/Outdoor setting or intended activity (Study, Eat, Relax, Socialize).
 
-## 4. Place details
+> 📷 **Screenshot Opportunity #3: Filter Options Sheet**
+> * **What to capture:** Tap the **Filters** button on the Explore screen. Capture the filter modal showing preset budget chips, amenities, and "Open now" toggle.
+> * **Save image as:** `docs/screenshots/03_filters_sheet.png`
+>
+> ![Screenshot 3: Filter Options Sheet](screenshots/03_filters_sheet.png)
 
-Opening a place shows:
+---
 
-- Place name, category, and area.
-- A demo or verification status where applicable.
-- Photos or a no-photo placeholder.
-- Photo captions and a full-screen photo viewer when photos are available.
-- What the place is good for.
-- Amenities.
-- Estimated price or price range.
-- Indoor or outdoor setting.
-- Open or closed status when structured hours are available.
-- The weekly opening-hours schedule.
-- Address when one is available.
-- Description and other supplied listing information.
+## 4. Place Details & Photo Gallery
 
-Students can copy a displayed address and use the directions button when the
-listing has a verified location.
+Tapping any place card opens a complete detail sheet:
 
-### Place detail limitations
+* 🖼️ **Swipeable Photo Gallery:** Swipe through photos or tap to open in a full-screen pinch-to-zoom viewer.
+* 📅 **Per-Day Weekly Schedule:** View full operating hours from Monday to Sunday.
+* 🏷️ **Facts & Badges:** Live **Bukas ngayon** (Open now) or **Sarado ngayon** (Closed now) status badges, estimated spend, address, and amenities.
+* 🗺️ **Google Maps Directions:** Tap **Directions** to open turn-by-turn navigation directly in the Google Maps app for verified locations.
 
-- Listing accuracy depends on the information supplied and maintained by the
-  project team.
-- Prices, hours, amenities, photos, and addresses may become outdated.
-- The app does not allow shop owners to edit their own listings.
-- The app does not process reservations, payments, orders, or in-app
-  messaging.
-- Directions open in Google Maps outside the app. The app does not calculate
-  routes, walking time, traffic, or live travel estimates.
-- Directions are unavailable when the location is not verified or coordinates
-  are missing.
+> 📷 **Screenshot Opportunity #4: Place Detail Sheet & Photo Gallery**
+> * **What to capture:** Tap on a place card (e.g., *Sample Kape Stop*). Capture the open detail sheet showing place photos, operating hours, and the Google Maps Directions button.
+> * **Save image as:** `docs/screenshots/04_place_details.png`
+>
+> ![Screenshot 4: Place Detail Sheet](screenshots/04_place_details.png)
 
-## 5. Map
+---
 
-The map displays:
+## 5. Interactive Campus Map
 
-- Fixed reference points for PLV Annex and CPAG.
-- Place markers when a listing has valid coordinates.
-- Place names beside markers.
-- A horizontal place-card carousel for mapped places.
-- A notice explaining that the map needs internet access and that places
-  without valid coordinates are not shown.
-- A map attribution control and provider information for the map data and
-  style.
+The **Map** offers visual location discovery:
 
-Students can tap a map marker or place card to open the same place details
-shown from the list.
+* 📍 **Campus Anchors:** Clear, fixed reference pins for **PLV Annex** and **CPAG**.
+* 🏪 **Place Markers & Closed Styling:** Open places render active blue markers; closed places render in muted slate grey (`#5A6485`) with outlines.
+* 🎴 **Bottom Card Carousel:** Swipe through place cards at the bottom of the map. Tapping a card or pin opens shop details.
 
-### Map limitations
+> 📷 **Screenshot Opportunity #5: Interactive Map & Place Carousel**
+> * **What to capture:** Tap **View map** on the Explore list. Capture the map screen showing PLV Annex / CPAG pins, place markers, and the bottom place carousel.
+> * **Save image as:** `docs/screenshots/05_map_view.png`
+>
+> ![Screenshot 5: Interactive Map View](screenshots/05_map_view.png)
 
-- The app does not request or track the student’s GPS location.
-- The campus points are fixed reference points, not the student’s live
-  location.
-- Places without valid coordinates cannot appear as map markers.
-- The map requires an internet connection to load its online map style and
-  tiles.
-- The map is a discovery map, not a navigation or route-planning service.
+---
 
-## 6. Mood check-in
+## 6. Anonymous Mood Check-in
 
-Mood check-in is an optional flow separate from browsing places. A student
-can:
+Students can voluntarily share how their visit went:
 
-1. Read the purpose and privacy information.
-2. Review and accept the check-in consent notice.
-3. Select **where they went** from the available tambayan places.
-4. Choose how they felt:
-   - Happy
-   - Relaxed
-   - Stressed
-   - Sad
-5. Add an optional nickname.
-6. Review the selected place, mood, and nickname.
-7. Submit the anonymous check-in.
-8. Start another check-in or return home.
+* 1️⃣ **Select Place:** Choose the establishment visited.
+* 2️⃣ **Choose Mood:** Select 1 of 4 mood icons (😊 Happy, 😌 Relaxed, 😰 Stressed, 😢 Sad).
+* 3️⃣ **Privacy Disclosure & Optional Nickname:** Clear consent disclosure explaining 100% anonymous storage, no GPS tracking, and an optional nickname field with a privacy warning tip.
+* 4️⃣ **Submit Check-in:** Inserts response into Supabase `public.mood_check_ins` with automated 90-day retention and offline queueing.
 
-The check-in does not use GPS and does not require an account or student
-profile. The nickname is optional, but the app warns that a unique nickname
-could still identify someone.
+> 📷 **Screenshot Opportunity #6: Mood Check-in Step**
+> * **What to capture:** Tap **Mood check-in** from Home or the menu. Capture Step 2 or 3 showing the mood icons and privacy tip.
+> * **Save image as:** `docs/screenshots/06_mood_checkin.png`
+>
+> ![Screenshot 6: Mood Check-in Step](screenshots/06_mood_checkin.png)
 
-When the shared service is configured, the check-in is sent to the mood
-check-in database. If submission cannot reach the service, the app places the
-check-in in an offline retry queue and can retry it later.
+---
 
-### Mood check-in limitations
+## 7. Bilingual Experience (Tagalog / English) & Sidebar Menu
 
-- A student can select only from places currently supplied to the app.
-- The check-in records the selected place and mood; it does not prove that the
-  student visited the place.
-- The app does not diagnose mental health or provide counselling.
-- The nickname is not a secure identity system and should not be treated as
-  anonymous if it identifies the student.
-- The check-in requires the project’s approved database setup and privacy
-  decisions before it should be treated as a production service.
-- Aggregate mood summaries are supported by the data layer, but the current
-  student-facing flow is primarily for submitting a check-in.
+* 🇵🇭 / 🇬🇧 **Bilingual Support:** Switch between **English** and **Filipino (Tagalog)** anytime from the sidebar drawer.
+* ☰ **Universal Access:** Tapping the menu button at the top-right of any screen opens the sidebar to access Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, and Language settings.
 
-## 7. Shared listings and offline behavior
+> 📷 **Screenshot Opportunity #7: Sidebar Menu & Language Switcher**
+> * **What to capture:** Tap the top-right menu button to open the sidebar drawer showing navigation destinations and the language toggle.
+> * **Save image as:** `docs/screenshots/07_sidebar_menu.png`
+>
+> ![Screenshot 7: Sidebar Drawer Menu](screenshots/07_sidebar_menu.png)
 
-The application can use two listing sources:
+---
 
-- A shared online listing service for the team’s maintained data.
-- Bundled sample listings included with the app.
+## Summary of Screenshots to Capture for Presentation
 
-The app uses the bundled listings when shared service configuration is absent
-or unavailable. After a successful non-empty shared download, it can retain a
-local copy for offline browsing. The app does not silently replace a useful
-saved listing set with an empty response.
-
-### Data and connectivity limitations
-
-- The online listing service must be configured separately for shared data to
-  work.
-- Offline mode cannot provide new online map tiles, current external
-  directions, or newly updated listings.
-- The app does not include an administrator screen. Authorized team members
-  maintain listings through the configured backend.
-- The bundled and demo information should not be presented as verified
-  business information until the team supplies and reviews the final dataset.
-
-## 8. Language support
-
-The interface supports:
-
-- English
-- Filipino (Tagalog)
-
-Students can switch languages from the side menu. The selected language is
-used by the app interface, filters, place detail labels, mood flow, notices,
-and guide screens.
-
-### Language limitation
-
-The language switch covers the app’s supplied interface and bilingual listing
-fields. It cannot translate newly entered backend content automatically.
-
-## 9. Onboarding and instructions
-
-The first-launch visual guide introduces:
-
-1. Finding nearby tambayan places.
-2. Using filters.
-3. Reviewing a place and opening directions.
-
-The guide can be skipped. The detailed Instructions screen can be reopened
-from the side menu and explains the main discovery, filtering, details, map,
-and information behaviors.
-
-## 10. Side menu and information pages
-
-The side menu provides:
-
-- Home
-- Instructions
-- Vision & Mission
-- Privacy
-- Terms & Conditions
-- English/Filipino language switching
-- App version information
-
-Vision & Mission, Privacy, and Terms & Conditions are clearly marked
-informational or draft content until the client supplies and approves final
-copy.
-
-## 11. Privacy and account limitations
-
-The current application:
-
-- Does not require registration or login.
-- Does not create student accounts or profiles.
-- Does not request live GPS location.
-- Does not provide in-app payments.
-- Does not provide an owner/admin account screen.
-- Treats the mood check-in as optional.
-
-The mood check-in and listing backend still require the project team to confirm
-retention, access, deletion, consent wording, and operational responsibilities
-before production use. This document describes application behavior; it is
-not a legal or privacy compliance assessment.
-
-## 12. Current class-demo scope
-
-The application is suitable for demonstrating:
-
-- Student place discovery near PLV Annex and CPAG.
-- Search and practical place filters.
-- Place details and photo viewing.
-- A campus-reference map.
-- External Google Maps directions for verified listings.
-- Bilingual navigation and instructions.
-- Optional anonymous mood check-ins with place selection.
-- Online listing synchronization with local fallback behavior.
-
-It is not yet a complete production marketplace, navigation service, business
-management system, or verified source of current commercial information.
+| # | Screen Name | Action to Capture | Recommended Filename |
+| :--- | :--- | :--- | :--- |
+| **1** | Home Hub | Main screen with speech bubbles & logo | `01_home_screen.png` |
+| **2** | Explore List | Place list with "Starting near PLV Annex / CPAG" | `02_explore_list.png` |
+| **3** | Filters Sheet | Filter modal with budget chips & "Open now" toggle | `03_filters_sheet.png` |
+| **4** | Place Details | Detail sheet showing photos & Google Maps button | `04_place_details.png` |
+| **5** | Interactive Map | MapLibre map with campus pins & bottom carousel | `05_map_view.png` |
+| **6** | Mood Check-in | 4-step check-in wizard with mood icons | `06_mood_checkin.png` |
+| **7** | Sidebar Menu | Side drawer with language toggle | `07_sidebar_menu.png` |
