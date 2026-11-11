@@ -646,7 +646,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('open-menu')));
       await tester.pumpAndSettle();
-      expect(find.text('Kamus Tambay · Version 1.0.0'), findsOneWidget);
+      expect(find.text('Kumus Tambay · Version 1.0.0'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('drawer-vision')));
       await tester.pumpAndSettle();

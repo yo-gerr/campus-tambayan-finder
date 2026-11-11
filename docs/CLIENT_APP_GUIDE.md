@@ -1,6 +1,6 @@
-# Kamus Tambay — Client User Guide & Feature Walkthrough
+# Kumus Tambay — Client User Guide & Feature Walkthrough
 
-Welcome to **Kamus Tambay** (Campus Tambayan Finder)! This guide provides a non-technical overview of all the app's features, how students use it to discover study and tambayan spots near **PLV Annex** and **CPAG**, and instructions on capturing screenshots for your client presentation.
+Welcome to **Kumus Tambay** (Campus Tambayan Finder)! This guide provides a non-technical overview of all the app's features, how students use it to discover study and tambayan spots near **PLV Annex** and **CPAG**, and instructions on capturing screenshots for your client presentation.
 
 ---
 
@@ -12,7 +12,7 @@ The **Home Screen** is the central hub of the application. It uses a clean, frie
 * 😊 **Mood check-in:** Opens the voluntary, 4-step anonymous mood feedback wizard.
 * ≡ **More (Top-Right Menu Button):** Opens the side menu drawer from any screen.
 
-The home screen displays the Kamus Tambay wordmark, mascot artwork, and cream/sky campus theme.
+The home screen displays the Kumus Tambay wordmark, mascot artwork, and cream/sky campus theme.
 
 > 📷 **Screenshot Opportunity #1: Home Screen Hub**
 > * **What to capture:** Open the app to the main Home screen showing the wordmark, student mascot, and 3 speech bubbles (**Find a tambayan**, **Mood check-in**, **More**).

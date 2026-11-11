@@ -1,6 +1,6 @@
 # Credits and Third-Party Notices
 
-Kamus Tambay is a class-demo Flutter app for Android. This file lists the
+Kumus Tambay is a class-demo Flutter app for Android. This file lists the
 third-party data, services, software, fonts, and artwork the app uses, and the
 attribution each one requires. It mirrors the in-app **Credits** screen
 (sidebar → Credits) and is the public reference for this repository.

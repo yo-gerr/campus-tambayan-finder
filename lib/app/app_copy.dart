@@ -104,7 +104,7 @@ class AppCopy {
     'privacy_pending': [
       'Demo Privacy Notice (Draft for Class Presentation)\n\n'
           '1. Data Minimization & Accounts:\n'
-          'Kamus Tambay does not require user registration, student profiles, emails, passwords, or personal account creation. You can browse listings freely.\n\n'
+          'Kumus Tambay does not require user registration, student profiles, emails, passwords, or personal account creation. You can browse listings freely.\n\n'
           '2. Location Privacy:\n'
           'The application does not track, store, or share your precise real-time GPS location. Map features rely on fixed campus anchors (PLV Annex & CPAG), and directions launch externally in Google Maps.\n\n'
           '3. Anonymous Mood Check-ins:\n'
@@ -114,7 +114,7 @@ class AppCopy {
           '*Note: This draft copy is for class presentation and review purposes only, pending formal legal review by a qualified professional.*',
       'Demo Privacy Notice (Draft para sa Class Presentation)\n\n'
           '1. Pagpapaliit ng Data at Account:\n'
-          'Hindi nangangailangan ang Kamus Tambay ng rehistrasyon, student profile, email, password, o personal account. Malaya mong mababrowse ang mga lugar.\n\n'
+          'Hindi nangangailangan ang Kumus Tambay ng rehistrasyon, student profile, email, password, o personal account. Malaya mong mababrowse ang mga lugar.\n\n'
           '2. Privacy sa Lokasyon:\n'
           'Hindi sinusubaybayan o itinuturo ng app ang iyong eksaktong real-time GPS location. Ang mga mapa ay gumagamit ng mga nakatakdang anchor sa campus (PLV Annex & CPAG), at ang direksyon ay binubuksan sa Google Maps.\n\n'
           '3. Anonymous Mood Check-in:\n'
@@ -126,7 +126,7 @@ class AppCopy {
     'terms_pending': [
       'Demo Terms & Conditions (Draft for Class Presentation)\n\n'
           '1. Purpose & Scope:\n'
-          'Kamus Tambay is an informational directory helping students discover study, coffee, food, and relaxation spots near PLV Annex and CPAG in Malinta, Valenzuela City.\n\n'
+          'Kumus Tambay is an informational directory helping students discover study, coffee, food, and relaxation spots near PLV Annex and CPAG in Malinta, Valenzuela City.\n\n'
           '2. No In-App Payments or Transactions:\n'
           'All listings are informational. The application does not process monetary transactions, reservations, or payments.\n\n'
           '3. Listing Accuracy & Consumer Information:\n'
@@ -136,7 +136,7 @@ class AppCopy {
           '*Note: This draft copy is for class presentation and review purposes only, pending formal legal review by a qualified professional.*',
       'Demo Terms at Kundisyon (Draft para sa Class Presentation)\n\n'
           '1. Layunin at Saklaw:\n'
-          'Ang Kamus Tambay ay isang impormatibong direktoryo upang tulungan ang mga estudyante na makahanap ng lugar para sa pag-aaral, kape, pagkain, at pahingahan malapit sa PLV Annex at CPAG sa Malinta, Valenzuela City.\n\n'
+          'Ang Kumus Tambay ay isang impormatibong direktoryo upang tulungan ang mga estudyante na makahanap ng lugar para sa pag-aaral, kape, pagkain, at pahingahan malapit sa PLV Annex at CPAG sa Malinta, Valenzuela City.\n\n'
           '2. Walang Bayad o Transaksyon sa App:\n'
           'Ang lahat ng listing ay para sa impormasyon lamang. Walang anumang bayad, booking, o transaksyon sa loob ng app.\n\n'
           '3. Katumpakan ng Listing at Impormasyon sa Mamimili:\n'
@@ -178,8 +178,8 @@ class AppCopy {
       'Mga notice ng package at bundled font license',
     ],
     'app_version': [
-      'Kamus Tambay · Version 1.0.0',
-      'Kamus Tambay · Bersyon 1.0.0',
+      'Kumus Tambay · Version 1.0.0',
+      'Kumus Tambay · Bersyon 1.0.0',
     ],
     'language': ['Language', 'Wika'],
     'language_english': ['English', 'English'],

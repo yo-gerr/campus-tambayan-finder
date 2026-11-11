@@ -4,7 +4,7 @@ import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
-/// Home-only header: the Kamus Tambay wordmark, emblem in a gold ring, and
+/// Home-only header: the Kumus Tambay wordmark, emblem in a gold ring, and
 /// menu shortcut.
 class BrandHeader extends StatelessWidget {
   const BrandHeader({required this.copy, required this.onMenu, super.key});
@@ -39,7 +39,7 @@ class BrandHeader extends StatelessWidget {
                     'assets/brand/wordmark.png',
                     height: wordmarkHeight,
                     fit: BoxFit.contain,
-                    semanticLabel: 'Kamus Tambay',
+                    semanticLabel: 'Kumus Tambay',
                   ),
                 ),
               ),

@@ -106,7 +106,7 @@ class CreditsScreen extends StatelessWidget {
   void _showLicenses(BuildContext context) {
     showLicensePage(
       context: context,
-      applicationName: 'Kamus Tambay',
+      applicationName: 'Kumus Tambay',
       applicationVersion: '1.0.0',
       applicationIcon: const Padding(
         padding: EdgeInsets.all(8),

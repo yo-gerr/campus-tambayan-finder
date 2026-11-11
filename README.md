@@ -1,4 +1,4 @@
-# Kamus Tambay
+# Kumus Tambay
 
 A proposed Android application to help students find suitable places to study, eat, relax, and socialize in Malinta, Valenzuela City, particularly near PLV Annex and CPAG.
 
@@ -34,7 +34,7 @@ The handoff is a lightweight, version-controlled coordination log, not a live sy
 | Visual direction (provisional) | Cream/sky/navy/blue speech-bubble palette, Fredoka headings with Nunito body text, flat shapes with hard undersides, 24 px margins (16 px on compact widths), 8 px grid, and 48 dp targets. Branding remains provisional |
 | Initial coverage | Malinta, particularly near PLV Annex and CPAG |
 | Platform | Android |
-| Product name and wordmark | Confirmed November 5, 2026: the displayed app name and supplied home wordmark are "Kamus Tambay". The internal package/application ID and GitHub repository name remain unchanged; final logo treatment is open |
+| Product name and wordmark | Confirmed November 5, 2026: the displayed app name and supplied home wordmark are "Kumus Tambay". The internal package/application ID and GitHub repository name remain unchanged; final logo treatment is open |
 | App languages | Filipino (Tagalog) and English |
 | Requested delivery | Installable Android APK for class presentation/testing; no Google Play release |
 | Web preview | Browser build published to GitHub Pages so the client can review changes without reinstalling the APK. Review channel only; the APK remains the deliverable |

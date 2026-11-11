@@ -4,6 +4,22 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-11 — Committed the Kumus Tambay rename and updated brand artwork
+
+- Committed the pending display-name rename from `Kamus Tambay` to `Kumus Tambay` across app labels, the Android manifest, web metadata, in-app copy and credits, widget tests, and documentation.
+- Replaced the bundled `assets/brand/wordmark.png` with the corrected supplied artwork.
+- Added the supplied `assets/brand/kumus-tambay-logo.png` for version control; it is not declared in `pubspec.yaml` or referenced in code, so it is not bundled into builds.
+- Fixed the missed `docs/MVP_PLAN.md` reference that still read "Kamus Tambay".
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: final logo treatment (launcher icon still the temporary blue-and-gold mark), client dataset, and legal copy sign-offs.
+
+### 2026-11-10 — Renamed application name to Kumus Tambay
+
+- Updated all application display labels, Android `AndroidManifest.xml` label, Web `index.html`/`manifest.json`, in-app credits, and documentation from `Kamus Tambay` to `Kumus Tambay`.
+- Preserved internal package/application ID, git repository name (`commission`), and underlying data models.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client final dataset and legal copy sign-offs.
+
 ### 2026-11-10 — Fixed offstage native map texture flickering on keyboard focus
 
 - Updated [`tambayan_app.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/tambayan_app.dart) to unmount `PlacesMapScreen` when `_section != AppSection.map`.

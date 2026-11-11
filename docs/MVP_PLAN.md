@@ -57,7 +57,7 @@ Retain the calm, welcoming student-oriented visual style as a design hypothesis 
 - Structured per-day hours: the weekly list, the open/closed badge on cards and in details, and the "Open now" filter all read `hoursByDay`; free-text `hours` is a note only.
 - English/Filipino interface toggle in the sidebar, launch guide reopenable from Sidebar → Instructions, and a MapLibre/OpenFreeMap map with campus anchors, place pins, and a card carousel.
 - Home hub with three speech-bubble destinations and no bottom navigation; spoke screens use the shared top-right menu to open a sidebar holding Home, Instructions, Vision & Mission, Privacy, Terms & Conditions, language switching, and a version note. System Back returns to the hub. Vision/Mission, Privacy, and Terms are labelled placeholders pending reviewed client copy; the mood bubble opens an informational preview that stores nothing.
-- Speech-bubble palette, Fredoka/Nunito typography, and flat card shapes applied across the app. The displayed app name and supplied wordmark are confirmed as Kamus Tambay; final logo treatment remains open.
+- Speech-bubble palette, Fredoka/Nunito typography, and flat card shapes applied across the app. The displayed app name and supplied wordmark are confirmed as Kumus Tambay; final logo treatment remains open.
 - Shared Supabase listings with realtime updates, the latest non-empty snapshot cached for offline browsing, bundled JSON as the first-sync seed/fallback, and clear demo labelling for `sample-` rows.
 - GitHub Pages web preview rebuilt on every push to `master`.
 - Shared responsive layout utility for width bands, page margins, readable content width, sidebar sizing, sheet height, and large-text stacking; tested across 320–600 px widths at 1.0–2.0 text scale.

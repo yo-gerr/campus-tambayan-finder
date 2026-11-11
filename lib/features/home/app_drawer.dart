@@ -55,7 +55,7 @@ class AppDrawer extends StatelessWidget {
                       height: 58,
                       fit: BoxFit.contain,
                       alignment: Alignment.centerLeft,
-                      semanticLabel: 'Kamus Tambay',
+                      semanticLabel: 'Kumus Tambay',
                     ),
                   ),
                   const SizedBox(width: 8),

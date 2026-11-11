@@ -42,7 +42,7 @@ class TambayanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Kamus Tambay',
+      title: 'Kumus Tambay',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       home: _TambayanHome(
