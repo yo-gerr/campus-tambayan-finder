@@ -4,8 +4,8 @@ import '../../app/app_copy.dart';
 import '../../app/app_layout.dart';
 import '../../app/app_theme.dart';
 
-/// Home-only header: the Kumus Tambay wordmark, emblem in a gold ring, and
-/// menu shortcut.
+/// Home-only header: the Kumus Tambay wordmark, the logo badge, and the menu
+/// shortcut.
 class BrandHeader extends StatelessWidget {
   const BrandHeader({required this.copy, required this.onMenu, super.key});
 
@@ -20,7 +20,7 @@ class BrandHeader extends StatelessWidget {
         // Give the wordmark the largest share of the header. The smaller
         // emblem stays visually attached to it, while the wider gap before
         // the hamburger preserves the menu as a separate utility action.
-        final ring = (width * 0.2).clamp(60.0, 76.0);
+        final emblemSize = (width * 0.2).clamp(60.0, 76.0);
         const wordmarkHeight = 102.0;
 
         return Padding(
@@ -44,49 +44,20 @@ class BrandHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              _LogoRing(size: ring),
+              ExcludeSemantics(
+                child: Image.asset(
+                  'assets/brand/logo_black.png',
+                  width: emblemSize,
+                  height: emblemSize,
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(width: AppSpacing.unit * 2),
               _MenuButton(copy: copy, onPressed: onMenu),
             ],
           ),
         );
       },
-    );
-  }
-}
-
-class _LogoRing extends StatelessWidget {
-  const _LogoRing({required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExcludeSemantics(
-      child: Container(
-        width: size,
-        height: size,
-        padding: EdgeInsets.all(size * 0.04),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: AppColors.inkStrong,
-          border: Border.all(color: AppColors.accent, width: size * 0.055),
-          boxShadow: const [
-            BoxShadow(
-              color: AppColors.surfaceUnder,
-              offset: Offset(0, 4),
-              blurRadius: 0,
-            ),
-          ],
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            'assets/brand/splash.png',
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.medium,
-          ),
-        ),
-      ),
     );
   }
 }

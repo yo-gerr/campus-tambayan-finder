@@ -4,6 +4,26 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-11 — Replaced the Android launcher icon with the client badge
+
+- Added `flutter_launcher_icons` (dev-only) and configured it in `pubspec.yaml` with `android: true`, `ios: false`: **black logo on a white background**, legacy mipmaps from a derived `assets/brand/app_icon_legacy.png` (white-backed `logo_black.png`, logo at 67% of a 1024 px canvas, generated with a one-off System.Drawing pass), adaptive foreground from `logo_black.png` itself, `adaptive_icon_background: "#FFFFFF"`.
+- Set `adaptive_icon_foreground_inset: 20` because `logo_black.png` is full-bleed (the ring covers 96% of its canvas). 20% lands the ring at about 62 dp of the 108 dp canvas — inside the 66 dp safe circle and filling most of the 72 dp visible viewport. An earlier iteration used the white badge on `#1F6FD1` with the supplied splash artwork and a 5% inset; the owner replaced that direction with white background plus black logo.
+- Ran `dart run flutter_launcher_icons`: regenerated `mipmap-*/ic_launcher.png` (48–192 px, white background), `drawable-*/ic_launcher_foreground.png` (108–432 px), `mipmap-anydpi-v26/ic_launcher.xml`, and `values/colors.xml` (`ic_launcher_background` = `#FFFFFF`).
+- Removed `values/ic_launcher_colors.xml` (the generated `values/colors.xml` now owns `ic_launcher_background`; keeping both is a duplicate-resource build failure) and the obsolete `drawable-nodpi/ic_launcher_foreground.png` (432 px, old mark).
+- Updated `docs/ARCHITECTURE.md` and `docs/PROJECT_BRIEF.md`; the logo status stays provisional pending client sign-off.
+- Validation: `dart run flutter_launcher_icons`, `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `flutter build apk --debug` succeeded, `git diff --check` clean. Checked generated pixels: legacy corner is `#FFFFFF`, legacy logo at 67.2%, adaptive foreground at 96.1% before the inset.
+- Remaining: confirm the icon on a device or emulator (launchers cache icons, so uninstall and reinstall to see it); a white icon background can blend into light launcher wallpapers; there is no `roundIcon` or Android 13 monochrome layer; the black vector master `kumus-tambay-logo.svg` is still missing; final logo sign-off and the client dataset/legal copy remain open.
+
+### 2026-11-11 — Applied the client logo set to the header emblem and native splash
+
+- Replaced the gold-ring home header emblem with the client-supplied `assets/brand/logo_black.png` badge; the wide wordmark, menu button, and sidebar wordmark are unchanged.
+- Added `logo_black.png` to the bundled Flutter assets and removed the no-longer-referenced `assets/brand/splash.png` from that list.
+- Updated `flutter_native_splash` to the brand-blue `#1F6FD1` splash with the new 1152×1152 transparent white-logo `splash.png` and `splash_android12.png`, including dark-mode entries, and regenerated the Android splash resources.
+- Updated `docs/ARCHITECTURE.md`, `docs/PROJECT_BRIEF.md`, and `docs/CLIENT_APP_GUIDE.md`; the logo status stays provisional pending client sign-off.
+- `logo_white.png`, the white SVG master, the preview images, and the supplied `flutter_native_splash.yaml` remain uncommitted reference assets; `logo_white.png` is not bundled because the app has no dark mode.
+- Validation: `dart run flutter_native_splash:create`, `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `flutter build apk --debug` succeeded, `git diff --check` clean.
+- Remaining: the black vector master `kumus-tambay-logo.svg` is not in the repository; the launcher icon is still the temporary mark; final logo sign-off and the client dataset/legal copy remain open.
+
 ### 2026-11-11 — Committed the Kumus Tambay rename and updated brand artwork
 
 - Committed the pending display-name rename from `Kamus Tambay` to `Kumus Tambay` across app labels, the Android manifest, web metadata, in-app copy and credits, widget tests, and documentation.

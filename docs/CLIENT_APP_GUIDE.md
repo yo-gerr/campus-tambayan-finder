@@ -12,7 +12,7 @@ The **Home Screen** is the central hub of the application. It uses a clean, frie
 * 😊 **Mood check-in:** Opens the voluntary, 4-step anonymous mood feedback wizard.
 * ≡ **More (Top-Right Menu Button):** Opens the side menu drawer from any screen.
 
-The home screen displays the Kumus Tambay wordmark, mascot artwork, and cream/sky campus theme.
+The home screen displays the Kumus Tambay wordmark, logo badge, mascot artwork, and cream/sky campus theme.
 
 > 📷 **Screenshot Opportunity #1: Home Screen Hub**
 > * **What to capture:** Open the app to the main Home screen showing the wordmark, student mascot, and 3 speech bubbles (**Find a tambayan**, **Mood check-in**, **More**).

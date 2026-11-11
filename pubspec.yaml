@@ -44,6 +44,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_native_splash: ^2.4.8
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -67,10 +68,16 @@ flutter:
   assets:
     - assets/data/sample_places.json
     - assets/brand/wordmark.png
+    - assets/brand/logo_black.png
     - assets/brand/student_male.png
-    - assets/brand/splash.png
     - assets/fonts/OFL-fredoka.txt
     - assets/fonts/OFL-nunito.txt
+
+    # An image asset can refer to one or more resolution-specific "variants", see
+    # https://flutter.dev/to/resolution-aware-images
+
+    # For details regarding adding assets from package dependencies, see
+    # https://flutter.dev/to/asset-from-package
 
   fonts:
     - family: Fredoka
@@ -94,18 +101,35 @@ flutter_native_splash:
   android: true
   ios: false
   web: false
-  color: "#FBF8F4"
+  color: "#1F6FD1"
   image: assets/brand/splash.png
+  color_dark: "#1F6FD1"
+  image_dark: assets/brand/splash.png
   android_12:
-    color: "#FBF8F4"
+    color: "#1F6FD1"
     image: assets/brand/splash_android12.png
     icon_background_color: "#1F6FD1"
+    color_dark: "#1F6FD1"
+    image_dark: assets/brand/splash_android12.png
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
+# Android launcher icon: the black logo on a white background. The legacy
+# (pre-Android 8) mipmaps use `app_icon_legacy.png`, a derived white-backed
+# copy of `logo_black.png` with the logo at 67% of the canvas. The adaptive
+# layer uses `logo_black.png` itself. Web and iOS icons stay unconfigured.
+# Generate with:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/brand/app_icon_legacy.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/brand/logo_black.png"
+  # `logo_black.png` is full-bleed (the ring covers 96% of its canvas), so the
+  # inset does the padding the artwork does not. 20% lands the ring at ~62dp of
+  # the 108dp canvas: inside the 66dp safe circle, and filling most of the
+  # 72dp visible viewport.
+  adaptive_icon_foreground_inset: 20
+  min_sdk_android: 21
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

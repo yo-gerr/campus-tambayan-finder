@@ -1,0 +1,30 @@
+# Add this block to pubspec.yaml (or save as flutter_native_splash.yaml in the
+# project root), copy the PNGs to assets/splash/, then run:
+#   dart run flutter_native_splash:create
+#
+# #1F6FD0 is the blue of your primary buttons. Change it here if your splash
+# background should be a different brand color.
+flutter_native_splash:
+  color: "#1F6FD0"
+  image: assets/splash/splash.png
+  color_dark: "#1F6FD0"
+  image_dark: assets/splash/splash.png
+
+  # Android 12 and newer. The system draws this icon inside a circle that is
+  # 2/3 of the image, which is why the logo is smaller inside its canvas.
+  android_12:
+    color: "#1F6FD0"
+    image: assets/splash/splash_android12.png
+    color_dark: "#1F6FD0"
+    image_dark: assets/splash/splash_android12.png
+
+# Also in pubspec.yaml, so the home screen can use the logo:
+# flutter:
+#   assets:
+#     - assets/logo/logo_black.png
+#     - assets/logo/logo_white.png
+#
+# Home screen header, light background:
+#   Image.asset('assets/logo/logo_black.png', height: 48)
+# Dark background:
+#   Image.asset('assets/logo/logo_white.png', height: 48)
