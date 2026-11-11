@@ -78,7 +78,6 @@ class _TambayanHomeState extends State<_TambayanHome> {
   PlaceFilters _filters = const PlaceFilters();
   String _campus = 'plv';
   AppSection _section = AppSection.home;
-  bool _mapOpened = false;
 
   AppCopy get _copy => AppCopy(_language);
 
@@ -148,7 +147,6 @@ class _TambayanHomeState extends State<_TambayanHome> {
 
   void _openSection(AppSection section) {
     setState(() {
-      if (section == AppSection.map) _mapOpened = true;
       _section = section;
     });
   }
@@ -244,7 +242,7 @@ class _TambayanHomeState extends State<_TambayanHome> {
                   onMapPressed: () => _openSection(AppSection.map),
                   onRefresh: _refreshPlaces,
                 ),
-                if (_mapOpened)
+                if (_section == AppSection.map)
                   PlacesMapScreen(
                     places: visiblePlaces,
                     copy: _copy,

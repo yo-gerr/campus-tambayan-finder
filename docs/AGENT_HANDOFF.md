@@ -4,6 +4,13 @@ Shared, version-controlled handoff notes for agents working in this repository. 
 
 ## Latest
 
+### 2026-11-10 — Fixed offstage native map texture flickering on keyboard focus
+
+- Updated [`tambayan_app.dart`](file:///C:/Users/roger/Downloads/GitHub/commission/lib/app/tambayan_app.dart) to unmount `PlacesMapScreen` when `_section != AppSection.map`.
+- This eliminates native Android `TextureView` / `AndroidView` surface inset resize flickering when soft keyboard slides up on `MoodInfoScreen` or other non-map screens.
+- Validation: `flutter analyze` clean (**0 issues**), all 110 Flutter tests passed, `git diff --check` clean.
+- Remaining: await client final dataset and legal copy sign-offs.
+
 ### 2026-11-10 — Refined client app guide with non-technical walkthrough and screenshot placeholders
 
 - Rewrote [`CLIENT_APP_GUIDE.md`](file:///C:/Users/roger/Downloads/GitHub/commission/docs/CLIENT_APP_GUIDE.md) into an engaging, non-technical feature walkthrough tailored for client presentation.
